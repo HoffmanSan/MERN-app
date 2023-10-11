@@ -17,5 +17,5 @@ a, input, button {
 }
 
 .btn {
-  @apply border-2 outline-none cursor-pointer rounded-lg p-2 font-bold text-orange-400 border-orange-400 hover:bg-orange-400 hover:text-white focus:bg-orange-400 focus:text-white transition ease-out duration-500 shadow-md
+  @apply border-2 outline-none cursor-pointer rounded-lg p-2 font-bold text-orange-400 border-orange-400 hover:bg-orange-400 hover:text-white focus:bg-orange-400 focus:text-white focus:outline-none transition ease-out duration-500 shadow-md
 }

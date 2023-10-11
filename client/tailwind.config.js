@@ -7,6 +7,12 @@ module.exports = {
     extend: {
       fontFamily: {
         main: ["Nunito"]
+      },
+      minWidth: {
+        "6": "25px"
+      },
+      minHeight: {
+        "6": "25px"
       }
     },
   },
