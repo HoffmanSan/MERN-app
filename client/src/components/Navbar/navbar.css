@@ -1,0 +1,7 @@
+#account:hover #dropdown-account {
+  @apply block
+}
+
+.dropdown-link {
+  @apply text-white cursor-pointer px-2 rounded hover:font-bold
+}

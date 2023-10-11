@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-main bg-gray-200
+}
+
+a, input, button {
+  @apply outline-none
+}
+
+.auth-form {
+  @apply bg-white rounded-lg flex flex-col w-96 shadow-lg px-8 py-8 mx-auto top-1/4 absolute
+}
+
+.btn {
+  @apply border-2 outline-none cursor-pointer rounded-lg p-2 font-bold text-orange-400 border-orange-400 hover:bg-orange-400 hover:text-white focus:bg-orange-400 focus:text-white transition ease-out duration-500 shadow-md
+}

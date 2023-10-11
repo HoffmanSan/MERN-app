@@ -21,19 +21,19 @@ userSchema.statics.signup = async function(email, password) {
   
   // Validation
   if (!email || !password) {
-    throw Error("All fields must be filled");
+    throw Error("Należy wypełnić wszystkie pola");
   }
   if (!validator.isEmail(email)) {
-    throw Error("Email is not valid");
+    throw Error("Nieprawidłowy format adresu e-mail");
   }
   if (!validator.isStrongPassword(password)) {
-    throw Error ("Password not strong enough");
+    throw Error ("Hasło nie jest wystarczająco silne");
   }
 
   const exists = await this.findOne({ email });
 
   if (exists) {
-    throw Error("Email already in use");
+    throw Error("Konto z tym adresem e-mail już istnieje");
   }
 
   // Signup process
@@ -50,20 +50,23 @@ userSchema.statics.login = async function(email, password) {
 
   // Validation
   if (!email || !password) {
-    throw Error("All fields must be filled");
+    throw Error("Należy wypełnić wszystkie pola");
+  }
+  if (!validator.isEmail(email)) {
+    throw Error("Nieprawidłowy format adresu e-mail");
   }
 
   // Login process
   const user = await this.findOne({ email });
 
   if (!user) {
-   throw Error("Incorrect email");
+   throw Error("Nieprawidłowy adres e-mail lub hasło");
   }
 
   const match = await bcrypt.compare(password, user.password);
 
   if (!match) {
-    throw Error("Incorrect password");
+    throw Error("Nieprawidłowy adres e-mail lub hasło");
   }
 
   return user;
