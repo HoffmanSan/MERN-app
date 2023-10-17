@@ -1,24 +1,28 @@
+// Imports
 import { createContext, useReducer } from "react";
 
+// TS types
+type Dispatch = (action: Action) => void
+type User = {
+  email: string,
+  token: string
+}
 type Action = {
   type: "LOGIN" | "LOGOUT"
-  payload: {
-    email: string
-    token: string
-  } | null
+  payload: User | null
 }
-type Dispatch = (action: Action) => void
 type State = {
-  user: {
-    email: string
-    token: string
-  } | null
+  user: User | null
 }
-type AuthProviderProps = {children: React.ReactNode}
+type AuthProviderProps = {
+  children: React.ReactNode
+}
 
+// Check local storage for "user" item
 const userJson = localStorage.getItem("user");
-const user = (userJson !== null) ? JSON.parse(userJson) : null;
+const user = (userJson !== null) && JSON.parse(userJson)
 
+// Create context - define it later in the file
 export const AuthContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
 
 export const authReducer = (state: State, action: Action) => {

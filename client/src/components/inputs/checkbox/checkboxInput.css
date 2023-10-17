@@ -1,18 +1,3 @@
-/* Disable arrows on number type input */
-
-/* Chrome, Safari */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  appearance: none;
-  -moz-appearance: textfield; 
-}
-
 /* Replace original checkbox style */
 input[type="checkbox"] {
   display: none;

@@ -1,14 +1,15 @@
+// Imports
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
 export const useLogin = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
   const login = async (email: string, password: string) => {
     setIsLoading(true)
-    setError(null)
+    setError("")
 
     const response = await fetch("/api/user-auth/login", {
       method: "POST",

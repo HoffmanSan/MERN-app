@@ -5,17 +5,25 @@
 @tailwind utilities;
 
 body {
-  @apply font-main bg-gray-200
+  @apply bg-gray-200 font-main;
+}
+
+h2 {
+  @apply text-2xl font-bold;
+}
+
+h3 {
+  @apply text-xl font-bold;
 }
 
 a, input, button {
-  @apply outline-none
-}
-
-.auth-form {
-  @apply bg-white rounded-lg flex flex-col w-96 shadow-lg px-8 py-8 mx-auto top-1/4 absolute
+  @apply outline-none;
 }
 
 .btn {
-  @apply border-2 outline-none cursor-pointer rounded-lg p-2 font-bold text-orange-400 border-orange-400 hover:bg-orange-400 hover:text-white focus:bg-orange-400 focus:text-white focus:outline-none transition ease-out duration-500 shadow-md
+  @apply p-2 font-bold text-white transition duration-500 ease-out bg-orange-400 border-2 border-orange-400 rounded-lg shadow-md outline-none cursor-pointer hover:scale-110 focus:scale-110 focus:outline-none;
+}
+
+.error {
+  @apply p-2 text-center text-red-500 bg-red-100 border border-red-500;
 }

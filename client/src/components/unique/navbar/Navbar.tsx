@@ -1,10 +1,10 @@
 // Imports
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { useLogout } from "../../hooks/useLogout";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useLogout } from "../../../hooks/useLogout";
 
-// Component unique styles
+// Unique styles
 import "./navbar.css";
 
 
@@ -14,20 +14,20 @@ export default function Navbar() {
   const { logout } = useLogout();
 
   return (
-    <nav className="bg-orange-400 top-0 sticky z-10">
-      <ul className="py-2 w-9/12 flex mx-auto">
+    <nav className="sticky top-0 z-10 bg-orange-400">
+      <ul className="flex w-9/12 py-2 mx-auto">
 
         <li>
           <Link to="/">
-              <h1 className="text-3xl text-white font-bold">Sklepico.pl</h1>
+              <h1 className="text-3xl font-bold text-white">Sklepico.pl</h1>
           </Link>
         </li>
         
-        <li id="search" className="px-1 flex mx-auto w-2/6">
+        <li id="search" className="flex w-2/6 px-1 mx-auto">
           <input
             type="text"
             name="search-bar"
-            className="rounded px-2 w-full"
+            className="w-full px-2 rounded"
             placeholder="Szukaj..."
             onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}
@@ -61,7 +61,7 @@ export default function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
             </svg>
           </Link>
-          <ul id="dropdown-account" className="hidden absolute bg-orange-400 rounded-md p-1">
+          <ul id="dropdown-account" className="absolute hidden p-1 bg-orange-400 rounded-md">
           {!state.user ?
             <>
               <li className="dropdown-link"><Link to="/login">Logowanie</Link></li>

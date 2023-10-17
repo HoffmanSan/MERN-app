@@ -1,7 +1,7 @@
 // Imports
 import { useState } from "react"
 
-// Component unique styles
+// Unique styles
 import "./checkboxInput.css"
 
 // TS types

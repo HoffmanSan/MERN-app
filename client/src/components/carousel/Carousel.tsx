@@ -4,10 +4,12 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
 type CarouselElementProps = {
-  title?: String
-  price: Number
-  _id: any
-}[]
+  products: {
+    title: String
+    price: Number
+    _id: any
+  }[]
+}
 
 const responsive = {
   superLargeDesktop: {
@@ -31,7 +33,7 @@ const responsive = {
   }
 };
 
-export default function CarouselElement({products}:{products: CarouselElementProps}) {
+export default function CarouselElement({products}:CarouselElementProps) {
   return (
     <Carousel
       responsive={responsive}
@@ -39,7 +41,7 @@ export default function CarouselElement({products}:{products: CarouselElementPro
       removeArrowOnDeviceType={["tablet", "mobile"]}
     >
     {products.map((item) => (
-      <div key={item._id} className="w-48 h-48 bg-gray-400">
+      <div key={item._id} className="w-48 h-48 mx-auto mt-3 bg-gray-400">
         <Link to="/account">
           <p className="text-white text-lg">{item.title}</p>
           <p className="text-white text-lg">{item.price.toString()}</p>
