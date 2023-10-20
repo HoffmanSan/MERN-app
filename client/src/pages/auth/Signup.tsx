@@ -15,8 +15,8 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="absolute p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96 top-1/4">
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96">
         <h3 className="text-center pb-7">ZAREJESTRUJ SIĘ</h3>
 
         <AuthForm handleSubmit={handleSignup} error={error} isLoading={isLoading} submitButtonText="załóż konto"/>

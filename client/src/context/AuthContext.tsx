@@ -25,7 +25,7 @@ const user = (userJson !== null) && JSON.parse(userJson)
 // Create context - define it later in the file
 export const AuthContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
 
-export const authReducer = (state: State, action: Action) => {
+export const authReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "LOGIN":
       return { user: action.payload }

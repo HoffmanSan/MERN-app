@@ -1,0 +1,3 @@
+.dropdown-link {
+  @apply px-2 text-white rounded cursor-pointer hover:font-bold;
+}

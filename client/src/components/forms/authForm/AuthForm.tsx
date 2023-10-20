@@ -1,9 +1,6 @@
 // Imports
 import { useState } from "react"
 
-// Components
-import { TextInput } from "../../index"
-
 // TS types
 type AuthFormProps = {
   handleSubmit: (e: React.FormEvent, email: string, password: string) => void,
@@ -20,10 +17,22 @@ export default function AuthForm({handleSubmit, error, isLoading, submitButtonTe
     <form className="flex flex-col mx-auto" onSubmit={(e) => handleSubmit(e, email, password)}>
 
       <label htmlFor="login-email" className="text-lg">Adres e-mail</label>
-      <TextInput id="login-email" value={email} handleChange={setEmail}/>
+      <input
+        className="p-2 my-1 text-black border border-orange-400 rounded-md"
+        id="login-email"
+        type="text"
+        onChange={(e) => setEmail(e.target.value)}
+        value={email}
+      />
 
       <label htmlFor="login-password" className="text-lg">Hasło</label>
-      <TextInput id="login-password" value={password} handleChange={setPassword} type="password"/>
+      <input
+        className="p-2 my-1 text-black border border-orange-400 rounded-md"
+        id="login-password"
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
+      />
 
       <button className="my-5 tracking-wider btn" disabled={isLoading}>{submitButtonText.toUpperCase()}</button>
       {error && <div className="error">{error}</div>}

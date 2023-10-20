@@ -7,26 +7,22 @@ import "./checkboxInput.css"
 // TS types
 type CheckboxInputProps = {
   category: string,
+  categories: string[]
   handleClick: () => void 
 }
 
-export default function CheckboxInput({category, handleClick}: CheckboxInputProps) {
-  const [isChecked, setIsChecked] = useState(false);
+export default function CheckboxInput({category, handleClick, categories}: CheckboxInputProps) {
 
   return (
     <>
       {/* original checkbox style has been replaced with custom-made one - see CSS file */}
       <input
         type="checkbox"
-        id={`category-${category}`}
-        checked={isChecked}
+        id={category}
+        checked={categories.includes(category)}
         readOnly
       />
-      <span onClick={() => {
-        setIsChecked(!isChecked);
-        handleClick();
-      }}/>
-      
+      <span onClick={() => handleClick()}/>
     </>
   )
 }

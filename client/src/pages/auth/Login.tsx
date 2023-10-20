@@ -15,11 +15,11 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="absolute p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96 top-1/4">
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96">
         <h3 className="text-center pb-7">ZALOGUJ SIĘ</h3>
 
-        <AuthForm handleSubmit={handleLogin} error={error} isLoading={isLoading} submitButtonText="zaloguj się"/>
+        <AuthForm handleSubmit={handleLogin} error={error} isLoading={isLoading} submitButtonText="logowanie"/>
 
         <div className="mt-6 text-center">
           <p>Nie masz jeszcze konta?</p>

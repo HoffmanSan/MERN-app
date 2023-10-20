@@ -5,9 +5,10 @@ import 'react-multi-carousel/lib/styles.css';
 
 type CarouselElementProps = {
   products: {
-    title: String
-    price: Number
-    _id: any
+    _id: number,
+    title: string,
+    price: number,
+    categories: string[]
   }[]
 }
 
@@ -42,9 +43,9 @@ export default function CarouselElement({products}:CarouselElementProps) {
     >
     {products.map((item) => (
       <div key={item._id} className="w-48 h-48 mx-auto mt-3 bg-gray-400">
-        <Link to="/account">
-          <p className="text-white text-lg">{item.title}</p>
-          <p className="text-white text-lg">{item.price.toString()}</p>
+        <Link to={`/product/${item._id}`}>
+          <p className="text-lg text-white">{item.title}</p>
+          <p className="text-lg text-white">{item.price.toString()}</p>
         </Link>
       </div>
     ))}

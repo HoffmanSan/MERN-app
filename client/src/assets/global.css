@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-200 font-main;
+  @apply min-w-full bg-gray-200 font-main;
 }
 
 h2 {
@@ -26,4 +26,50 @@ a, input, button {
 
 .error {
   @apply p-2 text-center text-red-500 bg-red-100 border border-red-500;
+}
+
+/* Disable arrows on number-type inputs */
+
+/* Chrome, Safari */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  appearance: none;
+  -moz-appearance: textfield; 
+}
+
+/* Table styles */
+td {
+  @apply text-center
+}
+tr {
+  @apply h-14
+}
+tr:nth-child(even) {
+  @apply bg-orange-100
+}
+thead td {
+  @apply bg-orange-400
+}
+
+/* Replace original checkbox style */
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] + span {
+  @apply relative inline-block align-middle transition duration-300 ease-out bg-white border border-black rounded-md cursor-pointer min-w-6 min-h-6 top-px;
+}
+
+input[type="checkbox"]:checked + span {
+  @apply bg-orange-400 border-white;
+}
+
+input[type="checkbox"]:checked + span + label {
+  @apply text-orange-400 transition duration-300 ease-out;
 }

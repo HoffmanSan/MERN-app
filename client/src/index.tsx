@@ -5,6 +5,7 @@ import App from './App';
 
 // Context Providers
 import { AuthContextProvider } from "./context/AuthContext";
+import { ProductsContextProvider } from "./context/ProductsContext";
 
 // Styles
 import './assets/global.css';
@@ -15,7 +16,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <App />
+      <ProductsContextProvider>
+        <App />
+      </ProductsContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );
