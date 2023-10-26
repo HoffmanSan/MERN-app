@@ -21,7 +21,7 @@ a, input, button {
 }
 
 .btn {
-  @apply p-2 font-bold text-white transition duration-500 ease-out bg-orange-400 border-2 border-orange-400 rounded-lg shadow-md outline-none cursor-pointer hover:scale-110 focus:scale-110 focus:outline-none;
+  @apply p-2 font-bold text-white transition duration-500 ease-out bg-orange-400 border-2 border-orange-400 rounded-lg shadow-md outline-none cursor-pointer hover:scale-110 focus:outline-none;
 }
 
 .error {
@@ -50,7 +50,7 @@ td {
 tr {
   @apply h-14
 }
-tr:nth-child(even) {
+tr:nth-child(odd) {
   @apply bg-orange-100
 }
 thead td {

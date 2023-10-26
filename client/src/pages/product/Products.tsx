@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 type Product = {
   _id: number,
-  title: string,
+  name: string,
   price: number,
   categories: string[],
   description: string,
@@ -32,11 +32,11 @@ export default function Products() {
       {product && (
       <>
         <div className="col-span-3 bg-blue-700">
-          <h3>{product.title}</h3>
-          <img src={product.photoURL} alt={`${product.title}`} />
+          <h3>{product.name}</h3>
+          <img src={product.photoURL} alt={`${product.name}`} />
         </div>
         <div className="col-span-2 bg-red-700">
-          <h3>{product.title}</h3>
+          <h3>{product.name}</h3>
           <h4>{product.price}</h4>
           <button className="bg-gray-500 h-7 w-7" onClick={() => setProductQuantity(productQuantity - 1)}>-</button>
           <button className="bg-gray-500 h-7 w-7" onClick={() => setProductQuantity(productQuantity + 1)}>+</button>

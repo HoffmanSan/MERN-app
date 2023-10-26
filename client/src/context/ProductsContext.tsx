@@ -4,16 +4,17 @@ import { createContext, useReducer } from "react";
 // TS types
 type Product = {
   _id: number,
-  title: string,
+  name: string,
   price: number,
   categories: string[],
   description: string,
   inStock: number,
-  photoURLS: string[]
+  photoURLs: string[],
+  photoCloudinaryId: string
 }
 type Dispatch = (action: Action) => void
 type Action = {
-  type: "SET_PRODUCTS" | "CREATE_PRODUCT",
+  type: "SET_PRODUCTS" | "CREATE_PRODUCT" | "DELETE_PRODUCT",
   payload: Product[]
 }
 type State = {
@@ -34,6 +35,15 @@ export const productsReducer = (state: State, action: Action): State => {
     case "CREATE_PRODUCT":
       return {
         products: (state.products).concat(action.payload)
+      }
+    case "DELETE_PRODUCT":
+      return {
+        products: (state.products).filter(item => {
+          if (action.payload[0]._id !== item._id) {
+            return true
+          }
+            return false
+        })
       }
     default:
       return state

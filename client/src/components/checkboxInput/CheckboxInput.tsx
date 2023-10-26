@@ -1,5 +1,4 @@
 // Imports
-import { useState } from "react"
 
 // Unique styles
 import "./checkboxInput.css"

@@ -1,9 +1,10 @@
+// Imports
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-  title: {
+  name: {
     type: String,
     required: true
   },
@@ -23,10 +24,14 @@ const productSchema = new Schema({
     type: Number,
     required: true
   },
-  photoURLS: {
+  photoURLs: {
     type: [String],
-    required: true,
+    required: true
   },
+  photoCloudinaryId: {
+    type: String,
+    required: true
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Product", productSchema);

@@ -10,5 +10,8 @@ export { default as ProfileMenu } from "./profileMenu/ProfileMenu";
 export { default as FilterForm } from "./forms/filterProductsForm/FilterProductsForm";
 
 // Admin Panel Components
+export { default as Products } from "./adminPanel/products/Products";
 export { default as DisplayProducts } from "./adminPanel/products/DisplayProducts";
 export { default as CreateProduct } from "./adminPanel/products/CreateProduct";
+export { default as Categories } from "./adminPanel/categories/Categories";
+export { default as Users } from "./adminPanel/users/Users";

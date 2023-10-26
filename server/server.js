@@ -3,11 +3,13 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require('body-parser')
-const { uploadImage } = require("./controllers/uploadImagesController");
 
 // Import routes
-const productRoutes = require("./routes/products");
-const userAuthRoutes = require("./routes/usersAuth");
+const productRoutes = require("./routes/productRoutes");
+const userAuthRoutes = require("./routes/userAuthRoutes");
+const imageRoutes = require("./routes/imageRoutes");
+const userRoutes = require("./routes/userRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 // Express App
 const app = express();
@@ -17,19 +19,17 @@ app.use(bodyParser.json({ limit: '4mb' }))
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(req.path, req.method);
+  console.log(req.headers["content-length"])
   next();
 });
 
 // Routes
 app.use("/api/products", productRoutes);
 app.use("/api/user-auth", userAuthRoutes);
+app.use("/api/images", imageRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
 
-// TEST
-app.post("/uploadImage", (req, res) => {
-  uploadImage(req.body.image)
-    .then((url) => res.send(url))
-    .catch((err) => res.send(err));
-})
 
 // Connect to database
 mongoose.connect(process.env.MONGO_URI)

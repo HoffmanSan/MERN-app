@@ -5,8 +5,12 @@ import { useState } from "react";
 import { CheckboxInput } from "../../index";
 
 // TS types
+type Category = {
+  name: string,
+  _id: number
+}
 type FilterFormProps = {
-  categoryList: string[],
+  categoryList: Category[],
   handleFilter: (minPrice: number, maxPrice: number, categories: string[]) => void;
 }
 
@@ -27,7 +31,6 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(maxPrice)
     handleFilter(minPrice, maxPrice, filteredCategories);
   }
 
@@ -59,9 +62,17 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
       
       <div className="grid grid-cols-2 gap-y-2">
         {categoryList.map((item) => (
-          <div className="flex items-center" key={item}>
-            <CheckboxInput category={item} categories={filteredCategories} handleClick={() => handleCheck(item)}/>
-            <label className="pl-2" htmlFor={item}>{item}</label>
+          <div className="flex items-center" key={item.name}>
+            <>
+              <input
+                type="checkbox"
+                id={item.name}
+                checked={filteredCategories.includes(item.name)}
+                readOnly
+              />
+              <span onClick={() => handleCheck(item.name)}/>
+            </>
+            <label className="pl-2" htmlFor={item.name}>{item.name}</label>
           </div>
         ))}
       </div>

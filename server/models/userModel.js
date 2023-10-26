@@ -1,3 +1,4 @@
+// Imports
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
@@ -14,7 +15,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   }
-});
+}, { timestamps: true });
 
 // Static signup method
 userSchema.statics.signup = async function(email, password) {

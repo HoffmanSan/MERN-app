@@ -1,3 +1,4 @@
+// Imports
 const Product = require("../models/productModel");
 const mongoose = require("mongoose");
 
@@ -27,10 +28,10 @@ const getProduct = async (req, res) => {
 
 // Create a new product
 const createProduct = async (req, res) => {
-  const { title, price, categories, description, inStock, photoURLS } = req.body;
+  const { name, price, categories, description, inStock, photoURLs, photoCloudinaryId } = req.body;
 
   try {
-    const product = await Product.create({title, categories, price, description, inStock, photoURLS});
+    const product = await Product.create({name, categories, price, description, inStock, photoURLs, photoCloudinaryId});
     res.status(200).json(product);
   } catch (error) {
     res.status(400).json({error: error.message});

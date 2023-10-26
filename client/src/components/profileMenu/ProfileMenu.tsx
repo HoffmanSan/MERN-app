@@ -31,12 +31,12 @@ export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
     <ul ref={ref} className="absolute p-2 m-0 text-white bg-orange-400">
       {!state.user ?
       <>
-        <li className="hover:font-bold"><Link to="/login" onClick={() => {setIsOpen(false)}}>Logowanie</Link></li>
-        <li className="hover:font-bold"><Link to="/signup" onClick={() => {setIsOpen(false)}}>Rejestracja</Link></li>
-        <li className="hover:font-bold"><Link to="/admin" onClick={() => {setIsOpen(false)}}>Admin</Link></li>
+        <li className="hover:font-bold"><Link to="/login">Logowanie</Link></li>
+        <li className="hover:font-bold"><Link to="/signup">Rejestracja</Link></li>
+        <li className="hover:font-bold"><Link to="/admin">Admin</Link></li>
       </>
       :
-      <li className="hover:font-bold" onClick={() => {setIsOpen(false); logout()}}>Wyloguj</li>
+      <li className="cursor-pointer hover:font-bold" onClick={() => logout()}>Wyloguj</li>
       }
     </ul>
   )

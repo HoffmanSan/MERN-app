@@ -34,7 +34,7 @@ export default function AuthForm({handleSubmit, error, isLoading, submitButtonTe
         value={password}
       />
 
-      <button className="my-5 tracking-wider btn" disabled={isLoading}>{submitButtonText.toUpperCase()}</button>
+      <button className="my-5 tracking-wider btn" disabled={isLoading}>{isLoading ? "ŁADOWANIE..." : submitButtonText.toUpperCase()}</button>
       {error && <div className="error">{error}</div>}
       
     </form>
