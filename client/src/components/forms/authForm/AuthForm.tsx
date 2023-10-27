@@ -1,6 +1,9 @@
 // Imports
 import { useState } from "react"
 
+// Components
+import { LoadingSpinner } from "../../index";
+
 // TS types
 type AuthFormProps = {
   handleSubmit: (e: React.FormEvent, email: string, password: string) => void,
@@ -34,7 +37,7 @@ export default function AuthForm({handleSubmit, error, isLoading, submitButtonTe
         value={password}
       />
 
-      <button className="my-5 tracking-wider btn" disabled={isLoading}>{isLoading ? "ŁADOWANIE..." : submitButtonText.toUpperCase()}</button>
+      <button className="my-5 tracking-wider btn" disabled={isLoading}>{isLoading ? <LoadingSpinner /> : submitButtonText.toUpperCase()}</button>
       {error && <div className="error">{error}</div>}
       
     </form>

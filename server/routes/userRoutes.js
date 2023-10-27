@@ -1,5 +1,6 @@
 // Imports
 const express = require("express");
+const requireAuth = require("../middleware/requireAuth");
 
 // Controller functions
 const {
@@ -10,6 +11,9 @@ const {
 
 // Routes
 const router = express.Router();
+
+// Middleware
+router.use(requireAuth);
 
 // GET all users
 router.get("/", getUsers);

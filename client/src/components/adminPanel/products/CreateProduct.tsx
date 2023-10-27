@@ -5,7 +5,10 @@ import axios from "axios";
 import { nanoid } from "nanoid";
 import { useProductsContext } from "../../../hooks/useProductsContext";
 import { useCategoriesContext } from "../../../hooks/useCategoriesContext";
-import { InputFiles } from "typescript";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+
+// Components
+import { LoadingSpinner } from "../../index";
 
 // TS types
 type Product = {
@@ -20,7 +23,8 @@ type Product = {
 
 export default function CreateProduct() {
   const { convertImageToBase64 } = useConvertImages();
-  const { state } = useCategoriesContext();
+  const { state: stateAuth } = useAuthContext();
+  const { state: stateCategories } = useCategoriesContext();
   const { dispatch } = useProductsContext();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -145,7 +149,7 @@ export default function CreateProduct() {
     ).then(() => {
       
       // Add product to database
-      axios.post("/api/products", { ...product })
+      axios.post("/api/products", { ...product }, {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
         .then((response) => {
           dispatch({type: "CREATE_PRODUCT", payload: [response.data]})
           resetForm();
@@ -156,6 +160,7 @@ export default function CreateProduct() {
           }, 5000);
         })
         .catch((err) => {
+          setIsLoading(false);
           setError(err.message);
           console.log(err)
         })
@@ -217,7 +222,7 @@ export default function CreateProduct() {
       <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
 
       <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
-        {state.categories.sort().map((item) => (
+        {stateCategories.categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
             <input
               type="checkbox"
@@ -248,7 +253,13 @@ export default function CreateProduct() {
         ))}
       </div>
 
-      <button disabled={isLoading} className={`btn w-2/12 mx-auto `}>{isLoading ? "Ładowanie..." : "Dodaj produkt"}</button>
+      <button disabled={isLoading} className={`btn w-2/12 mx-auto `}>
+      {isLoading ?
+        <LoadingSpinner />
+        :
+        "Dodaj produkt"
+      }
+      </button>
       {error && <div className="m-2 mx-auto error">{error}</div>}
       {outcome && <div className="p-2 m-2 mx-auto text-green-500 bg-green-100 border border-green-500">{outcome}</div>}
     </form>

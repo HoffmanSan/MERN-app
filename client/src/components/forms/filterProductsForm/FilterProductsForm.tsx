@@ -1,9 +1,6 @@
 // Imports
 import { useState } from "react";
 
-// Components
-import { CheckboxInput } from "../../index";
-
 // TS types
 type Category = {
   name: string,
@@ -35,7 +32,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
   }
 
   return (
-    <form className="p-5 bg-white" onSubmit={(e) => handleSubmit(e)}>
+    <form className="p-5 bg-white shadow-md h-min" onSubmit={(e) => handleSubmit(e)}>
       <h2>Filtry</h2>
 
       <h3 className="py-1 text-lg font-bold">Cena</h3>
@@ -76,7 +73,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
           </div>
         ))}
       </div>
-      <button className="float-right btn">Szukaj</button>
+      <button className="float-right mt-5 btn">Szukaj</button>
     </form>
   )
 }

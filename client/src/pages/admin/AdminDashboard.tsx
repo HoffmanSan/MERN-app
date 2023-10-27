@@ -3,28 +3,33 @@ import { useState, useEffect } from "react";
 import { useProductsContext } from "../../hooks/useProductsContext";
 import { useCategoriesContext } from "../../hooks/useCategoriesContext";
 import { useUsersContext } from "../../hooks/useUsersContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import axios from "axios"
 
 // Components
 import { Products, Categories, Users } from "../../components/index";
 
 export default function AdminPanel() {
+  const [error, setError] = useState("")
   const [currentPanel, setCurrentPanel] = useState<string>("Products")
-  const {state: stateUsers, dispatch } = useUsersContext();
+  const { state: stateAuth } = useAuthContext();
+  const { state: stateUsers, dispatch } = useUsersContext();
   const { state: stateProducts } = useProductsContext();
   const { state: stateCategories } = useCategoriesContext();
 
   useEffect(() => {
     const getUsers = async () => {
-      const response = await axios.get("/api/users");
-
-      if (response) {
-        dispatch({type: "SET_USERS", payload: response.data})
-      }
+      await axios.get("/api/users", {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
+        .then((response) => {
+          dispatch({type: "SET_USERS", payload: response.data})
+        })
+        .catch(error => {
+          setError(error.message)
+        })
     }
 
     getUsers();
-  }, [])
+  }, [dispatch])
 
   const showCorrectPanel = () => {
     switch (currentPanel) {
@@ -68,7 +73,8 @@ export default function AdminPanel() {
         </ul>
       </div>
 
-      {showCorrectPanel()}
+      {!error && showCorrectPanel()}
+      {error && <div className="mx-auto mt-5 error">{error}</div>  }
       
     </div>
   )

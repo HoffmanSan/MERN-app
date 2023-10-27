@@ -33,10 +33,13 @@ export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
       <>
         <li className="hover:font-bold"><Link to="/login">Logowanie</Link></li>
         <li className="hover:font-bold"><Link to="/signup">Rejestracja</Link></li>
-        <li className="hover:font-bold"><Link to="/admin">Admin</Link></li>
+        
       </>
       :
-      <li className="cursor-pointer hover:font-bold" onClick={() => logout()}>Wyloguj</li>
+      <>
+        {state.user.role === "Admin" && <li className="hover:font-bold"><Link to="/admin">Admin</Link></li>}
+        <li className="cursor-pointer hover:font-bold" onClick={() => logout()}>Wyloguj</li>
+      </>
       }
     </ul>
   )

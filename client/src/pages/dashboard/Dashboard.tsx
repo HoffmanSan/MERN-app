@@ -1,26 +1,22 @@
 // Imports
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useProductsContext } from "../../hooks/useProductsContext";
 import { useCategoriesContext } from "../../hooks/useCategoriesContext";
 
 // Components
 import { Carousel, FilterForm, ProductList } from "../../components/index";
 
-// Unique styles
-import "./dashboard.css"
-
 // TS types
 type Product = {
-  _id: number,
-  name: string,
-  price: number,
-  categories: string[],
-  description: string,
-  inStock: number,
+  _id: number
+  name: string
+  price: number
+  categories: string[]
+  description: string
+  inStock: number
   photoURLs: string[]
+  createdAt: Date
 }
-
-const CATEGORIES = ["Kuchenne AGD", "Elektronika", "Rowery i akcesoria", "Mechanika", "Sztuka", "RTV", "Hydraulika", "Ogród", "Garaż"]
 
 export default function Dashboard() {
   const { state: stateProducts } = useProductsContext();
@@ -66,12 +62,12 @@ export default function Dashboard() {
   
   return (
     <>
-      <div className="dashboard-row">
+      <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md">
         <h2>Najnowsze produkty</h2>
         <Carousel products={stateProducts.products}/>
       </div>
 
-      <div className="dashboard-row">
+      <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md">
         <h2>Szukaj produktów wg Kategorii</h2>
         <Carousel products={stateProducts.products}/>
       </div>

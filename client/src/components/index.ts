@@ -2,6 +2,8 @@
 export { default as Carousel } from "./carousel/Carousel";
 export { default as CheckboxInput } from "./checkboxInput/CheckboxInput";
 export { default as AuthForm } from "./forms/authForm/AuthForm";
+export { default as LoadingSpinner } from "./loadingSpinner/LoadingSpinner";
+export { default as Card } from "./card/Card";
 
 // Single Use Components
 export { default as Navbar } from "./navbar/Navbar";

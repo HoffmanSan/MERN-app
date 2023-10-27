@@ -4,8 +4,9 @@ import { createContext, useReducer } from "react";
 // TS types
 type Dispatch = (action: Action) => void
 type User = {
-  email: string,
+  email: string
   token: string
+  role: string
 }
 type Action = {
   type: "LOGIN" | "LOGOUT"
@@ -38,8 +39,6 @@ export const authReducer = (state: State, action: Action): State => {
 
 export const AuthContextProvider = ({children}: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, { user: user });
-
-  console.log("AuthContext state: ", state);
 
   return (
     <AuthContext.Provider value={{state, dispatch}}>

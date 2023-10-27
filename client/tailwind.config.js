@@ -9,7 +9,8 @@ module.exports = {
         main: ["Nunito"]
       },
       minWidth: {
-        "6": "25px"
+        "6": "25px",
+        "1/12": "8.333333%"
       },
       minHeight: {
         "6": "25px"

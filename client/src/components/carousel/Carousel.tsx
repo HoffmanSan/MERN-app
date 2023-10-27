@@ -3,12 +3,19 @@ import { Link } from 'react-router-dom';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
+// Components
+import { Card } from "../index";
+
 type CarouselElementProps = {
   products: {
-    _id: number,
-    name: string,
-    price: number,
+    _id: number
+    name: string
+    price: number
     categories: string[]
+    description: string
+    inStock: number
+    photoURLs: string[]
+    createdAt: Date
   }[]
 }
 
@@ -41,13 +48,8 @@ export default function CarouselElement({products}:CarouselElementProps) {
       draggable={false}
       removeArrowOnDeviceType={["tablet", "mobile"]}
     >
-    {products.map((item) => (
-      <div key={item._id} className="w-48 h-48 mx-auto mt-3 bg-gray-400">
-        <Link to={`/product/${item._id}`}>
-          <p className="text-lg text-white">{item.name}</p>
-          <p className="text-lg text-white">{item.price.toString()}</p>
-        </Link>
-      </div>
+    {products && products.map((item) => (
+      <Card product={item} key={item._id}/>
     ))}
     </Carousel>
   )

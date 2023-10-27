@@ -1,28 +1,35 @@
 // Imports
 import axios from "axios";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useProductsContext } from "../../../hooks/useProductsContext";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import { useDebounce } from "../../../hooks/useDebounce";
+
+// Components
+import { LoadingSpinner } from "../../index";
 
 // TS types
 type Product = {
-  _id: number,
-  name: string,
-  price: number,
-  categories: string[],
-  description: string,
-  inStock: number,
-  photoURLs: string[],
+  _id: number
+  name: string
+  price: number
+  categories: string[]
+  description: string
+  inStock: number
+  photoURLs: string[]
   photoCloudinaryId: string
+  createdAt: Date
 }
 type ShowProductsProps = {
   products: Product[],
 }
 
 export default function DisplayProductsPanel({products}: ShowProductsProps) {
+  const { state: stateAuth } = useAuthContext();
   const { dispatch } = useProductsContext();
   const [isDeleting, setIsDeleting] = useState(0);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState("");
 
   const debouncedQuery = useDebounce(query, 500)
 
@@ -39,16 +46,18 @@ export default function DisplayProductsPanel({products}: ShowProductsProps) {
 
   const deleteProduct = async (product: Product) => {
     setIsDeleting(product._id)
-    Promise.all([
-      await axios.delete(`/api/images/${product.photoCloudinaryId}`),
-      await axios.delete(`/api/products/${product._id}`)
+    await Promise.all([
+      axios.delete(`/api/images/${product.photoCloudinaryId}`),
+      axios.delete(`/api/products/${product._id}`, {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
     ])
     .then(() => {
-      setIsDeleting(0)
-      dispatch({type: "DELETE_PRODUCT", payload: [product]})
+      setIsDeleting(0);
+      dispatch({type: "DELETE_PRODUCT", payload: [product]});
     })
-    .catch(err => {
-      console.log(err)
+    .catch(error => {
+      setIsDeleting(0);
+      setError(error.message);
+      console.log(error.message);
     })
   }
 
@@ -64,6 +73,9 @@ export default function DisplayProductsPanel({products}: ShowProductsProps) {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
+
+      {error && <div className="mx-auto mb-5 error">{error}</div>}
+
       <table className="w-11/12 mx-auto border border-orange-400">
         <thead className="text-lg font-bold text-white">
           <tr>
@@ -93,17 +105,17 @@ export default function DisplayProductsPanel({products}: ShowProductsProps) {
               <td className="w-3/12">{product.description.slice(0, 75)}{product.description.length >= 75 && "..."}</td>
               <td className="w-2/12">
                 {product.photoURLs.map(item => (
-                  <a key={item} href={item} target="_blank" className="p-2 m-1 text-white bg-orange-400 rounded-md hover:bg-orange-600"><button>{1 + product.photoURLs.indexOf(item)}</button></a>
+                  <a key={item} href={item} target="_blank" rel="noreferrer" className="m-1 btn"><button>{1 + product.photoURLs.indexOf(item)}</button></a>
                 ))}
               </td>
               <td>
-                <button className="p-1 px-2 m-1 text-center text-white bg-orange-400 rounded-md hover:bg-orange-600">Edytuj</button>
+                <button className="m-1 btn">Edytuj</button>
                 <button
                   onClick={() => deleteProduct(product)}
                   disabled={isDeleting !== 0}
-                  className="p-1 px-2 m-1 text-center text-white bg-orange-400 rounded-md hover:bg-orange-600"
+                  className="m-1 btn"
                 >
-                  {isDeleting === product._id ? "..." : "Usuń"}
+                  {isDeleting === product._id ? <LoadingSpinner /> : "Usuń"}
                 </button>
               </td>
             </tr>

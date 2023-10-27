@@ -6,14 +6,15 @@ import { DisplayProducts, CreateProduct } from "../.."
 
 // TS types
 type Product = {
-  _id: number,
-  name: string,
-  price: number,
-  categories: string[],
-  description: string,
-  inStock: number,
-  photoURLs: string[],
+  _id: number
+  name: string
+  price: number
+  categories: string[]
+  description: string
+  inStock: number
+  photoURLs: string[]
   photoCloudinaryId: string
+  createdAt: Date
 }
 type ProductsProps = {
   products: Product[]

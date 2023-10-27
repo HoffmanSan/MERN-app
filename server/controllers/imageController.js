@@ -33,12 +33,15 @@ const deleteImage = async (req, res) => {
     .then(async () => {
       await cloudinary.api.delete_folder(`Sklepico/products/${id}`)
       .then(result => {
-        res.status(200).json(result)
+          res.status(200).json(result)
         })
         .catch(error => {
-          res.status(400).json(error)
+          res.status(400).json({error: error.message})
         })
-    });
+    })
+    .catch(error => {
+      res.status(400).json({error: error.message})
+    })
 }
 
 module.exports = {

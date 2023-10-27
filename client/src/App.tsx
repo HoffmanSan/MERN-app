@@ -1,6 +1,6 @@
 // Imports
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useProductsContext } from "./hooks/useProductsContext";
 import { useCategoriesContext } from "./hooks/useCategoriesContext";
 import { useAuthContext } from "./hooks/useAuthContext";
@@ -45,10 +45,17 @@ function App() {
       
         <Routes>
           <Route path="/" element={<Dashboard />}/>
-          <Route path="/login" element={state.user ? <Dashboard /> : <Login />}/>
-          <Route path="/signup" element={state.user ? <Dashboard /> : <Signup />}/>
-          <Route path="/product/:id" element={<Product />}/>
-          <Route path="/admin" element={<UsersContextProvider><AdminDashboard /></UsersContextProvider>}/>
+          <Route path="/login" element={state.user ? <Navigate to="/"/> : <Login />}/>
+          <Route path="/signup" element={state.user ? <Navigate to="/"/> : <Signup />}/>
+          <Route path="/products/:id" element={<Product />}/>
+          
+          <Route path="/admin" element={state.user && state.user.role === "Admin" ?
+            <UsersContextProvider>
+              <AdminDashboard />
+            </UsersContextProvider>
+          : 
+            <Navigate to="/"/>}
+          />
         </Routes>
       </BrowserRouter>
     </div>
