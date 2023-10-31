@@ -6,6 +6,7 @@ type User = {
   email: string
   _id: number
   createdAt: Date
+  role: string
 }
 type Dispatch = (action: Action) => void
 type Action = {
@@ -30,10 +31,7 @@ export const usersReducer = (state: State, action: Action): State => {
     case "DELETE_USER":
       return {
         users: (state.users).filter(item => {
-          if (action.payload[0]._id !== item._id) {
-            return true
-          }
-            return false
+          return action.payload[0]._id !== item._id
         })
       }
     default:

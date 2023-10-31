@@ -28,7 +28,7 @@ const productSchema = new Schema({
     type: [String],
     required: true
   },
-  photoCloudinaryId: {
+  cloudinaryFolderId: {
     type: String,
     required: true
   }

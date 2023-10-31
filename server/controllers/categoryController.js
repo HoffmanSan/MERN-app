@@ -26,13 +26,13 @@ const deleteCategory = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such category."});
+    return res.status(404).json({error: "Nie ma takiej kategorii"});
   }
 
   const category = await Category.findOneAndDelete({_id: id});
 
   if (!category) {
-    return res.status(404).json({error: "No such category."});
+    return res.status(404).json({error: "Nie ma takiej kategorii"});
   }
 
   res.status(200).json({category});
@@ -43,7 +43,7 @@ const updateCategory = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such category."});
+    return res.status(404).json({error: "Nie ma takiej kategorii"});
   }
 
   const category = await Category.findOneAndUpdate(
@@ -53,7 +53,7 @@ const updateCategory = async (req, res) => {
   );
 
   if (!category) {
-    return res.status(404).json({error: "No such category."});
+    return res.status(404).json({error: "Nie ma takiej kategorii"});
   }
 
   res.status(200).json({category});

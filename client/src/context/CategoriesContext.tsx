@@ -33,10 +33,7 @@ export const productsReducer = (state: State, action: Action): State => {
     case "DELETE_CATEGORY":
       return {
         categories: (state.categories).filter(item => {
-          if (action.payload[0]._id !== item._id) {
-            return true
-          }
-            return false
+          return action.payload[0]._id !== item._id
         })
       }
     default:

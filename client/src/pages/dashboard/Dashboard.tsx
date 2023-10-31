@@ -4,7 +4,7 @@ import { useProductsContext } from "../../hooks/useProductsContext";
 import { useCategoriesContext } from "../../hooks/useCategoriesContext";
 
 // Components
-import { Carousel, FilterForm, ProductList } from "../../components/index";
+import { CardsCarousel, FilterForm, LoadingSpinner, ProductList } from "../../components/index";
 
 // TS types
 type Product = {
@@ -62,21 +62,31 @@ export default function Dashboard() {
   
   return (
     <>
-      <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md">
+      <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md min-h-max">
         <h2>Najnowsze produkty</h2>
-        <Carousel products={stateProducts.products}/>
+        {stateProducts.products.length > 0 ? <CardsCarousel products={stateProducts.products}/> : <h3 className="text-center text-gray-300">Ładowanie...</h3> }
       </div>
 
       <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md">
         <h2>Szukaj produktów wg Kategorii</h2>
-        <Carousel products={stateProducts.products}/>
+        {stateProducts.products.length > 0 ? <CardsCarousel products={stateProducts.products}/> : <h3 className="text-center text-gray-300">Ładowanie...</h3>}
       </div>
+
+      {stateProducts.products.length > 0 ?
 
       <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max">
         <FilterForm categoryList={stateCategories.categories} handleFilter={handleFilter}/>
 
         <ProductList filteredProducts={filtersApplied ? filteredProducts : stateProducts.products} />
       </div>
+
+      :
+
+      <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white">
+        <h3 className="text-gray-300">Ładowanie...</h3>
+      </div>
+
+      }
 
       <div className="sg h-80"></div>
     </>

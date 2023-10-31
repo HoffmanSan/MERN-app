@@ -1,5 +1,5 @@
 // Imports
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useProductsContext } from "./hooks/useProductsContext";
 import { useCategoriesContext } from "./hooks/useCategoriesContext";
@@ -8,9 +8,10 @@ import { UsersContextProvider } from "./context/UsersContext";
 import axios from "axios"
 
 // Pages & Components
-import { Dashboard, Login, Signup, Product, AdminDashboard } from "./pages/index";
+import { Dashboard, Login, Signup } from "./pages/index";
 import { Navbar } from "./components/index";
-
+const Product = lazy(() => import("./pages/product/Products"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 
 function App() {
   const { state } = useAuthContext();
@@ -19,20 +20,24 @@ function App() {
 
   useEffect(() => {
     const getProducts = async () => {
-      const response = await axios.get("/api/products");
-
-      if (response) {
-      dispatchProducts({type: "SET_PRODUCTS", payload: response.data});
-      }
-    }
+      await axios.get("/api/products")
+      .then(response => {
+        dispatchProducts({type: "SET_PRODUCTS", payload: response.data})
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    };
 
     const getCategories = async () => {
-      const response = await axios.get("/api/categories");
-      
-      if (response) {
-        dispatchCategories({type: "SET_CATEGORIES", payload: response.data})
-      }
-    }
+      await axios.get("/api/categories")
+      .then(response => {
+        dispatchCategories({type: "SET_CATEGORIES", payload: response.data});
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    };
 
     getProducts();
     getCategories();
@@ -47,12 +52,14 @@ function App() {
           <Route path="/" element={<Dashboard />}/>
           <Route path="/login" element={state.user ? <Navigate to="/"/> : <Login />}/>
           <Route path="/signup" element={state.user ? <Navigate to="/"/> : <Signup />}/>
-          <Route path="/products/:id" element={<Product />}/>
+          <Route path="/products/:id" element={ <Suspense><Product /></Suspense>}/>
           
-          <Route path="/admin" element={state.user && state.user.role === "Admin" ?
-            <UsersContextProvider>
-              <AdminDashboard />
-            </UsersContextProvider>
+          <Route path="/admin" element={state.user && state.user.role === "Administrator" ?
+            <Suspense>
+              <UsersContextProvider>
+                  <AdminDashboard />
+              </UsersContextProvider>
+            </Suspense>
           : 
             <Navigate to="/"/>}
           />

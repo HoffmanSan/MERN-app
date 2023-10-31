@@ -4,7 +4,6 @@ import { useConvertImages } from "../../../hooks/useConvertImages";
 import { useProductsContext } from "../../../hooks/useProductsContext";
 import { useCategoriesContext } from "../../../hooks/useCategoriesContext";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import { nanoid } from "nanoid";
 import axios from "axios";
 
 // COMPONENTS
@@ -12,30 +11,38 @@ import { LoadingSpinner } from "../../index";
 
 // TYPES
 type Product = {
-  name: string,
-  price: number,
-  description: string,
-  inStock: number,
-  categories: string[],
-  photoURLs: string[],
-  cloudinaryFolderId: string,
+  _id: number
+  name: string
+  price: number
+  description: string
+  inStock: number
+  categories: string[]
+  photoURLs: string[]
+  cloudinaryFolderId: string
+  createdAt: Date
+}
+type UpdateProductProps = {
+  updatedProduct: Product
 }
 
-export default function CreateProduct() {
+export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
   // LOCAL STATES
-  const [isAdding, setIsAdding] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState("");
   const [outcome, setOutcome] = useState("");
-  const [imageSizes, setImageSizes] = useState<File[]>([]);
+  const [imagesSize, setImagesSize] = useState<File[]>([]);
   const [imageList, setImageList] = useState<File[] | null>(null);
+  const [showPreviousPhotos, setShowPreviousPhotos] = useState(true)
   const [product, setProduct] = useState<Product>({
-    name: "",
-    price: 0,
-    description: "",
-    inStock: 0,
-    categories: [],
-    photoURLs: [],
-    cloudinaryFolderId: nanoid()
+    _id: updatedProduct._id,
+    name: updatedProduct.name,
+    price: updatedProduct.price,
+    description: updatedProduct.description,
+    inStock: updatedProduct.inStock,
+    categories: updatedProduct.categories,
+    photoURLs: updatedProduct.photoURLs,
+    cloudinaryFolderId: updatedProduct.cloudinaryFolderId,
+    createdAt: updatedProduct.createdAt
   });
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -51,18 +58,17 @@ export default function CreateProduct() {
   // ON FILE INPUT CHANGE
   const handleFileChange = (e: ChangeEvent) => {
     setImageList(null);
-    setImageSizes([]);
+    setImagesSize([]);
     setError("");
-
+    
     let files = (e.target as HTMLInputElement).files
     
-    // validation
     if (!files || files.length === 0) {
       return 
     }
 
     let filesArray = Object.values(files);
-    setImageSizes(filesArray);
+    setImagesSize(filesArray);
 
     if (filesArray.length > 5) {
       setError("Można dodać maksymalnie 5 plików");
@@ -98,28 +104,11 @@ export default function CreateProduct() {
     }
   };
 
-  // RESET FORM DATA
-  const resetForm = () => {
-    setProduct({
-      name: "",
-      price: 0,
-      description: "",
-      inStock: 0,
-      categories: [],
-      photoURLs: [],
-      cloudinaryFolderId: nanoid()
-    });
-    setImageList(null);
-    setImageSizes([]);
-    setError("");
-    if (fileInput.current != null) {
-      fileInput.current.value = "";
-    }
-  };
-
-  // ADD PRODUCT
+  // UPDATE PRODUCT
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setOutcome("");
+    setError("");
 
     // validation
     if (!product.name || !product.price || !product.description || !product.inStock) {
@@ -130,52 +119,78 @@ export default function CreateProduct() {
       setError("Przydziel kategorie do produktu")
       return
     }
-    if (!imageList || imageList.length === 0) {
-      setError("Dodaj zdjęcia produktu");
-      return
-    }
-    
-    setError("");
-    setIsAdding(true);
+  
+    setIsUpdating(true);
 
-    // convert product images to base64 strings, upload them to storage, and save their urls within product data
-    Promise.all(
-      imageList.map(item => {
+    // if there is no images change
+    if (!imageList || imageList.length === 0) {
+
+      // update base product data in the database
+      return axios.patch(
+        `/api/products/${product._id}`,
+        { ...product },
+        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
+      )
+      .then(() => {
+        dispatch({type: "UPDATE_PRODUCT", payload: [product]});
+        setIsUpdating(false);
+        setOutcome("Produkt zaktualizowany");
+        setShowPreviousPhotos(false);
+      })
+      .catch((error) => {
+        setIsUpdating(false);
+        setError(error.message);
+        console.log(error);
+      })
+    }
+
+    // if there are new images
+    product.photoURLs = [];
+    setShowPreviousPhotos(false);
+    
+    // delete previous images
+    Promise.all([
+      await axios.delete(
+        `/api/images/${product.cloudinaryFolderId}`
+      ),
+      ...imageList.map(item => {
         return new Promise(async (resolve, reject) => {
+
+          // convert new product images to base64 strings
           const base64String = await convertImageToBase64(item);
-          
+
+          // upload images to storage, and save their urls within product data
           axios.post(
             "/api/images",
             { image: base64String, folder: product.cloudinaryFolderId }
           )
           .then((response) => {
+            console.log("resolved")
             resolve(product.photoURLs.push(response.data));
           })
         })
       })
-    ).then(() => {
-      // add product to database
-      axios.post(
-        "/api/products",
+    ])
+    .then(() => {
+      // update product in the database
+      axios.patch(
+        `/api/products/${product._id}`,
         { ...product },
         { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
       )
-      .then((response) => {
-        dispatch({type: "CREATE_PRODUCT", payload: [response.data]})
-        resetForm();
-        setIsAdding(false);
-        setOutcome("Produkt dodany");
-        setTimeout(() => {
-          setOutcome("");
-        }, 5000);
+      .then(() => {
+        dispatch({type: "UPDATE_PRODUCT", payload: [product]});
+        setIsUpdating(false);
+        setOutcome("Produkt zaktualizowany");
+        setShowPreviousPhotos(false);
       })
       .catch((error) => {
-        setIsAdding(false);
+        setIsUpdating(false);
         setError(error.message);
         console.log(error);
       })
     }).catch(error => {
-      setIsAdding(false);
+      setIsUpdating(false);
       setError(error.message);
       console.log(error);
     })
@@ -183,7 +198,10 @@ export default function CreateProduct() {
 
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
-      <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md">NOWY PRODUKT</h2>
+      
+      <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md">EDYTUJ PRODUKT</h2>
+
+      {/* GENERAL DATA SECTION */}
       
       <h3 className="p-1 text-white bg-orange-400">Dane</h3>
 
@@ -229,6 +247,8 @@ export default function CreateProduct() {
         />
       </label>
 
+      {/* CATEGORIES SECTION */}
+      
       <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
 
       <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
@@ -246,32 +266,69 @@ export default function CreateProduct() {
         ))}
       </div>
 
+      {/* IMAGES SECTION */}
+      
       <h3 className="p-1 m-2 text-white bg-orange-400">Zdjęcia</h3>
-
-      <div className="m-2 mb-4 ">
+      
+      <div className="m-2 mb-4">
         <input
           ref={fileInput}
           onChange={handleFileChange}
           type="file"
           multiple
         />
-        {imageSizes && imageSizes.map(item => (
-          <Fragment key={item.name}>
-            <br />
-            <span>{item.name.slice(0, 25)}</span> - <span>{(item.size / 1000000).toFixed(2)} mb</span>
-          </Fragment>
-        ))}
+
+        <div className={`pt-2 w-6/12 mx-auto ${showPreviousPhotos && imagesSize.length !== 0 ? "grid grid-cols-2" : ""}`}>
+
+          <div>
+            {imagesSize.length !== 0 &&
+              <h3>Nowe zdjęcia:</h3>
+            }
+            {imagesSize.map(item => (
+              <Fragment key={item.name}>
+                <span>{item.name.slice(0, 25)}</span> - <span>{(item.size / 1000000).toFixed(2)} mb</span>
+                <br />
+              </Fragment>
+            ))}
+          </div>
+
+          {showPreviousPhotos && 
+            <div>
+              {product.photoURLs.length > 0 &&
+                <h3>Obecne zdjęcia:</h3>
+              }
+              {product.photoURLs.map(item => (
+                <Fragment key={item}>
+                  <a href={item} target="_blank" rel="noreferrer" className="hover:font-bold">
+                    Zdjęcie {product.photoURLs.indexOf(item) + 1}
+                  </a>
+                  <br />
+                </Fragment>
+              ))}
+            </div>
+          }
+
+        </div>
+        {imagesSize.length !== 0 &&
+          <p className="mt-3">
+            <span className="font-bold">UWAGA!</span> Jeżeli dodasz nowe pliki to zastąpią one poprzednie zdjęcia
+          </p>
+        }
       </div>
 
-      <button disabled={isAdding} className={`btn w-2/12 mx-auto `}>
-      {isAdding ?
+      {/* SUBMIT BUTTON */}
+
+      <button disabled={isUpdating} className={`btn w-2/12 mx-auto `}>
+      {isUpdating ?
         <LoadingSpinner />
         :
-        "Dodaj produkt"
+        "Aktualizuj produkt"
       }
       </button>
+
       {error && <div className="m-2 mx-auto error">{error}</div>}
       {outcome && <div className="p-2 m-2 mx-auto text-green-500 bg-green-100 border border-green-500">{outcome}</div>}
+      
     </form>
   )
 }

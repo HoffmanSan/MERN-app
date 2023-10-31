@@ -1,79 +1,99 @@
-// Imports
+// IMPORTS
 import { useMemo, useState } from "react";
-import axios from "axios";
 import { useCategoriesContext } from "../../../hooks/useCategoriesContext";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import axios from "axios";
 
-// Components
+// COMPONENTS
 import { LoadingSpinner } from "../../index";
 
-// TS types
+// TYPES
 type Category = {
   name: string,
   _id: number
 }
-type DisplayCategoriesProps = {
-  categories: Category[]
-}
 
-export default function DisplayCategories({categories}: DisplayCategoriesProps) {
-  const { state: stateAuth } = useAuthContext();
-  const { dispatch } = useCategoriesContext();
+export default function DisplayCategories() {
+  // LOCAL STATES
   const [newCategory, setNewCategory] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(0);
+  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
-
+  
+  // GLOBAL STATES
+  const { state: authState } = useAuthContext();
+  const userAuth = authState.user;
+  const { state: categoriesState, dispatch } = useCategoriesContext();
+  const categories = categoriesState.categories;
+  
+  // SEARCH BAR LOGIC
   const debouncedQuery = useDebounce(query, 500);
 
-  const filteredCategories = useMemo(() => { return categories.filter(item => 
-    item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
-  )}, [debouncedQuery, categories])
+  const filteredCategories = useMemo(() => {
+    if (!debouncedQuery) {
+      return categories
+    }
+    return categories.filter(item => 
+      item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
+    )
+  }, [debouncedQuery, categories])
 
+  // ADD CATEGORY
   const addCategory = async (newCategory: string) => {
+    
     if (!newCategory) {
       setError("Uzupełnij pole nowej kategorii")
       return
     }
 
-    // check if category already exists
-    if (categories.filter(item => { return Object.values(item).indexOf(newCategory) > -1 }).length > 0) {
+    if (categories.filter(item => {
+        return Object.values(item).indexOf(newCategory) > -1
+      }).length > 0) {
       setError("Ta kategoria już istnieje")
       return
     }
     
-    setError("")
-    setLoading(true)
+    setError("");
+    setIsAdding(true);
     
-    await axios.post("/api/categories", { name: newCategory }, {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
-      .then((response) => {
-        setLoading(false);
-        dispatch({type: "CREATE_CATEGORY", payload: response.data})
-        setNewCategory("")
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log(error.message);
-        setError(error.message);
-      })
-  }
+    await axios.post(
+      "/api/categories",
+      { name: newCategory },
+      { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
+    )
+    .then((response) => {
+      setIsAdding(false);
+      dispatch({type: "CREATE_CATEGORY", payload: response.data});
+      setNewCategory("");
+    })
+    .catch((error) => {
+      setIsAdding(false);
+      setError(error.message);
+      console.log(error.message);
+    })
+  };
 
+  // DELETE CATEGORY
   const deleteCategory = async (category: Category) => {
-    setIsDeleting(category._id)
-    setError("")
+    setIsDeleting(category._id);
+    setError("");
     
-    await axios.delete(`/api/categories/${category._id}`, {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
-      .then(() => {
-        dispatch({type: "DELETE_CATEGORY", payload: [category]})
-        setIsDeleting(0)
-      })
-      .catch((err) => {
-        setIsDeleting(0)
-        setError(err.message)
-      })
-  }
+    await axios.delete(
+      `/api/categories/${category._id}`,
+      { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
+    )
+    .then(() => {
+      setIsDeleting(0);
+      dispatch({type: "DELETE_CATEGORY", payload: [category]});
+    })
+    .catch((error) => {
+      setIsDeleting(0);
+      setError(error.message);
+      console.log(error.message);
+    })
+  };
 
   return (
     <>
@@ -90,7 +110,7 @@ export default function DisplayCategories({categories}: DisplayCategoriesProps) 
           className="p-2 font-bold text-white bg-orange-400 min-w-1/12 hover:bg-orange-600"
           onClick={() => addCategory(newCategory)}
         >
-          {loading ? <LoadingSpinner /> : "Dodaj kategorie"}
+          {isAdding ? <LoadingSpinner /> : "Dodaj kategorie"}
         </button>
       </div>
 
@@ -120,8 +140,8 @@ export default function DisplayCategories({categories}: DisplayCategoriesProps) 
               <td>{item.name}</td>
               <td>
                 <button
-                  disabled={isDeleting !== 0}
                   className="m-1 btn"
+                  disabled={isDeleting !== 0}
                   onClick={() => deleteCategory(item)}
                 >
                   {isDeleting === item._id ? <LoadingSpinner /> : "Usuń"}

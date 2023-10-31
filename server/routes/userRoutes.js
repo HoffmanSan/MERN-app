@@ -6,6 +6,7 @@ const requireAuth = require("../middleware/requireAuth");
 const {
   getUser,
   getUsers,
+  updateUser,
   deleteUser,
 } = require("../controllers/userController");
 
@@ -21,7 +22,10 @@ router.get("/", getUsers);
 // GET a single user
 router.get("/:id", getUser);
 
-// DELETE a product
+// UPDATE a user
+router.patch("/:id", updateUser)
+
+// DELETE a user
 router.delete("/:id", deleteUser);
 
 module.exports = router;

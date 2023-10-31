@@ -17,7 +17,7 @@ const requireAuth = async (req, res, next) => {
 
     req.user = await User.findOne({ _id });
     
-    if (req.user.role !== "Admin") {
+    if (req.user.role !== "Administrator") {
       return res.status(401).json({error: "Odrzucono zapytanie o dane z powodu braku uprawnień Administratora"})
     }
     

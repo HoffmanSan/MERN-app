@@ -37,7 +37,7 @@ export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
       </>
       :
       <>
-        {state.user.role === "Admin" && <li className="hover:font-bold"><Link to="/admin">Admin</Link></li>}
+        {state.user.role === "Administrator" && <li className="hover:font-bold"><Link to="/admin">Admin</Link></li>}
         <li className="cursor-pointer hover:font-bold" onClick={() => logout()}>Wyloguj</li>
       </>
       }

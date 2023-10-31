@@ -1,10 +1,10 @@
-// Imports
+// IMPORTS
 import { useState } from "react";
 
-// Components
-import { DisplayProducts, CreateProduct } from "../.."
+// COMPONENTS
+import { DisplayProducts, CreateProduct, UpdateProduct } from "../.."
 
-// TS types
+// TYPES
 type Product = {
   _id: number
   name: string
@@ -13,27 +13,26 @@ type Product = {
   description: string
   inStock: number
   photoURLs: string[]
-  photoCloudinaryId: string
+  cloudinaryFolderId: string
   createdAt: Date
 }
-type ProductsProps = {
-  products: Product[]
-}
 
-export default function Products({products} : ProductsProps) {
-  const [showPanel, setShowPanel] = useState(false);
+export default function Products() {
+  const [showPanel, setShowPanel] = useState("Display");
+  const [updatedProduct, setUpdatedProduct] = useState<Product>();
 
   return (
     <>
       <button
-        onClick={() => {setShowPanel(!showPanel)}}
         className="w-3/12 mx-auto mt-6 btn"
+        onClick={() => setShowPanel(showPanel === "Display" ? "Create" : "Display")}
       >
-        {!showPanel ? "Dodaj produkt" : "Pokaż produkty"}
+        {showPanel === "Display" ? "Dodaj produkt" : "Pokaż produkty"}
       </button>
 
-      {showPanel === false && <DisplayProducts products={products}/>}
-      {showPanel === true && <CreateProduct />}
+      {showPanel === "Display" && <DisplayProducts changePanel={setShowPanel} setUpdatedProduct={setUpdatedProduct}/>}
+      {showPanel === "Create" && <CreateProduct />}
+      {showPanel === "Edit" && updatedProduct && <UpdateProduct updatedProduct={updatedProduct}/>}
     </>
   )
 }

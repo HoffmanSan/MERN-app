@@ -1,7 +1,5 @@
 // Imports
 import { useState, useEffect } from "react";
-import { useProductsContext } from "../../hooks/useProductsContext";
-import { useCategoriesContext } from "../../hooks/useCategoriesContext";
 import { useUsersContext } from "../../hooks/useUsersContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import axios from "axios"
@@ -13,34 +11,32 @@ export default function AdminPanel() {
   const [error, setError] = useState("")
   const [currentPanel, setCurrentPanel] = useState<string>("Products")
   const { state: stateAuth } = useAuthContext();
-  const { state: stateUsers, dispatch } = useUsersContext();
-  const { state: stateProducts } = useProductsContext();
-  const { state: stateCategories } = useCategoriesContext();
+  const { dispatch } = useUsersContext();
 
   useEffect(() => {
     const getUsers = async () => {
-      await axios.get("/api/users", {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
-        .then((response) => {
-          dispatch({type: "SET_USERS", payload: response.data})
-        })
-        .catch(error => {
-          setError(error.message)
-        })
+      await axios.get("/api/users", { headers: {'Authorization': `Bearer ${stateAuth.user?.token}`} })
+      .then((response) => {
+        dispatch({ type: "SET_USERS", payload: response.data })
+      })
+      .catch(error => {
+        setError(error.message)
+      })
     }
 
     getUsers();
-  }, [dispatch])
+  }, [dispatch, stateAuth.user?.token])
 
   const showCorrectPanel = () => {
     switch (currentPanel) {
       case ("Products"):
-        return <Products products={stateProducts.products}/>
-      case "Użytkownicy":
-        return <Users users={stateUsers.users}/>
+        return <Products/>
+      case "Users":
+        return <Users/>
       case "Categories":
-        return <Categories categories={stateCategories.categories}/>
+        return <Categories/>
       default:
-        return <div>404 ERROR</div>
+        return <div>404 Page not found</div>
     }
   }
 
@@ -57,8 +53,8 @@ export default function AdminPanel() {
           </li>
 
           <li
-            className={`p-5 font-bold cursor-pointer hover:bg-orange-600 ${currentPanel === "Użytkownicy" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
-            onClick={() => setCurrentPanel("Użytkownicy")}
+            className={`p-5 font-bold cursor-pointer hover:bg-orange-600 ${currentPanel === "Users" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
+            onClick={() => setCurrentPanel("Users")}
           >
             UŻYTKOWNICY
           </li>

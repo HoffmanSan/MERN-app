@@ -1,12 +1,11 @@
 // Imports
-import { Link } from 'react-router-dom';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
 // Components
-import { Card } from "../index";
+import { ProductCard } from "../../index";
 
-type CarouselElementProps = {
+type CardsCarouselProps = {
   products: {
     _id: number
     name: string
@@ -41,16 +40,20 @@ const responsive = {
   }
 };
 
-export default function CarouselElement({products}:CarouselElementProps) {
+export default function CardsCarousel({products}:CardsCarouselProps) {
   return (
     <Carousel
       responsive={responsive}
       draggable={false}
       removeArrowOnDeviceType={["tablet", "mobile"]}
     >
-    {products && products.map((item) => (
-      <Card product={item} key={item._id}/>
-    ))}
+      {products ?
+        products.map((item) => (
+          <ProductCard product={item} key={item._id}/>
+        ))
+      :
+        <h1>LOADING...</h1>
+      }
     </Carousel>
   )
 }

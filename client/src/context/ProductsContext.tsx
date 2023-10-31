@@ -10,12 +10,12 @@ type Product = {
   description: string
   inStock: number
   photoURLs: string[]
-  photoCloudinaryId: string
+  cloudinaryFolderId: string
   createdAt: Date
 }
 type Dispatch = (action: Action) => void
 type Action = {
-  type: "SET_PRODUCTS" | "CREATE_PRODUCT" | "DELETE_PRODUCT",
+  type: "SET_PRODUCTS" | "CREATE_PRODUCT" | "DELETE_PRODUCT" | "UPDATE_PRODUCT",
   payload: Product[]
 }
 type State = {
@@ -40,12 +40,18 @@ export const productsReducer = (state: State, action: Action): State => {
     case "DELETE_PRODUCT":
       return {
         products: (state.products).filter(item => {
-          if (action.payload[0]._id !== item._id) {
-            return true
-          }
-            return false
+          return action.payload[0]._id !== item._id
         })
       }
+      case "UPDATE_PRODUCT":
+        return {
+          products: (state.products).map(item => {
+            if (action.payload[0]._id === item._id) {
+              return action.payload[0]
+            }
+              return item
+          })
+        }
     default:
       return state
   }

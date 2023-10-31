@@ -1,50 +1,63 @@
-// Imports
+// IMPORTS
 import { useState, useMemo } from "react";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { useUsersContext } from "../../../hooks/useUsersContext";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import axios from "axios";
 
-// Components
+// COMPONENTS
 import { LoadingSpinner } from "../../index";
 
-// TS types
+// TYPES
 type User = {
   email: string
   createdAt: Date
   _id: number
-}
-type UsersProps = {
-  users: User[];
+  role: string
 }
 
-export default function Users({users}: UsersProps) {
-  const { state: stateAuth } = useAuthContext();
-  const { dispatch } = useUsersContext();
-  const [query, setQuery] = useState("");
-  const [isDeleting, setIsDeleting] = useState(0);
+export default function Users() {
+  // LOCAL STATES
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
 
+  // GLOBAL STATES
+  const { state: stateAuth } = useAuthContext();
+  const userAuth = stateAuth.user;
+  const { state: stateUsers, dispatch } = useUsersContext();
+  const users = stateUsers.users;
+
+  // SEARCH BAR LOGIC
   const debouncedQuery = useDebounce(query, 500);
 
-  const filteredUsers = useMemo(() => { return users.filter(item => 
-    Object.values(item).toString().toLowerCase().includes(debouncedQuery.toLowerCase())
-  )}, [debouncedQuery, users])
+  const filteredUsers = useMemo(() => {
+    if (!debouncedQuery) {
+      return users
+    }
+    return users.filter(item => 
+      Object.values(item).toString().toLowerCase().includes(debouncedQuery.toLowerCase())
+    )
+  }, [debouncedQuery, users])
 
+  // DELETE USER
   const deleteUser = async (user: User) => {
     setIsDeleting(user._id);
     setError("");
     
-    axios.delete(`/api/users/${user._id}`, {headers: { 'Authorization': `Bearer ${stateAuth.user?.token}` }})
-      .then(() => {
-        setIsDeleting(0);
-        dispatch({type: "DELETE_USER", payload: [user]});
-      })
-      .catch(error => {
-        setIsDeleting(0);
-        setError(error.message);
-        console.log(error.message);
-      })
+    axios.delete(
+      `/api/users/${user._id}`,
+      { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
+    )
+    .then(() => {
+      setIsDeleting(null);
+      dispatch({ type: "DELETE_USER", payload: [user] });
+    })
+    .catch(error => {
+      setIsDeleting(null);
+      setError(error.message);
+      console.log(error.message);
+    })
   }
   
   return (
@@ -67,6 +80,7 @@ export default function Users({users}: UsersProps) {
           <tr>
             <td>Email</td>
             <td>Dołączył</td>
+            <td>Uprawnienia</td>
             <td>Opcje</td>
           </tr>
         </thead>
@@ -75,8 +89,17 @@ export default function Users({users}: UsersProps) {
             <tr key={user._id}>
               <td>{user.email}</td>
               <td>{(new Date(user.createdAt)).toLocaleDateString('pl-PL')}</td>
+              <td>{user.role}</td>
               <td>
-                <button className="m-1 btn" onClick={() => deleteUser(user)}>{isDeleting === user._id ? <LoadingSpinner /> : "Usuń"}</button>
+                {user.role !== "Administrator" &&
+                  <button
+                    className="m-1 btn"
+                    disabled={isDeleting !== null}
+                    onClick={() => deleteUser(user)}
+                  >
+                    {isDeleting === user._id ? <LoadingSpinner /> : "Usuń"}
+                  </button>
+                }
               </td>
             </tr>
           ))}

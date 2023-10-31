@@ -14,30 +14,51 @@ const getUser = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such user."});
+    return res.status(404).json({error: "Nie ma takiego użytkownika"});
   }
 
   const user = await User.findById(id)
 
   if (!user) {
-    return res.status(404).json({error: "No such user."});
+    return res.status(404).json({error: "Nie ma takiego użytkownika"});
   }
 
   res.status(200).json(user)
 };
+
+// Update a user
+const updateUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({error: "Nie ma takiego użytkownika"});
+  }
+
+  const user = await User.findOneAndUpdate(
+    {_id: id},
+    { ...req.body },
+    { new: true }
+  );
+
+  if (!user) {
+    return res.status(404).json({error: "Nie ma takiego użytkownika"});
+  }
+
+  res.status(200).json({user});
+}
 
 // Delete a user
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such user."});
+    return res.status(404).json({error: "Nie ma takiego użytkownika"});
   }
 
   const user = await User.findOneAndDelete({_id: id});
 
   if (!user) {
-    return res.status(404).json({error: "No such user."});
+    return res.status(404).json({error: "Nie ma takiego użytkownika"});
   }
 
   res.status(200).json({user});
@@ -46,5 +67,6 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getUser,
   getUsers,
+  updateUser,
   deleteUser
 };

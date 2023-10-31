@@ -14,13 +14,13 @@ const getProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such product."});
+    return res.status(404).json({error: "Nie ma takiego produktu"});
   }
 
   const product = await Product.findById(id)
 
   if (!product) {
-    return res.status(404).json({error: "No such product."});
+    return res.status(404).json({error: "Nie ma takiego produktu"});
   }
 
   res.status(200).json(product)
@@ -28,10 +28,10 @@ const getProduct = async (req, res) => {
 
 // Create a new product
 const createProduct = async (req, res) => {
-  const { name, price, categories, description, inStock, photoURLs, photoCloudinaryId } = req.body;
+  const { name, price, categories, description, inStock, photoURLs, cloudinaryFolderId } = req.body;
 
   try {
-    const product = await Product.create({name, categories, price, description, inStock, photoURLs, photoCloudinaryId});
+    const product = await Product.create({name, categories, price, description, inStock, photoURLs, cloudinaryFolderId});
     res.status(200).json(product);
   } catch (error) {
     res.status(400).json({error: error.message});
@@ -43,13 +43,13 @@ const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such product."});
+    return res.status(404).json({error: "Nie ma takiego produktu"});
   }
 
   const product = await Product.findOneAndDelete({_id: id});
 
   if (!product) {
-    return res.status(404).json({error: "No such product."});
+    return res.status(404).json({error: "Nie ma takiego produktu"});
   }
 
   res.status(200).json({product});
@@ -60,7 +60,7 @@ const updateProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "No such product."});
+    return res.status(404).json({error: "Nie ma takiego produktu"});
   }
 
   const product = await Product.findOneAndUpdate(
@@ -70,7 +70,7 @@ const updateProduct = async (req, res) => {
   );
 
   if (!product) {
-    return res.status(404).json({error: "No such product."});
+    return res.status(404).json({error: "Nie ma takiego produktu"});
   }
 
   res.status(200).json({product});
