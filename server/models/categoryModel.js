@@ -8,6 +8,14 @@ const categorySchema = new Schema ({
     type: String,
     required: true,
     unique: true
+  },
+  imageURL: {
+    type: String,
+    required: true
+  },
+  cloudinaryFolderId: {
+    type: String,
+    required: true
   }
 });
 

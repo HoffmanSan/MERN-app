@@ -1,12 +1,12 @@
 // Imports
 import { Link } from "react-router-dom";
-import { useLogin } from "../../hooks/useLogin";
+import { useAuthAPI } from "../../hooks/useAuthAPI";
 
 // Components
 import { AuthForm } from "../../components";
 
 export default function Login() {
-  const {login, error, isLoading} = useLogin();
+  const {login, error, isLoading} = useAuthAPI();
 
   const handleLogin = async (e: React.FormEvent, email: string, password: string) => {
     e.preventDefault()
@@ -15,7 +15,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center min-h-9/10-screen">
       <div className="p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96">
         <h3 className="text-center pb-7">ZALOGUJ SIĘ</h3>
 

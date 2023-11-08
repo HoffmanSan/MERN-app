@@ -1,17 +1,16 @@
 // IMPORTS
-import { ChangeEvent, FormEvent, Fragment, useRef, useState } from "react";
-import { useConvertImages } from "../../../hooks/useConvertImages";
-import { useProductsContext } from "../../../hooks/useProductsContext";
-import { useCategoriesContext } from "../../../hooks/useCategoriesContext";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import axios from "axios";
+import { ChangeEvent, FormEvent, Fragment, useRef, useState } from "react"
+import { useImagesAPI } from "../../../hooks/useImagesAPI"
+import { useDataAPI } from "../../../hooks/useDataAPI"
+import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext"
+import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategoriesContext"
 
 // COMPONENTS
-import { LoadingSpinner } from "../../index";
+import { LoadingSpinner } from "../../index"
 
 // TYPES
 type Product = {
-  _id: number
+  _id: string
   name: string
   price: number
   description: string
@@ -47,12 +46,11 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
   const fileInput = useRef<HTMLInputElement>(null);
 
   // GLOBAL STATES
-  const { convertImageToBase64 } = useConvertImages();
+  const { updateDocument } = useDataAPI();
+  const { convertImageToBase64String, uploadImage, deleteImages } = useImagesAPI();
   const { dispatch } = useProductsContext();
-  const { state: stateAuth } = useAuthContext();
-  const userAuth = stateAuth.user;
-  const { state: stateCategories } = useCategoriesContext();
-  const caregories = stateCategories.categories;
+  const { state } = useCategoriesContext();
+  const categories = state.categories;
   
 
   // ON FILE INPUT CHANGE
@@ -104,11 +102,10 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
     }
   };
 
-  // UPDATE PRODUCT
+  // ---- UPDATE PRODUCT ---- \\
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setOutcome("");
-    setError("");
+    e.preventDefault()
+    setError("")
 
     // validation
     if (!product.name || !product.price || !product.description || !product.inStock) {
@@ -120,81 +117,46 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
       return
     }
   
-    setIsUpdating(true);
+    // start the process if validation is passed
+    try {
+      setIsUpdating(true);
+      
+      // if there are new images attached
+      if (imageList && imageList.length !== 0) {
 
-    // if there is no images change
-    if (!imageList || imageList.length === 0) {
+        // clear old urls and hide previous images
+        product.photoURLs = []
+        setShowPreviousPhotos(false)
 
-      // update base product data in the database
-      return axios.patch(
-        `/api/products/${product._id}`,
-        { ...product },
-        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-      )
-      .then(() => {
-        dispatch({type: "UPDATE_PRODUCT", payload: [product]});
-        setIsUpdating(false);
-        setOutcome("Produkt zaktualizowany");
-        setShowPreviousPhotos(false);
-      })
-      .catch((error) => {
-        setIsUpdating(false);
-        setError(error.message);
-        console.log(error);
-      })
-    }
+        // delete old images in storage
+        await deleteImages("products", product.cloudinaryFolderId)
 
-    // if there are new images
-    product.photoURLs = [];
-    setShowPreviousPhotos(false);
-    
-    // delete previous images
-    Promise.all([
-      await axios.delete(
-        `/api/images/${product.cloudinaryFolderId}`
-      ),
-      ...imageList.map(item => {
-        return new Promise(async (resolve, reject) => {
-
-          // convert new product images to base64 strings
-          const base64String = await convertImageToBase64(item);
-
-          // upload images to storage, and save their urls within product data
-          axios.post(
-            "/api/images",
-            { image: base64String, folder: product.cloudinaryFolderId }
-          )
-          .then((response) => {
-            console.log("resolved")
-            resolve(product.photoURLs.push(response.data));
+        // add new images to storage
+        await Promise.all(
+          imageList.map(async item => {
+            const imageString = await convertImageToBase64String(item)
+            const imageURL = await uploadImage(imageString, "products", product.cloudinaryFolderId)
+            return product.photoURLs.push(imageURL)
           })
-        })
-      })
-    ])
-    .then(() => {
+        )
+      }
+
       // update product in the database
-      axios.patch(
-        `/api/products/${product._id}`,
-        { ...product },
-        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-      )
-      .then(() => {
-        dispatch({type: "UPDATE_PRODUCT", payload: [product]});
-        setIsUpdating(false);
-        setOutcome("Produkt zaktualizowany");
-        setShowPreviousPhotos(false);
-      })
-      .catch((error) => {
-        setIsUpdating(false);
-        setError(error.message);
-        console.log(error);
-      })
-    }).catch(error => {
-      setIsUpdating(false);
-      setError(error.message);
-      console.log(error);
-    })
-  };
+      const response = await updateDocument("products", product, product._id.toString())
+      dispatch({ type: "UPDATE_PRODUCT", payload: [response.product] })
+      setError("")
+      setOutcome("Produkt zaktualizowany")
+      setTimeout(() => setOutcome(""), 3000)
+    }
+    catch (error: any) {
+      setError(error.message)
+      console.log(error)
+    }
+    finally {
+      setIsUpdating(false)
+    }
+  }
+  // ------------------------ \\
 
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
@@ -252,7 +214,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
       <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
 
       <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
-        {caregories.sort().map((item) => (
+        {categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
             <input
               type="checkbox"

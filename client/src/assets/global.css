@@ -24,6 +24,10 @@ a, input, button {
   @apply p-2 font-bold text-white transition duration-500 ease-out bg-orange-400 border-2 border-orange-400 rounded-lg shadow-md outline-none cursor-pointer hover:bg-orange-600 hover:border-orange-600 focus:outline-none;
 }
 
+#file-upload-button {
+  @apply bg-orange-200 text-orange-400
+}
+
 .error {
   @apply p-2 text-center text-red-500 bg-red-100 border border-red-500;
 }
@@ -72,4 +76,9 @@ input[type="checkbox"]:checked + span {
 
 input[type="checkbox"]:checked + span + label {
   @apply text-orange-400 transition duration-300 ease-out;
+}
+
+/* Carousel item  */
+.react-multi-carousel-track > li {
+  @apply pb-5
 }

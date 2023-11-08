@@ -1,5 +1,6 @@
 // Imports
 const express = require("express");
+const requireAdminAuth = require("../middleware/requireAdminAuth");
 
 // Controller functions
 const {
@@ -10,10 +11,13 @@ const {
 // Routes
 const router = express.Router();
 
+// Middleware
+router.use(requireAdminAuth);
+
 // POST a new image
 router.post("/", uploadImage);
 
 // DELETE an image
-router.delete("/:id", deleteImage)
+router.delete("/:folder/:id", deleteImage)
 
 module.exports = router;

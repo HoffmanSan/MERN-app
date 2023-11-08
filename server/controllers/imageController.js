@@ -16,7 +16,7 @@ const uploadImage = async (req, res) => {
 
   await cloudinary.uploader.upload(image, {
       resource_type: "auto",
-      folder: "Sklepico/products/" + folderId
+      folder: "Sklepico" + folderId
     }
   ).then(result => {
     res.status(200).json(result.secure_url)
@@ -27,11 +27,11 @@ const uploadImage = async (req, res) => {
 
 // Delete an image
 const deleteImage = async (req, res) => {
-  const { id } = req.params
+  const { folder, id } = req.params
 
-  await cloudinary.api.delete_resources_by_prefix(`Sklepico/products/${id}`)
+  await cloudinary.api.delete_resources_by_prefix(`Sklepico/${folder}/${id}`)
     .then(async () => {
-      await cloudinary.api.delete_folder(`Sklepico/products/${id}`)
+      await cloudinary.api.delete_folder(`Sklepico/${folder}/${id}`)
       .then(result => {
           res.status(200).json(result)
         })

@@ -6,7 +6,7 @@ import { DisplayProducts, CreateProduct, UpdateProduct } from "../.."
 
 // TYPES
 type Product = {
-  _id: number
+  _id: string
   name: string
   price: number
   categories: string[]

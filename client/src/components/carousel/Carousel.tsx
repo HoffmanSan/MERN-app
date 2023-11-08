@@ -2,20 +2,9 @@
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
-// Components
-import { ProductCard } from "../../index";
-
-type CardsCarouselProps = {
-  products: {
-    _id: number
-    name: string
-    price: number
-    categories: string[]
-    description: string
-    inStock: number
-    photoURLs: string[]
-    createdAt: Date
-  }[]
+// TYPES
+type CarouselComponentProps = {
+  children: JSX.Element[]
 }
 
 const responsive = {
@@ -40,20 +29,17 @@ const responsive = {
   }
 };
 
-export default function CardsCarousel({products}:CardsCarouselProps) {
+export default function CarouselComponent({children}: CarouselComponentProps) {
   return (
     <Carousel
       responsive={responsive}
       draggable={false}
       removeArrowOnDeviceType={["tablet", "mobile"]}
     >
-      {products ?
-        products.map((item) => (
-          <ProductCard product={item} key={item._id}/>
-        ))
-      :
-        <h1>LOADING...</h1>
-      }
+      {children}
+      
+      {/* this empty div is placed here due to a bug with react-multi-carousel and it's elements.length property */}
+      {<div/>}
     </Carousel>
   )
 }

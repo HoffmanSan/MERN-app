@@ -1,7 +1,7 @@
 // Imports
 import { Link } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext";
 import { useEffect, useRef } from "react";
 
 // TS type
@@ -37,8 +37,21 @@ export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
       </>
       :
       <>
-        {state.user.role === "Administrator" && <li className="hover:font-bold"><Link to="/admin">Admin</Link></li>}
-        <li className="cursor-pointer hover:font-bold" onClick={() => logout()}>Wyloguj</li>
+        {state.user.role === "Administrator" &&
+          <li className="hover:font-bold">
+            <Link to="/admin">
+              Admin
+            </Link>
+          </li>
+        }
+        <li
+          className="outline-none cursor-pointer hover:font-bold"
+          tabIndex={0}
+          onKeyUp={(key) => { if (key.code === "Enter") logout() }}
+          onClick={() => logout()}
+        >
+          Wyloguj
+        </li>
       </>
       }
     </ul>

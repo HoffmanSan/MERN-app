@@ -1,7 +1,7 @@
 // Imports
 import { useState, useEffect } from "react";
-import { useUsersContext } from "../../hooks/useUsersContext";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useUsersContext } from "../../hooks/useContextHooks/useUsersContext";
+import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext";
 import axios from "axios"
 
 // Components
@@ -15,13 +15,12 @@ export default function AdminPanel() {
 
   useEffect(() => {
     const getUsers = async () => {
-      await axios.get("/api/users", { headers: {'Authorization': `Bearer ${stateAuth.user?.token}`} })
-      .then((response) => {
-        dispatch({ type: "SET_USERS", payload: response.data })
+      await axios.get(
+        `${process.env.REACT_APP_API_SERVER_URI}/api/users`,
+        { headers: {'Authorization': `Bearer ${stateAuth.user?.token}`} 
       })
-      .catch(error => {
-        setError(error.message)
-      })
+      .then((response) => dispatch({ type: "SET_USERS", payload: response.data }))
+      .catch(error => setError(error.message))
     }
 
     getUsers();
@@ -36,7 +35,7 @@ export default function AdminPanel() {
       case "Categories":
         return <Categories/>
       default:
-        return <div>404 Page not found</div>
+        return <Products/>
     }
   }
 

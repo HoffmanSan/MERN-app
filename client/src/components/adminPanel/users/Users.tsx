@@ -1,9 +1,8 @@
 // IMPORTS
 import { useState, useMemo } from "react";
 import { useDebounce } from "../../../hooks/useDebounce";
-import { useUsersContext } from "../../../hooks/useUsersContext";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import axios from "axios";
+import { useDataAPI } from "../../../hooks/useDataAPI";
+import { useUsersContext } from "../../../hooks/useContextHooks/useUsersContext";
 
 // COMPONENTS
 import { LoadingSpinner } from "../../index";
@@ -12,24 +11,23 @@ import { LoadingSpinner } from "../../index";
 type User = {
   email: string
   createdAt: Date
-  _id: number
+  _id: string
   role: string
 }
 
 export default function Users() {
   // LOCAL STATES
-  const [isDeleting, setIsDeleting] = useState<number | null>(null);
-  const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [error, setError] = useState("")
+  const [query, setQuery] = useState("")
 
-  // GLOBAL STATES
-  const { state: stateAuth } = useAuthContext();
-  const userAuth = stateAuth.user;
-  const { state: stateUsers, dispatch } = useUsersContext();
-  const users = stateUsers.users;
+  // GLOBAL STATES & UTILITIES
+  const { state, dispatch } = useUsersContext()
+  const users = state.users;
+  const { deleteDocument } = useDataAPI()
 
-  // SEARCH BAR LOGIC
-  const debouncedQuery = useDebounce(query, 500);
+  // ---- SEARCH BAR LOGIC ---- \\
+  const debouncedQuery = useDebounce(query, 500)
 
   const filteredUsers = useMemo(() => {
     if (!debouncedQuery) {
@@ -40,24 +38,22 @@ export default function Users() {
     )
   }, [debouncedQuery, users])
 
-  // DELETE USER
+  // ---- DELETE USER ---- \\
   const deleteUser = async (user: User) => {
-    setIsDeleting(user._id);
-    setError("");
-    
-    axios.delete(
-      `/api/users/${user._id}`,
-      { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-    )
-    .then(() => {
-      setIsDeleting(null);
-      dispatch({ type: "DELETE_USER", payload: [user] });
-    })
-    .catch(error => {
-      setIsDeleting(null);
-      setError(error.message);
-      console.log(error.message);
-    })
+    setIsDeleting(user._id)
+    setError("")
+
+    try {
+      const response = await deleteDocument("users", user._id)
+      dispatch({ type: "DELETE_USER", payload: [response.user] })
+    }
+    catch (error: any) {
+      setError(error.message)
+      console.log(error.message)
+    }
+    finally {
+      setIsDeleting(null)
+    }
   }
   
   return (

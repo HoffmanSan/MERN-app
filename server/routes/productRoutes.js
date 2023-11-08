@@ -1,6 +1,6 @@
 // Imports
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
+const requireAdminAuth = require("../middleware/requireAdminAuth");
 
 // Controller functions
 const {
@@ -21,12 +21,12 @@ router.get("/", getProducts);
 router.get("/:id", getProduct);
 
 // POST a new product
-router.post("/", requireAuth, createProduct);
+router.post("/", requireAdminAuth, createProduct);
 
 // DELETE a product
-router.delete("/:id", requireAuth, deleteProduct);
+router.delete("/:id", requireAdminAuth, deleteProduct);
 
 // UPDATE a product
-router.patch("/:id", requireAuth, updateProduct);
+router.patch("/:id", requireAdminAuth, updateProduct);
 
 module.exports = router;

@@ -4,7 +4,7 @@ import { createContext, useReducer } from "react";
 // TS types
 type User = {
   email: string
-  _id: number
+  _id: string
   createdAt: Date
   role: string
 }

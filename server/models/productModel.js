@@ -31,7 +31,11 @@ const productSchema = new Schema({
   cloudinaryFolderId: {
     type: String,
     required: true
-  }
+  },
+  // testField: {
+  //   type: String,
+  //   required: true
+  // }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Product", productSchema);

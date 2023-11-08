@@ -1,34 +1,37 @@
 // IMPORTS
-import { useMemo, useState } from "react";
-import { useCategoriesContext } from "../../../hooks/useCategoriesContext";
+import { ChangeEvent, useMemo, useState } from "react";
+import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategoriesContext";
+import { useDataAPI } from "../../../hooks/useDataAPI";
+import { useImagesAPI } from "../../../hooks/useImagesAPI";
 import { useDebounce } from "../../../hooks/useDebounce";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import axios from "axios";
+import { nanoid } from "nanoid";
 
 // COMPONENTS
 import { LoadingSpinner } from "../../index";
 
 // TYPES
 type Category = {
-  name: string,
-  _id: number
+  _id: string
+  name: string
+  cloudinaryFolderId: string
 }
 
 export default function DisplayCategories() {
   // LOCAL STATES
-  const [newCategory, setNewCategory] = useState("");
-  const [isAdding, setIsAdding] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(0);
-  const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
+  const [newCategory, setNewCategory] = useState({ name: "", imageURL: "", cloudinaryFolderId: nanoid() })
+  const [categoryImage, setCategoryImage] = useState<File>()
+  const [isAdding, setIsAdding] = useState(false)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const [error, setError] = useState("")
+  const [query, setQuery] = useState("")
   
-  // GLOBAL STATES
-  const { state: authState } = useAuthContext();
-  const userAuth = authState.user;
-  const { state: categoriesState, dispatch } = useCategoriesContext();
-  const categories = categoriesState.categories;
+  // GLOBAL STATES & UTILITIES
+  const { state, dispatch } = useCategoriesContext()
+  const categories = state.categories
+  const { convertImageToBase64String, uploadImage, deleteImages} = useImagesAPI()
+  const { createDocument, deleteDocument } = useDataAPI()
   
-  // SEARCH BAR LOGIC
+  // ---- SEARCH BAR LOGIC ---- \\
   const debouncedQuery = useDebounce(query, 500);
 
   const filteredCategories = useMemo(() => {
@@ -40,75 +43,106 @@ export default function DisplayCategories() {
     )
   }, [debouncedQuery, categories])
 
-  // ADD CATEGORY
-  const addCategory = async (newCategory: string) => {
-    
-    if (!newCategory) {
-      setError("Uzupełnij pole nowej kategorii")
+  // ---- FILE INPUT CHANGE ---- \\
+  const handleFileChange = (e: ChangeEvent) => {
+    let files = (e.target as HTMLInputElement).files
+
+    // validation
+    if (!files || files.length === 0) {
+      return 
+    }
+    if (!files[0].type.includes("image")) {
+      setError("Plik musi być obrazem")
+      return
+    }
+    if (files[0].size > 2500000) {
+      setError("Obraz nie może być większy niż 2.5 mb")
       return
     }
 
+    // accept file if validation passed
+    setError("")
+    setCategoryImage(files[0])
+  }
+
+  // ---- ADD CATEGORY ---- \\
+  const addCategory = async () => {
+    setError("")
+    
+    // validation
+    if (!newCategory.name) {
+      setError("Uzupełnij pole nowej kategorii")
+      return
+    }
+    if (!categoryImage) {
+      setError("Dodaj obraz reprezentujący kategorię")
+      return
+    }
     if (categories.filter(item => {
-        return Object.values(item).indexOf(newCategory) > -1
+        return Object.values(item)[1].toString().toLowerCase().indexOf(newCategory.name.toLowerCase()) > -1
       }).length > 0) {
       setError("Ta kategoria już istnieje")
       return
     }
     
-    setError("");
-    setIsAdding(true);
-    
-    await axios.post(
-      "/api/categories",
-      { name: newCategory },
-      { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-    )
-    .then((response) => {
-      setIsAdding(false);
-      dispatch({type: "CREATE_CATEGORY", payload: response.data});
-      setNewCategory("");
-    })
-    .catch((error) => {
-      setIsAdding(false);
-      setError(error.message);
-      console.log(error.message);
-    })
-  };
+    // start process if validation is passed
+    setIsAdding(true)
 
-  // DELETE CATEGORY
+    try {
+      const imageString = await convertImageToBase64String(categoryImage)
+      const imageURL = await uploadImage(imageString, "categories", newCategory.cloudinaryFolderId)
+      newCategory.imageURL = imageURL;
+      const response = await createDocument("categories", newCategory)
+      dispatch({ type: "CREATE_CATEGORY", payload: [response] })
+      setNewCategory({ name: "", imageURL: "", cloudinaryFolderId: nanoid() })
+    }
+    catch (error: any) {
+      setError(error.message)
+      console.log(error)
+    }
+    finally {
+      setIsAdding(false)
+    }
+  }
+
+  // ---- DELETE CATEGORY ---- \\
   const deleteCategory = async (category: Category) => {
-    setIsDeleting(category._id);
-    setError("");
-    
-    await axios.delete(
-      `/api/categories/${category._id}`,
-      { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-    )
-    .then(() => {
-      setIsDeleting(0);
-      dispatch({type: "DELETE_CATEGORY", payload: [category]});
-    })
-    .catch((error) => {
-      setIsDeleting(0);
-      setError(error.message);
-      console.log(error.message);
-    })
-  };
+    setError("")
+    setIsDeleting(category._id)
+
+    try {
+      await deleteImages("categories", category.cloudinaryFolderId)
+      const response = await deleteDocument("categories", category._id)
+      dispatch({ type: "DELETE_CATEGORY", payload: [response.category] })
+    }
+    catch (error: any) {
+      setError(error.message)
+      console.log(error)
+    }
+    finally {
+      setIsDeleting(null)
+    }
+  }
 
   return (
     <>
       <div className="flex justify-center mt-6">
+        <input 
+          type="file"
+          className="text-orange-400"
+          onChange={handleFileChange}
+        />
         <input
           type="text"
           id="category-add-bar"
           className="w-2/12 p-2 text-center text-black border border-orange-400 rounded-l-md"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
+          value={newCategory.name}
+          onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
         />
 
         <button
           className="p-2 font-bold text-white bg-orange-400 min-w-1/12 hover:bg-orange-600"
-          onClick={() => addCategory(newCategory)}
+          onClick={() => addCategory()}
         >
           {isAdding ? <LoadingSpinner /> : "Dodaj kategorie"}
         </button>
@@ -116,7 +150,7 @@ export default function DisplayCategories() {
 
       {error && <div className="mx-auto mt-2 error">{error}</div>}
 
-      <div className="flex justify-center m-6 text-white">
+      <div className="flex justify-center m-6">
         <input
           type="text"
           id="category-search-bar"
@@ -131,6 +165,7 @@ export default function DisplayCategories() {
         <thead className="text-lg font-bold text-white">
           <tr>
             <td>Nazwa</td>
+            <td>Obraz</td>
             <td>Opcje</td>
           </tr>
         </thead>
@@ -139,9 +174,12 @@ export default function DisplayCategories() {
             <tr key={item._id}>
               <td>{item.name}</td>
               <td>
+                <a href={item.imageURL} className="m-1 !p-1 !rounded-none btn" target="_blank" rel="noreferrer">1</a>
+              </td>
+              <td>
                 <button
                   className="m-1 btn"
-                  disabled={isDeleting !== 0}
+                  disabled={isDeleting !== null}
                   onClick={() => deleteCategory(item)}
                 >
                   {isDeleting === item._id ? <LoadingSpinner /> : "Usuń"}

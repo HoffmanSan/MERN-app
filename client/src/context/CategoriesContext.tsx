@@ -3,8 +3,10 @@ import { createContext, useReducer } from "react";
 
 // TS Types
 type Category = {
-  name: string,
-  _id: number
+  _id: string
+  name: string
+  imageURL: string
+  cloudinaryFolderId: string
 }
 type Dispatch = (action: Action) => void
 type Action = {

@@ -1,6 +1,6 @@
 // Imports
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
+const requireAdminAuth = require("../middleware/requireAdminAuth");
 
 // Controller functions
 const {
@@ -14,7 +14,7 @@ const {
 const router = express.Router();
 
 // Middleware
-router.use(requireAuth);
+router.use(requireAdminAuth);
 
 // GET all users
 router.get("/", getUsers);

@@ -1,14 +1,14 @@
 // Imports
 import { useState } from "react";
-import { useProductsContext } from "../../hooks/useProductsContext";
-import { useCategoriesContext } from "../../hooks/useCategoriesContext";
+import { useProductsContext } from "../../hooks/useContextHooks/useProductsContext";
+import { useCategoriesContext } from "../../hooks/useContextHooks/useCategoriesContext";
 
 // Components
-import { CardsCarousel, FilterForm, LoadingSpinner, ProductList } from "../../components/index";
+import { Carousel, FilterForm, ProductList, ProductCard, CategoryCard } from "../../components/index";
 
 // TS types
 type Product = {
-  _id: number
+  _id: string
   name: string
   price: number
   categories: string[]
@@ -64,12 +64,32 @@ export default function Dashboard() {
     <>
       <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md min-h-max">
         <h2>Najnowsze produkty</h2>
-        {stateProducts.products.length > 0 ? <CardsCarousel products={stateProducts.products}/> : <h3 className="text-center text-gray-300">Ładowanie...</h3> }
+        {stateProducts.products.length > 0 ?
+          <Carousel>
+            {
+              stateProducts.products.map((item) => (
+                <ProductCard product={item} key={item._id}/>
+              )) || <div/>
+            }
+          </Carousel>
+          :
+          <h3 className="text-center text-gray-300">Ładowanie...</h3>
+        }
       </div>
 
-      <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md">
+      <div className="w-9/12 p-5 mx-auto mb-6 bg-white shadow-md">
         <h2>Szukaj produktów wg Kategorii</h2>
-        {stateProducts.products.length > 0 ? <CardsCarousel products={stateProducts.products}/> : <h3 className="text-center text-gray-300">Ładowanie...</h3>}
+        {stateCategories.categories.length > 0 ?
+          <Carousel>
+            {
+              stateCategories.categories.map(item => (
+                <CategoryCard category={item} key={item._id}/>
+              ))
+            }
+          </Carousel>
+          :
+          <h3 className="text-center text-gray-300">Ładowanie...</h3>
+        }
       </div>
 
       {stateProducts.products.length > 0 ?

@@ -1,10 +1,10 @@
-// Imports
-import { useState } from "react";
+// IMPORTS
+import { useRef, useState } from "react";
 
-// TS types
+// TYPES
 type Category = {
-  name: string,
-  _id: number
+  name: string
+  _id: string
 }
 type FilterFormProps = {
   categoryList: Category[],
@@ -29,7 +29,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleFilter(minPrice, maxPrice, filteredCategories);
-  }
+  };
 
   return (
     <form className="p-5 bg-white shadow-md h-min" onSubmit={(e) => handleSubmit(e)}>

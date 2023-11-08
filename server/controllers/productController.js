@@ -14,7 +14,7 @@ const getProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "Nie ma takiego produktu"});
+    return res.status(404).json({error: "Nieprawidłowy numer identyfikacyjny produktu"});
   }
 
   const product = await Product.findById(id)
@@ -43,7 +43,7 @@ const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "Nie ma takiego produktu"});
+    return res.status(404).json({error: "Nieprawidłowy numer identyfikacyjny produktu"});
   }
 
   const product = await Product.findOneAndDelete({_id: id});
@@ -60,7 +60,7 @@ const updateProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: "Nie ma takiego produktu"});
+    return res.status(404).json({error: "Nieprawidłowy numer identyfikacyjny produktu"});
   }
 
   const product = await Product.findOneAndUpdate(

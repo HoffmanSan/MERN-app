@@ -2,8 +2,9 @@
 import { createContext, useReducer } from "react";
 
 // TS types
+
 type Product = {
-  _id: number
+  _id: string
   name: string
   price: number
   categories: string[]
@@ -43,15 +44,15 @@ export const productsReducer = (state: State, action: Action): State => {
           return action.payload[0]._id !== item._id
         })
       }
-      case "UPDATE_PRODUCT":
-        return {
-          products: (state.products).map(item => {
-            if (action.payload[0]._id === item._id) {
-              return action.payload[0]
-            }
-              return item
-          })
-        }
+    case "UPDATE_PRODUCT":
+      return {
+        products: (state.products).map(item => {
+          if (action.payload[0]._id === item._id) {
+            return action.payload[0]
+          }
+            return item
+        })
+      }
     default:
       return state
   }

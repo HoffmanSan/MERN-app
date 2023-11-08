@@ -1,11 +1,10 @@
 // IMPORTS
 import { ChangeEvent, FormEvent, Fragment, useRef, useState } from "react";
-import { useConvertImages } from "../../../hooks/useConvertImages";
-import { useProductsContext } from "../../../hooks/useProductsContext";
-import { useCategoriesContext } from "../../../hooks/useCategoriesContext";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useImagesAPI } from "../../../hooks/useImagesAPI";
+import { useDataAPI } from "../../../hooks/useDataAPI";
+import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext";
+import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategoriesContext";
 import { nanoid } from "nanoid";
-import axios from "axios";
 
 // COMPONENTS
 import { LoadingSpinner } from "../../index";
@@ -40,15 +39,14 @@ export default function CreateProduct() {
   const fileInput = useRef<HTMLInputElement>(null);
 
   // GLOBAL STATES
-  const { convertImageToBase64 } = useConvertImages();
+  const { convertImageToBase64String, uploadImage} = useImagesAPI();
+  const { createDocument } = useDataAPI();
   const { dispatch } = useProductsContext();
-  const { state: stateAuth } = useAuthContext();
-  const userAuth = stateAuth.user;
   const { state: stateCategories } = useCategoriesContext();
   const caregories = stateCategories.categories;
   
 
-  // ON FILE INPUT CHANGE
+  // ---- HANDLE FILE CHANGE ---- \\
   const handleFileChange = (e: ChangeEvent) => {
     setImageList(null);
     setImageSizes([]);
@@ -80,8 +78,9 @@ export default function CreateProduct() {
     setError("");
     setImageList(filesArray);
   }
+  // ---------------------------- \\
  
-  // CATEGORY CHECKBOX ON CHECK
+  // ---- CATEGORY CHECKBOX ON CHECK ---- \\
   const handleCheckboxCheck = (newCategory: string) => {
     if (product.categories.includes(newCategory)) {
       // remove category
@@ -96,7 +95,8 @@ export default function CreateProduct() {
         categories: [...product.categories, newCategory]
       })
     }
-  };
+  }
+  // ------------------------------------ \\
 
   // RESET FORM DATA
   const resetForm = () => {
@@ -109,21 +109,20 @@ export default function CreateProduct() {
       photoURLs: [],
       cloudinaryFolderId: nanoid()
     });
-    setImageList(null);
-    setImageSizes([]);
-    setError("");
+    setImageList(null)
+    setImageSizes([])
     if (fileInput.current != null) {
       fileInput.current.value = "";
     }
   };
 
-  // ADD PRODUCT
+  // ---- ADD PRODUCT ---- \\
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // validation
     if (!product.name || !product.price || !product.description || !product.inStock) {
-      setError("Uzupełnij dane produktu");
+      setError("Uzupełnij dane produktu")
       return
     }
     if (product.categories.length === 0) {
@@ -131,55 +130,43 @@ export default function CreateProduct() {
       return
     }
     if (!imageList || imageList.length === 0) {
-      setError("Dodaj zdjęcia produktu");
+      setError("Dodaj zdjęcia produktu")
       return
     }
     
-    setError("");
-    setIsAdding(true);
+    // start the process if validation is passed
+    setError("")
+    setIsAdding(true)
 
-    // convert product images to base64 strings, upload them to storage, and save their urls within product data
+    // convert and upload images then save their urls in product data
     Promise.all(
-      imageList.map(item => {
-        return new Promise(async (resolve, reject) => {
-          const base64String = await convertImageToBase64(item);
-          
-          axios.post(
-            "/api/images",
-            { image: base64String, folder: product.cloudinaryFolderId }
-          )
-          .then((response) => {
-            resolve(product.photoURLs.push(response.data));
-          })
-        })
+      imageList.map(async (image) => {
+        const imageString = await convertImageToBase64String(image);
+        const response = await uploadImage(imageString, "products", product.cloudinaryFolderId)
+
+        return product.photoURLs.push(response)
       })
-    ).then(() => {
+    )
+    .then(async () => {
+
       // add product to database
-      axios.post(
-        "/api/products",
-        { ...product },
-        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-      )
-      .then((response) => {
-        dispatch({type: "CREATE_PRODUCT", payload: [response.data]})
-        resetForm();
-        setIsAdding(false);
-        setOutcome("Produkt dodany");
-        setTimeout(() => {
-          setOutcome("");
-        }, 5000);
-      })
-      .catch((error) => {
-        setIsAdding(false);
-        setError(error.message);
-        console.log(error);
-      })
-    }).catch(error => {
-      setIsAdding(false);
-      setError(error.message);
-      console.log(error);
+      const result = await createDocument("products", product)
+      dispatch({ type: "CREATE_PRODUCT", payload: [result] })
+      resetForm()
+      setError("")
+      setOutcome("Produkt dodany")
+      setTimeout(() => setOutcome(""), 3000)
+      
     })
-  };
+    .catch(error => {
+      console.log(error)
+      setError(error.message)
+    })
+    .finally(() => {
+      setIsAdding(false)
+    })
+  }
+  // --------------------- \\
 
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
@@ -248,7 +235,7 @@ export default function CreateProduct() {
 
       <h3 className="p-1 m-2 text-white bg-orange-400">Zdjęcia</h3>
 
-      <div className="m-2 mb-4 ">
+      <div className="m-2 mb-4">
         <input
           ref={fileInput}
           onChange={handleFileChange}

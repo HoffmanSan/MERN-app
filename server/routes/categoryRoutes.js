@@ -1,6 +1,6 @@
 // Imports
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
+const requireAdminAuth = require("../middleware/requireAdminAuth");
 
 // Controller functions
 const {
@@ -17,12 +17,12 @@ const router = express.Router();
 router.get("/", getCategories);
 
 // POST a new category
-router.post("/", requireAuth, createCategory);
+router.post("/", requireAdminAuth, createCategory);
 
 // DELETE a category
-router.delete("/:id", requireAuth, deleteCategory);
+router.delete("/:id", requireAdminAuth, deleteCategory);
 
 // UPDATE a category
-router.patch("/:id", requireAuth, updateCategory);
+router.patch("/:id", requireAdminAuth, updateCategory);
 
 module.exports = router;

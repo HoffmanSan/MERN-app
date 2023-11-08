@@ -7,6 +7,7 @@ type User = {
   email: string
   token: string
   role: string
+  cartId: string
 }
 type Action = {
   type: "LOGIN" | "LOGOUT"

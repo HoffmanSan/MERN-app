@@ -1,8 +1,8 @@
 // Imports
-import axios from "axios";
 import { useState, useMemo } from "react";
-import { useProductsContext } from "../../../hooks/useProductsContext";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext";
+import { useImagesAPI } from "../../../hooks/useImagesAPI";
+import { useDataAPI } from "../../../hooks/useDataAPI";
 import { useDebounce } from "../../../hooks/useDebounce";
 
 // Components
@@ -10,7 +10,7 @@ import { LoadingSpinner } from "../../index";
 
 // TS types
 type Product = {
-  _id: number
+  _id: string
   name: string
   price: number
   categories: string[]
@@ -27,17 +27,17 @@ type DisplayProductsProps = {
 
 export default function DisplayProducts({changePanel, setUpdatedProduct}: DisplayProductsProps) {
   // LOCAL STATES
-  const [isDeleting, setIsDeleting] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
 
-  // GLOBAL STATES
-  const { state: stateAuth } = useAuthContext();
-  const userAuth = stateAuth.user;
-  const { state: stateProducts, dispatch } = useProductsContext();
-  const products = stateProducts.products;
+  // GLOBAL STATES & UTILITIES
+  const { state, dispatch } = useProductsContext();
+  const products = state.products;
+  const { deleteImages } = useImagesAPI();
+  const { deleteDocument } = useDataAPI();
 
-  // SEARCH BAR LOGIC
+  // ---- SEARCH BAR LOGIC ---- \\
   const debouncedQuery = useDebounce(query, 500)
 
   const filteredProducts = useMemo(() => {
@@ -49,32 +49,28 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
         el.toString().toLowerCase().includes(debouncedQuery.toLowerCase())
       )
     })
-  }, [debouncedQuery, products]);
+  }, [debouncedQuery, products])
+  // -------------------------- \\
 
-  // DELETE PRODUCT
+  // ---- DELETE PRODUCT ---- \\
   const deleteProduct = async (product: Product) => {
-    setIsDeleting(product._id);
-    setError("");
+    setIsDeleting(product._id)
+    setError("")
 
-    await Promise.all([
-      axios.delete(
-        `/api/images/${product.cloudinaryFolderId}`
-      ),
-      axios.delete(
-        `/api/products/${product._id}`,
-        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
-      )
-    ])
-    .then(() => {
-      setIsDeleting(null);
-      dispatch({type: "DELETE_PRODUCT", payload: [product]});
-    })
-    .catch(error => {
-      setIsDeleting(null);
-      setError(error.message);
-      console.log(error.message);
-    })
+    try {
+      const response = await deleteDocument("products", product._id)
+      await deleteImages("products", product.cloudinaryFolderId)
+      dispatch({ type: "DELETE_PRODUCT", payload: [response.product] })
+    }
+    catch (error: any) {
+      console.log(error)
+      setError(error.message)
+    }
+    finally {
+      setIsDeleting(null)
+    }
   }
+  // ------------------------ \\
 
   return (
     <>
@@ -128,7 +124,8 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
                     rel="noreferrer"
                     className="m-1 !p-1 !rounded-none btn"
                   >
-                    <button>{1 + product.photoURLs.indexOf(item)}</button></a>
+                    {1 + product.photoURLs.indexOf(item)}
+                  </a>
                 ))}
               </td>
               <td>

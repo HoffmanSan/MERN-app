@@ -1,14 +1,18 @@
 // IMPORTS
 import { useParams } from "react-router-dom"
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react"
+import { useProductsContext } from "../../hooks/useContextHooks/useProductsContext"
+import { useCategoriesContext } from "../../hooks/useContextHooks/useCategoriesContext"
+import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext"
+
+import { useDataAPI } from "../../hooks/useDataAPI"
 
 // COMPONENTS
-import { CategoryCard } from "../../components";
+import { CategoryCard } from "../../components"
 
 // TYPES
 type Product = {
-  _id: number
+  _id: string
   name: string
   price: number
   categories: string[]
@@ -20,26 +24,49 @@ type Product = {
 }
 
 export default function Products() {
+  // LOCAL STATE
   const [product, setProduct] = useState<Product>()
-  const [currentImage, setCurrentImage] = useState<string>("");
+  const [currentImage, setCurrentImage] = useState<string>();
   const [purchaseQuantity, setPurchaseQuantity] = useState(1)
-  const [error, setError] = useState("");
-  const { id } = useParams();
 
+  // GLOBAL STATE & UTILITIES
+  const { id } = useParams()
+  const { updateDocument } = useDataAPI()
+  const { state: stateAuth } = useAuthContext()
+  const { state: stateProducts } = useProductsContext()
+  const { state: stateCategories } = useCategoriesContext()
+  const userCartId = stateAuth.user ? stateAuth.user.cartId : ""
+  const products = stateProducts.products
+  const categories = stateCategories.categories
+  
+  // ---- FIND PRODUCT IN PRODUCTS CONTEXT ---- \\
   useEffect(() => {
-    const getProduct = async () => {
-      axios.get(`/api/products/${id}`)
-      .then(response => {
-        setProduct(response.data)
-        setCurrentImage(response.data.photoURLs[0])
-      })
-      .catch(error => {
-        setError(error.message);
-      })
+    const product = products.find(product => product._id === id)
+    if (product) {
+      setProduct(product)
+      setCurrentImage(product.photoURLs[0])
     }
+  }, [id, products])
 
-    getProduct();
-  }, [id])
+  // ---- ADD PRODUCT TO CART ---- \\
+  const addProductToCart = async () => {
+    if (typeof product === "undefined") {
+      return
+    }
+    
+    await updateDocument(
+      "carts",
+      {
+        productId: product._id,
+        productName: product.name,
+        productPrice: product.price,
+        productInStock: product.inStock,
+        productImageUrl: product.photoURLs[0],
+        purchaseQuantity: purchaseQuantity
+      },
+      userCartId
+    )
+  }
   
   return (
     <div className="grid w-8/12 grid-cols-4 gap-5 mx-auto my-6 auto-rows-auto">
@@ -60,7 +87,7 @@ export default function Products() {
                   src={item} 
                   alt={`product ${product.photoURLs.indexOf(item) + 1}`} 
                   loading="lazy"
-                  className={`object-scale-down px-2 h-14 w-14 hover:cursor-pointer ${currentImage === item && "border-4 border-orange-400"}`}
+                  className={`object-scale-down px-2 h-20 w-20 hover:cursor-pointer ${currentImage === item && "border-4 border-orange-400"}`}
                   onClick={() => setCurrentImage(item)}
                 />
               </li>
@@ -102,18 +129,23 @@ export default function Products() {
           </div>
           
           <div className="pt-2 text-center">
-            <button className="w-5/6 my-1 btn">DODAJ DO KOSZYKA</button>
+            <button
+              className="w-5/6 my-1 btn"
+              onClick={() => addProductToCart()}
+            >
+              DODAJ DO KOSZYKA
+            </button>
             <button className="w-5/6 my-1 btn">KUP I ZAPŁAĆ</button>
           </div>
           
         </div>
 
-        <div className="p-4 bg-white shadow-md">
-          <h3 className="text-center">Sprawdź inne produkty z kategorii:</h3>
-          <CategoryCard />
+        <div className="p-4 pb-1 bg-white shadow-md">
+          <h3 className="text-center">Sprawdź inne produkty:</h3>
+          <CategoryCard category={categories.find(category => category.name === product.categories[0])}/>
         </div>
         
-        <div className="col-span-4 p-4 bg-white shadow-md">
+        <div className="col-span-4 p-4 pb-2 bg-white shadow-md">
           <h2 className="pb-3">Opis</h2>
           <article>
             {product.description}
@@ -122,6 +154,7 @@ export default function Products() {
 
       </>
       )}
+      {!product && <h3 className="col-span-4 text-center text-gray-400">Ładowanie...</h3>}
     </div>
   )
 }
