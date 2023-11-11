@@ -1,5 +1,5 @@
 // IMPORTS
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 // TYPES
 type Category = {

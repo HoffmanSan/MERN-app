@@ -47,7 +47,7 @@ export default function CartCard({product, userCartId, isLoading, setIsLoading}:
 
       <div className="grid grid-cols-3 col-span-3 py-2">
         <img src={product.productImageUrl} alt={product.productName} className="object-scale-down object-center w-24 h-24 mx-auto bg-gray-200"/>
-        <h3 className="col-span-2 my-auto ml-2 text-center">{product.productName}</h3>
+        <p className="col-span-2 my-auto ml-2 text-center uppercase">{product.productName}</p>
       </div>
 
       <div className="grid grid-cols-3 col-span-3 py-2">

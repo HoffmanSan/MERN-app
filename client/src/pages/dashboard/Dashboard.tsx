@@ -108,7 +108,7 @@ export default function Dashboard() {
 
       }
 
-      <div className="sg h-80"></div>
+      <div className="h-80"></div>
     </>
   )
 }
