@@ -80,5 +80,5 @@ input[type="checkbox"]:checked + span + label {
 
 /* Carousel item  */
 .react-multi-carousel-track > li {
-  @apply pb-5
+  @apply pb-7
 }

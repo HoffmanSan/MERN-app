@@ -24,4 +24,5 @@ root.render(
       </CategoriesContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
+
 );

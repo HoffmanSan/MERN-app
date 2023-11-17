@@ -1,4 +1,5 @@
 // IMPORTS
+import { useCallback } from "react";
 import { useAuthContext } from "./useContextHooks/useAuthContext";
 import axios, { AxiosResponse } from "axios"
 
@@ -23,7 +24,7 @@ export const useDataAPI = () => {
   // --------------------------- \\
 
   // ---- GET SINGLE DOCUMENT ---- \\
-  const getSingleDocument = async (dataType: string, documentId: string) => {
+  const getSingleDocument = useCallback(async (dataType: string, documentId: string) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_SERVER_URI}/api/${dataType}/${documentId}`,
@@ -35,7 +36,7 @@ export const useDataAPI = () => {
       console.log(error)
       throw new Error("Błąd pobierania danych dokumentu: " + error.response.data.error)
     }
-  }
+  }, [userToken])
   // ----------------------------- \\
 
   // ---- CREATE NEW DOCUMENT ---- \\

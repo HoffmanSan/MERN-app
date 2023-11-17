@@ -4,11 +4,11 @@ import { useState, useEffect } from "react"
 import { useProductsContext } from "../../hooks/useContextHooks/useProductsContext"
 import { useCategoriesContext } from "../../hooks/useContextHooks/useCategoriesContext"
 import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext"
-
+import { useCartContext } from "../../hooks/useContextHooks/useCartContext"
 import { useDataAPI } from "../../hooks/useDataAPI"
 
 // COMPONENTS
-import { CategoryCard } from "../../components"
+import { CategoryCard, LoadingSpinner } from "../../components"
 
 // TYPES
 type Product = {
@@ -28,11 +28,13 @@ export default function Products() {
   const [product, setProduct] = useState<Product>()
   const [currentImage, setCurrentImage] = useState<string>();
   const [purchaseQuantity, setPurchaseQuantity] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
 
   // GLOBAL STATE & UTILITIES
   const { id } = useParams()
-  const { updateDocument } = useDataAPI()
+  const { getSingleDocument, updateDocument } = useDataAPI()
   const { state: stateAuth } = useAuthContext()
+  const { state: stateCart, dispatch } = useCartContext()
   const { state: stateProducts } = useProductsContext()
   const { state: stateCategories } = useCategoriesContext()
   const userCartId = stateAuth.user ? stateAuth.user.cartId : ""
@@ -46,26 +48,47 @@ export default function Products() {
       setProduct(product)
       setCurrentImage(product.photoURLs[0])
     }
+
   }, [id, products])
+
+  // ---- GET CART DATA ---- \\
+  useEffect(() => {
+    const getCart = async () => {
+      await getSingleDocument("carts", userCartId)
+      .then(response => {
+        dispatch({type: "SET_CART_ITEMS", payload: response.cartItems})
+      })
+      .catch(error => console.log(error))
+    }
+    
+    getCart()
+  }, [getSingleDocument, userCartId])
+  
+  
 
   // ---- ADD PRODUCT TO CART ---- \\
   const addProductToCart = async () => {
     if (typeof product === "undefined") {
       return
     }
-    
-    await updateDocument(
-      "carts",
-      {
-        productId: product._id,
-        productName: product.name,
-        productPrice: product.price,
-        productInStock: product.inStock,
-        productImageUrl: product.photoURLs[0],
-        purchaseQuantity: purchaseQuantity
-      },
-      userCartId
-    )
+    setIsLoading(true)
+
+
+      console.log(stateCart.cartItems.map(item => item.toString()))
+
+
+    // const newCartItem = {
+    //   productId: product._id,
+    //   productName: product.name,
+    //   productPrice: product.price,
+    //   productInStock: product.inStock,
+    //   productImageUrl: product.photoURLs[0],
+    //   purchaseQuantity: purchaseQuantity
+    // }
+
+    // dispatch({type: "ADD_CART_ITEM", payload: [newCartItem]})
+    // console.log(stateCart)
+    setIsLoading(false)
   }
   
   return (
@@ -130,12 +153,14 @@ export default function Products() {
           
           <div className="pt-2 text-center">
             <button
-              className="w-5/6 my-1 btn"
+              className="w-64 my-1 btn"
               onClick={() => addProductToCart()}
             >
-              DODAJ DO KOSZYKA
+              {isLoading ? <LoadingSpinner /> : "DODAJ DO KOSZYKA"}
             </button>
-            <button className="w-5/6 my-1 btn">KUP I ZAPŁAĆ</button>
+            <button className="w-64 my-1 btn">
+              {isLoading ? <LoadingSpinner /> : "KUP I ZAPŁAĆ"}
+            </button>
           </div>
           
         </div>

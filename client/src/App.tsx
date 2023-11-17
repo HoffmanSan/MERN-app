@@ -6,6 +6,7 @@ import { useCategoriesContext } from "./hooks/useContextHooks/useCategoriesConte
 import { useAuthContext } from "./hooks/useContextHooks/useAuthContext";
 import { useDataAPI } from "./hooks/useDataAPI";
 import { UsersContextProvider } from "./context/UsersContext";
+import { CartContextProvider } from "./context/CartContext";
 
 // Pages & Components
 import { Dashboard, Login, Signup } from "./pages/index"
@@ -44,13 +45,17 @@ function App() {
 
           <Route path="/products/:id" element={
             <Suspense>
-              <Product />
+              <CartContextProvider>
+                <Product />
+              </CartContextProvider>
             </Suspense>
           }/>
 
           <Route path="/cart" element={user ?
             <Suspense>
-              <Cart />
+              <CartContextProvider>
+                <Cart />
+              </CartContextProvider>
             </Suspense>
             :
             <Login />
