@@ -62,7 +62,7 @@ export default function Dashboard() {
   
   return (
     <>
-      <div className="w-9/12 p-5 mx-auto my-6 bg-white shadow-md min-h-max">
+      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md min-h-max">
         <h2>Najnowsze produkty</h2>
         {stateProducts.products.length > 0 ?
           <Carousel>
@@ -77,7 +77,7 @@ export default function Dashboard() {
         }
       </div>
 
-      <div className="w-9/12 p-5 mx-auto mb-6 bg-white shadow-md">
+      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md">
         <h2>Szukaj produktów wg Kategorii</h2>
         {stateCategories.categories.length > 0 ?
           <Carousel>

@@ -62,8 +62,6 @@ const updateProduct = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({error: "Nieprawidłowy numer identyfikacyjny produktu"});
   }
-
-  console.log(req.body)
   
   const product = await Product.findOneAndUpdate(
     { _id: id },

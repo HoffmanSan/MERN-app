@@ -177,7 +177,7 @@ export default function CreateProduct() {
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Nazwa:</span>
         <input
-          className="w-4/12 p-2 my-1 text-center text-black border border-orange-400 rounded-md"
+          className="w-4/12 p-2 text-center text-black border border-orange-400 rounded-md"
           onChange={(e) => setProduct({...product, name: e.target.value})}
           value={product.name}
           id="product-name"

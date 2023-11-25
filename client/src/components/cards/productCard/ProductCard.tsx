@@ -26,11 +26,11 @@ export default function ProductCard({product}: CardProps) {
             alt={product.name}
             loading="lazy"
             rel="preload"
-            className="object-scale-down h-64 transition duration-200 ease-out "
+            className="object-scale-down h-56 transition duration-200 ease-out "
           />
         </div>
 
-        <div className="px-2 text-center transition duration-200 ease-out ">
+        <div className="px-2 pt-1 text-center transition duration-200 ease-out ">
           <h2>{product.price} zł</h2>
           <h3 className="text-base">{product.name}</h3>
         </div>

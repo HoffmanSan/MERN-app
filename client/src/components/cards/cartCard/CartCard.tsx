@@ -1,41 +1,52 @@
 // IMPORTS
-import { useState } from "react"
-import { useDataAPI } from "../../../hooks/useDataAPI"
+import { useMemo, useState } from "react"
+import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext"
 
 // TYPES
+type UpdateCartAction = {
+  type: "UPDATE_CART_ITEM" | "DELETE_CART_ITEM"
+  payload: CartItem[]
+}
+type Action = UpdateCartAction
+type Dispatch= (action: Action) => void
 type CartItem = {
-  productId: string
-  productName: string
-  productPrice: number
-  productInStock: number
-  productImageUrl: string
-  purchaseQuantity: number
+  cartItemId: string
+  cartItemQuantity: number
 }
 type CartCardProps = {
-  product: CartItem
-  userCartId: string
+  cartItem: CartItem
+  dispatchCart: Dispatch
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function CartCard({product, userCartId}: CartCardProps) {
+export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCardProps) {
   // LOCAL STATES
-  const [purchaseQuantity, setPurchaseQuantity] = useState(product.purchaseQuantity)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [purchaseQuantity, setPurchaseQuantity] = useState(cartItem.cartItemQuantity)
+  const [isDeleting] = useState(false)
 
   // GLOBAL STATES & CUSTOM HOOKS
-  const { updateDocument } = useDataAPI();
+  const { state } = useProductsContext()
+  const products = state.products
   
-  // ---- DELETE CART ITEM ---- \\
-  const deleteItemFromCart = async () => {
-    setIsDeleting(true)
-    await updateDocument("carts", { ...product, purchaseQuantity: 0}, userCartId)
+  // ---- FIND PRODUCT IN PRODUCTS CONTEXT ON MOUNT ---- \\
+  const product = useMemo(() => {
+    return products.find(item => item._id === cartItem.cartItemId)
+  }, [cartItem.cartItemId, products])
+
+  const deleteProductFromCart = () => {
+    dispatchCart({type: "DELETE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity }]})
+  }
+
+  if (!product) {
+    return null
   }
 
   return (
     <div className={`grid grid-cols-6 border-b border-orange-400 ${isDeleting && "hidden"}`}>
 
       <div className="grid grid-cols-3 col-span-3 py-2">
-        <img src={product.productImageUrl} alt={product.productName} className="object-scale-down object-center w-24 h-24 mx-auto bg-gray-200"/>
-        <a href={`/products/${product.productId}`}className="col-span-2 my-auto ml-2 text-center uppercase hover:text-orange-400">{product.productName}</a>
+        <img src={product?.photoURLs[0]} alt={product?.name} className="object-scale-down object-center w-24 h-24 mx-auto bg-gray-200"/>
+        <a href={`/products/${product._id}`}className="col-span-2 my-auto ml-2 text-center uppercase hover:text-orange-400">{product.name}</a>
       </div>
 
       <div className="grid grid-cols-5 col-span-3 py-2">
@@ -44,7 +55,9 @@ export default function CartCard({product, userCartId}: CartCardProps) {
           <button
             className={`h-10 font-bold text-orange-400 border-2 border-orange-400 w-9 ${purchaseQuantity === 1 && "bg-orange-200"}`}
             onClick={() => {
+              setIsLoading(true)
               setPurchaseQuantity(currValue => currValue - 1)
+              dispatchCart({type: "UPDATE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity - 1 }]})
             }}
             disabled={purchaseQuantity === 1}
           >
@@ -59,11 +72,13 @@ export default function CartCard({product, userCartId}: CartCardProps) {
           />
 
           <button
-            className={`h-10 font-bold text-orange-400 border-2 border-orange-400 w-9 ${purchaseQuantity === product.productInStock && "bg-orange-200"}`}
+            className={`h-10 font-bold text-orange-400 border-2 border-orange-400 w-9 ${purchaseQuantity === product.inStock && "bg-orange-200"}`}
             onClick={() => {
+              setIsLoading(true)
               setPurchaseQuantity(currValue => currValue + 1)
+              dispatchCart({type: "UPDATE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity + 1 }]})
             }}
-            disabled={purchaseQuantity === product.productInStock}
+            disabled={purchaseQuantity === product.inStock}
           >
             +
           </button>
@@ -74,7 +89,8 @@ export default function CartCard({product, userCartId}: CartCardProps) {
           <svg 
             className="hover:cursor-pointer"
             onClick={() => {
-              deleteItemFromCart()
+              setIsLoading(true)
+              deleteProductFromCart()
             }}
             xmlns="http://www.w3.org/2000/svg"
             x="0px"
@@ -89,7 +105,7 @@ export default function CartCard({product, userCartId}: CartCardProps) {
         </div>
 
         <div className="flex flex-col items-end justify-center col-span-2 mr-3">
-          <h3 className="tracking-wide">{(product.productPrice * purchaseQuantity).toFixed(2)} zł</h3>
+          <h3 className="tracking-wide">{(product.price * purchaseQuantity).toFixed(2)} zł</h3>
           <small className="text-gray-400">za sztukę zł</small>
         </div>
 

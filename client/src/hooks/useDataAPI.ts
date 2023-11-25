@@ -34,7 +34,7 @@ export const useDataAPI = () => {
     }
     catch (error: any) {
       console.log(error)
-      throw new Error("Błąd pobierania danych dokumentu: " + error.response.data.error)
+      throw new Error("Błąd pobierania dokumentu: " + error.response.data.error)
     }
   }, [userToken])
   // ----------------------------- \\
@@ -52,13 +52,13 @@ export const useDataAPI = () => {
     }
     catch (error: any) {
       console.log(error)
-      throw new Error("Błąd zapisywania dokumentu: " + error.response.data.error)
+      throw new Error("Błąd tworzenia dokumentu: " + error.response.data.error)
     }
   }
   // ----------------------------- \\
 
   // ---- UPDATE DOCUMENT ---- \\
-  const updateDocument = async (dataType: string, documentBody: object, documentId: string) => {
+  const updateDocument = useCallback(async (dataType: string, documentBody: object, documentId: string) => {
 
     try {
       const response = await axios.patch(
@@ -70,9 +70,9 @@ export const useDataAPI = () => {
     }
     catch (error: any) {
       console.log(error)
-      throw new Error("Błąd zapisywania dokumentu: " + error.response.data.error)
+      throw new Error("Błąd aktualizacji dokumentu: " + error.response.data.error)
     }
-  }
+  }, [userToken])
   // --------------------------- \\
 
   // ---- DELETE DOCUMENT ---- \\

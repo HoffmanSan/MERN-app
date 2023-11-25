@@ -16,8 +16,8 @@ export default function CategoryCard({category}: CategoryCardProps) {
     <Link to="/categories/">
       {category ? 
         <div
-          style={ {backgroundImage: `url(${category.imageURL})`} }
-          className="flex items-end mx-3 mt-4 mb-2 transition-all duration-300 ease-out bg-center bg-cover rounded-md h-80 group hover:scale-105"
+          style={ { backgroundImage: `url(${category.imageURL})` } }
+          className="flex items-end mx-3 mt-4 mb-2 transition-all duration-300 ease-out bg-center bg-cover rounded-md shadow-md h-80 group hover:scale-105"
         >
           <h2 className="w-full px-2 py-1 mb-4 tracking-wide text-center text-white transition-all duration-300 ease-out bg-orange-400 group-hover:mb-0 group-hover:rounded-b-md group-hover:bg-orange-600">{category.name}</h2>
         </div>

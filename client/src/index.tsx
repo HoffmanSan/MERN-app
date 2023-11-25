@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 // Context Providers
-import { AuthContextProvider } from "./context/AuthContext";
-import { ProductsContextProvider } from "./context/ProductsContext";
-import { CategoriesContextProvider } from './context/CategoriesContext';
+import { AuthContextProvider } from "./contexts/AuthContext";
+import { ProductsContextProvider } from "./contexts/ProductsContext";
+import { CategoriesContextProvider } from './contexts/CategoriesContext';
+import { CartContextProvider } from './contexts/CartContext';
 
 // Styles
 import './assets/global.css';
@@ -17,11 +18,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <CategoriesContextProvider>
-        <ProductsContextProvider>
-          <App />
-        </ProductsContextProvider>
-      </CategoriesContextProvider>
+      <CartContextProvider>
+        <CategoriesContextProvider>
+          <ProductsContextProvider>
+            <App />
+          </ProductsContextProvider>
+        </CategoriesContextProvider>
+      </CartContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 

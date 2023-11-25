@@ -5,22 +5,11 @@ const Schema = mongoose.Schema
 
 const cartSchema = new Schema({
   cartItems: [{
-    productId: {
+    _id: false,
+    cartItemId: {
       type: String
     },
-    productName: {
-      type: String
-    },
-    productPrice: {
-      type: Number
-    },
-    productInStock: {
-      type: Number
-    },
-    productImageUrl: {
-      type: String
-    },
-    purchaseQuantity: {
+    cartItemQuantity: {
       type: Number
     }
   }]

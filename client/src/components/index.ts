@@ -11,6 +11,7 @@ export { default as Navbar } from "./navbar/Navbar"
 export { default as ProductList } from "./productList/ProductList"
 export { default as ProfileMenu } from "./profileMenu/ProfileMenu"
 export { default as FilterForm } from "./forms/filterProductsForm/FilterProductsForm"
+export { default as ProductRow } from "./productRow/ProductRow"
 
 // Admin Panel Components
 export { default as Categories } from "./adminPanel/categories/Categories"

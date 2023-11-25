@@ -5,8 +5,8 @@ import { useProductsContext } from "./hooks/useContextHooks/useProductsContext";
 import { useCategoriesContext } from "./hooks/useContextHooks/useCategoriesContext";
 import { useAuthContext } from "./hooks/useContextHooks/useAuthContext";
 import { useDataAPI } from "./hooks/useDataAPI";
-import { UsersContextProvider } from "./context/UsersContext";
-import { CartContextProvider } from "./context/CartContext";
+import { UsersContextProvider } from "./contexts/UsersContext";
+import { CartContextProvider } from "./contexts/CartContext";
 
 // Pages & Components
 import { Dashboard, Login, Signup } from "./pages/index"
