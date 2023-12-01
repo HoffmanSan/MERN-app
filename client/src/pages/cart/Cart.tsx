@@ -4,6 +4,7 @@ import { useDataAPI } from "../../hooks/useDataAPI"
 import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext"
 import { useCartContext } from "../../hooks/useContextHooks/useCartContext"
 import { useProductsContext } from "../../hooks/useContextHooks/useProductsContext"
+import axios from "axios"
 
 // COMPONENTS
 import { CartCard, LoadingSpinner } from "../../components"
@@ -13,33 +14,14 @@ export default function Cart() {
   const [isLoading, setIsLoading] = useState(false)
 
   // GLOBAL STATES & CUSTOM HOOKS
-  const { getSingleDocument, updateDocument } = useDataAPI()
-  const { state: cartState, dispatch: dispatchCart } = useCartContext();
-  const cartId = cartState.cart._id
-  const cartItems = cartState.cart.cartItems
-  const { state: authState } = useAuthContext();
-  const userCartId = authState.user ? authState.user.cartId : ""
-  const { state: productsState } = useProductsContext();
-  const products = productsState.products
-
-  // ---- GET CART ITEMS ---- \\
-  useEffect(() => {
-    if (isLoading) {
-      return
-    }
-
-    const getCart = async () => {
-      await getSingleDocument("carts", userCartId)
-      .then(response => {
-        dispatchCart({type: "SET_CART", payload: response})
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    }
-    
-    getCart()
-  }, [dispatchCart, getSingleDocument, userCartId, isLoading])
+  const { updateDocument } = useDataAPI()
+  const { cart, dispatchCart } = useCartContext()
+  const cartId = cart._id
+  const cartItems = cart.cartItems
+  const { user } = useAuthContext()
+  const userCartId = user ? user.cartId : ""
+  const userToken = user ? user.token : "";
+  const { products } = useProductsContext()
 
   // ---- UPDATE CART IN DATABASE AFTER LOCAL CART CHANGES ---- \\
   useEffect(() => {
@@ -48,12 +30,12 @@ export default function Cart() {
     }
 
     const updateCart = setTimeout(async () => {
-      await updateDocument("carts", cartState.cart, userCartId)
+      await updateDocument("carts", cart, userCartId)
       setIsLoading(false)
     }, 1000)
 
     return () => clearTimeout(updateCart)
-  }, [cartState.cart, isLoading, userCartId, updateDocument])
+  }, [cart, isLoading, userCartId, updateDocument])
 
   // ---- GET TOTAL CART VALUE ---- \\
   const totalCartValue = useMemo(() => {
@@ -73,6 +55,16 @@ export default function Cart() {
     })
     return entireCartValue
   }, [cartItems, products])
+
+  const startPayment = () => {
+    axios.post(
+      `${process.env.REACT_APP_API_SERVER_URI}/api/payments/create-checkout-session`,
+      cartItems,
+      { headers: {'Authorization': `Bearer ${userToken}`} }
+    )
+    .then(response => window.location.href = response.data.url)
+    .catch(error => console.log(error))
+  }
   
   return (
     <div className="grid w-9/12 grid-cols-3 gap-4 mx-auto my-6">
@@ -103,7 +95,7 @@ export default function Cart() {
                   :
                     <>
                       <h2 className="py-10 my-auto text-4xl tracking-wider">{totalCartValue.toFixed(2)} zł</h2>
-                      <button className="w-full btn">DOSTAWA I PŁATNOŚĆ</button>
+                      <button className="w-full btn" onClick={() => startPayment()}>PŁATNOŚĆ</button>
                     </>
                   }
                 </div>
@@ -113,7 +105,7 @@ export default function Cart() {
         </>
       : 
         // if the cart is not loaded yet
-        <h3 className="col-span-3 text-center text-gray-400">Ładowanie...</h3>
+        <h3 className="col-span-3 mt-5 text-center text-gray-400">Ładowanie...</h3>
       }
       
     </div>

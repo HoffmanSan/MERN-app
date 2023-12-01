@@ -5,8 +5,8 @@ import axios from "axios";
 export const useImagesAPI = () => {
   
    // get user token for authentication
-  const { state } = useAuthContext();
-  const userAuth = state.user;
+  const { user } = useAuthContext();
+  const userToken = user ? user.token : "";
 
   // ---- CONVERT IMAGE TO BASE64 STRING ---- \\
   const convertImageToBase64String = (file: File): any => {
@@ -28,7 +28,7 @@ export const useImagesAPI = () => {
       const response = await axios.post(
         `${process.env.REACT_APP_API_SERVER_URI}/api/images`,
         { image: base64String, folder: `/${imageSource}/${cloudinaryFolderId}` },
-        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
+        { headers: {'Authorization': `Bearer ${userToken}`} }
       )
       return response.data
     }
@@ -45,7 +45,7 @@ export const useImagesAPI = () => {
     try {
       await axios.delete(
         `${process.env.REACT_APP_API_SERVER_URI}/api/images/${imageSource}/${cloudinaryFolderId}`,
-        { headers: {'Authorization': `Bearer ${userAuth?.token}`} }
+        { headers: {'Authorization': `Bearer ${userToken}`} }
       )
     }
     catch (error: any) {

@@ -13,7 +13,7 @@ type CategoryCardProps = {
 
 export default function CategoryCard({category}: CategoryCardProps) {
   return (
-    <Link to="/categories/">
+    <Link to={`/categories/${category?.name}`}>
       {category ? 
         <div
           style={ { backgroundImage: `url(${category.imageURL})` } }

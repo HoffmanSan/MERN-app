@@ -20,7 +20,7 @@ type UsersProviderProps = {
   children: React.ReactNode
 }
 
-export const UsersContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
+export const UsersContext = createContext<{users: User[]; dispatchUsers: Dispatch} | undefined>(undefined);
 
 export const usersReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -40,12 +40,10 @@ export const usersReducer = (state: State, action: Action): State => {
 };
 
 export const UsersContextProvider = ({children}: UsersProviderProps) => {
-  const [state, dispatch] = useReducer(usersReducer, {
-    users: []
-  })
+  const [state, dispatchUsers] = useReducer(usersReducer, { users: [] })
 
   return (
-    <UsersContext.Provider value={{state, dispatch}}>
+    <UsersContext.Provider value={{...state, dispatchUsers}}>
       {children}
     </UsersContext.Provider>
   )

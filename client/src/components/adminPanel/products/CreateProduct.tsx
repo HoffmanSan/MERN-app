@@ -41,9 +41,9 @@ export default function CreateProduct() {
   // GLOBAL STATES
   const { convertImageToBase64String, uploadImage} = useImagesAPI();
   const { createDocument } = useDataAPI();
-  const { dispatch } = useProductsContext();
-  const { state: stateCategories } = useCategoriesContext();
-  const caregories = stateCategories.categories;
+  const { dispatchProducts } = useProductsContext();
+  const { categories } = useCategoriesContext();
+
   
 
   // ---- HANDLE FILE CHANGE ---- \\
@@ -151,7 +151,7 @@ export default function CreateProduct() {
 
       // add product to database
       const result = await createDocument("products", product)
-      dispatch({ type: "CREATE_PRODUCT", payload: [result] })
+      dispatchProducts({ type: "CREATE_PRODUCT", payload: [result] })
       resetForm()
       setError("")
       setOutcome("Produkt dodany")
@@ -219,7 +219,7 @@ export default function CreateProduct() {
       <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
 
       <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
-        {caregories.sort().map((item) => (
+        {categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
             <input
               type="checkbox"
@@ -250,7 +250,7 @@ export default function CreateProduct() {
         ))}
       </div>
 
-      <button disabled={isAdding} className={`btn w-2/12 mx-auto `}>
+      <button disabled={isAdding || error !== ""} className={`btn w-2/12 mx-auto `}>
       {isAdding ?
         <LoadingSpinner />
         :

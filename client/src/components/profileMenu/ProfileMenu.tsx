@@ -11,7 +11,7 @@ type ProfileMenuProps = {
 
 export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
   const { logout } = useLogout();
-  const { state } = useAuthContext();
+  const { user } = useAuthContext();
   const ref = useRef<HTMLUListElement>(null)
 
   // Hide menu if the user clicks somewhere else on the page
@@ -29,7 +29,7 @@ export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
 
   return (
     <ul ref={ref} className="absolute p-2 m-0 text-white bg-orange-400">
-      {!state.user ?
+      {!user ?
       <>
         <li className="hover:font-bold"><Link to="/login">Logowanie</Link></li>
         <li className="hover:font-bold"><Link to="/signup">Rejestracja</Link></li>
@@ -37,7 +37,7 @@ export default function ProfileMenu({setIsOpen}: ProfileMenuProps) {
       </>
       :
       <>
-        {state.user.role === "Administrator" &&
+        {user.role === "Administrator" &&
           <li className="hover:font-bold">
             <Link to="/admin">
               Admin

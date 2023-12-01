@@ -27,7 +27,7 @@ export default function Navbar() {
             type="text"
             name="search-bar"
             className="w-full px-2 rounded"
-            placeholder="Szukaj..."
+            placeholder="Szukaj produktów..."
             onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}
           />

@@ -27,7 +27,7 @@ type CartProviderProps = {
   children: React.ReactNode
 }
 
-export const CartContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
+export const CartContext = createContext<{cart: Cart; dispatchCart: Dispatch} | undefined>(undefined);
 
 const cartReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -65,10 +65,10 @@ const cartReducer = (state: State, action: Action) => {
 }
 
 export const CartContextProvider = ({children}: CartProviderProps) => {
-  const [state, dispatch] = useReducer(cartReducer, { cart: { _id: "", cartItems: [] } })
+  const [state, dispatchCart] = useReducer(cartReducer, { cart: {_id: "", cartItems: []} })
 
   return (
-    <CartContext.Provider value={{state, dispatch}}>
+    <CartContext.Provider value={{...state, dispatchCart}}>
       {children}
     </CartContext.Provider>
   )

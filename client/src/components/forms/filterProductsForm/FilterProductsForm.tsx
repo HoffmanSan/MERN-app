@@ -59,7 +59,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
       
       <div className="grid grid-cols-2 gap-y-2">
         {categoryList.map((item) => (
-          <div className="flex items-center" key={item.name}>
+          <div className="flex items-center px-0.5" key={item.name}>
             <>
               <input
                 type="checkbox"

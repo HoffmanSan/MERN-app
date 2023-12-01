@@ -26,7 +26,7 @@ type ProductsProviderProps = {
   children: React.ReactNode
 }
 
-export const ProductsContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
+export const ProductsContext = createContext<{products: Product[]; dispatchProducts: Dispatch} | undefined>(undefined);
 
 export const productsReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -59,12 +59,10 @@ export const productsReducer = (state: State, action: Action): State => {
 }
 
 export const ProductsContextProvider = ({children}: ProductsProviderProps) => {
-  const [state, dispatch] = useReducer(productsReducer, {
-    products: []
-  })
+  const [state, dispatchProducts] = useReducer(productsReducer, { products: [] })
 
   return (
-    <ProductsContext.Provider value={{state, dispatch}}>
+    <ProductsContext.Provider value={{...state, dispatchProducts}}>
       {children}
     </ProductsContext.Provider>
   )

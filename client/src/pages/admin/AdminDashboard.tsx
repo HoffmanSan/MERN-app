@@ -8,23 +8,28 @@ import axios from "axios"
 import { Products, Categories, Users } from "../../components/index";
 
 export default function AdminPanel() {
+  // LOCAL STATES
   const [error, setError] = useState("")
   const [currentPanel, setCurrentPanel] = useState<string>("Products")
-  const { state: stateAuth } = useAuthContext();
-  const { dispatch } = useUsersContext();
+  
+  // GLOBAL STATES & UTILITIES
+  const { dispatchUsers } = useUsersContext();
+  const { user } = useAuthContext();
+  const userToken = user ? user.token : "";
 
+  // ---- GET USERS FROM DATABASE ---- \\
   useEffect(() => {
     const getUsers = async () => {
       await axios.get(
         `${process.env.REACT_APP_API_SERVER_URI}/api/users`,
-        { headers: {'Authorization': `Bearer ${stateAuth.user?.token}`} 
+        { headers: {'Authorization': `Bearer ${userToken}`} 
       })
-      .then((response) => dispatch({ type: "SET_USERS", payload: response.data }))
+      .then((response) => dispatchUsers({ type: "SET_USERS", payload: response.data }))
       .catch(error => setError(error.message))
     }
 
     getUsers();
-  }, [dispatch, stateAuth.user?.token])
+  }, [dispatchUsers, userToken])
 
   const showCorrectPanel = () => {
     switch (currentPanel) {

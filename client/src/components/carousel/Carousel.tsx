@@ -37,9 +37,6 @@ export default function CarouselComponent({children}: CarouselComponentProps) {
       removeArrowOnDeviceType={["tablet", "mobile"]}
     >
       {children}
-      
-      {/* this empty div is placed here due to a bug with react-multi-carousel and it's elements.length property */}
-      {<div/>}
     </Carousel>
   )
 }

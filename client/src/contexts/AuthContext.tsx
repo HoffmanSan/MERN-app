@@ -24,8 +24,8 @@ type AuthProviderProps = {
 const userJson = localStorage.getItem("user");
 const user = (userJson !== null) && JSON.parse(userJson)
 
-// Create context - define it later in the file
-export const AuthContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
+// Create context
+export const AuthContext = createContext<{user: User | null; dispatchAuth: Dispatch} | undefined>(undefined);
 
 export const authReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -39,10 +39,10 @@ export const authReducer = (state: State, action: Action): State => {
 }
 
 export const AuthContextProvider = ({children}: AuthProviderProps) => {
-  const [state, dispatch] = useReducer(authReducer, { user: user });
+  const [state, dispatchAuth] = useReducer(authReducer, { user: user });
 
   return (
-    <AuthContext.Provider value={{state, dispatch}}>
+    <AuthContext.Provider value={{...state, dispatchAuth}}>
       { children }
     </AuthContext.Provider>
   )

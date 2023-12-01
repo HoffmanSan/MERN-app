@@ -20,7 +20,7 @@ type ProductsListProps = {
 }
 
 export default function ProductsList({filteredProducts}: ProductsListProps) {
-  const { state } = useAuthContext()
+  const { user } = useAuthContext()
   
   return (
     <div className="col-span-3 p-5 ml-6 bg-white shadow-md h-min">
@@ -30,7 +30,7 @@ export default function ProductsList({filteredProducts}: ProductsListProps) {
           <h2 className="font-bold pb-3text-2xl">Wszystkie oferty</h2>
           {filteredProducts.map(product => (
             <Link key={product._id} to={`/products/${product._id}`}>
-              <ProductRow product={product} user={state.user}/>
+              <ProductRow product={product} user={user}/>
             </Link>
           ))}
         </>

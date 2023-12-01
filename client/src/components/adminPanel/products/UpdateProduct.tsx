@@ -32,26 +32,14 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
   const [imagesSize, setImagesSize] = useState<File[]>([]);
   const [imageList, setImageList] = useState<File[] | null>(null);
   const [showPreviousPhotos, setShowPreviousPhotos] = useState(true)
-  const [product, setProduct] = useState<Product>({
-    _id: updatedProduct._id,
-    name: updatedProduct.name,
-    price: updatedProduct.price,
-    description: updatedProduct.description,
-    inStock: updatedProduct.inStock,
-    categories: updatedProduct.categories,
-    photoURLs: updatedProduct.photoURLs,
-    cloudinaryFolderId: updatedProduct.cloudinaryFolderId,
-    createdAt: updatedProduct.createdAt
-  });
+  const [product, setProduct] = useState<Product>({ ...updatedProduct });
   const fileInput = useRef<HTMLInputElement>(null);
 
   // GLOBAL STATES
   const { updateDocument } = useDataAPI();
   const { convertImageToBase64String, uploadImage, deleteImages } = useImagesAPI();
-  const { dispatch } = useProductsContext();
-  const { state } = useCategoriesContext();
-  const categories = state.categories;
-  
+  const { dispatchProducts } = useProductsContext();
+  const { categories } = useCategoriesContext();
 
   // ON FILE INPUT CHANGE
   const handleFileChange = (e: ChangeEvent) => {
@@ -143,7 +131,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
 
       // update product in the database
       const response = await updateDocument("products", product, product._id.toString())
-      dispatch({ type: "UPDATE_PRODUCT", payload: [response.product] })
+      dispatchProducts({ type: "UPDATE_PRODUCT", payload: [response.product] })
       setError("")
       setOutcome("Produkt zaktualizowany")
       setTimeout(() => setOutcome(""), 3000)
@@ -280,7 +268,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
 
       {/* SUBMIT BUTTON */}
 
-      <button disabled={isUpdating} className={`btn w-2/12 mx-auto `}>
+      <button disabled={isUpdating || error !== ""} className={`btn w-2/12 mx-auto `}>
       {isUpdating ?
         <LoadingSpinner />
         :

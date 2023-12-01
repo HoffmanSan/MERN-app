@@ -26,8 +26,7 @@ export default function DisplayCategories() {
   const [query, setQuery] = useState("")
   
   // GLOBAL STATES & UTILITIES
-  const { state, dispatch } = useCategoriesContext()
-  const categories = state.categories
+  const { categories, dispatchCategories } = useCategoriesContext()
   const { convertImageToBase64String, uploadImage, deleteImages} = useImagesAPI()
   const { createDocument, deleteDocument } = useDataAPI()
   
@@ -39,7 +38,7 @@ export default function DisplayCategories() {
       return categories
     }
     return categories.filter(item => 
-      item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
+      item.name.toLowerCase().includes(debouncedQuery.toString().toLowerCase())
     )
   }, [debouncedQuery, categories])
 
@@ -93,7 +92,7 @@ export default function DisplayCategories() {
       const imageURL = await uploadImage(imageString, "categories", newCategory.cloudinaryFolderId)
       newCategory.imageURL = imageURL;
       const response = await createDocument("categories", newCategory)
-      dispatch({ type: "CREATE_CATEGORY", payload: [response] })
+      dispatchCategories({ type: "CREATE_CATEGORY", payload: [response] })
       setNewCategory({ name: "", imageURL: "", cloudinaryFolderId: nanoid() })
     }
     catch (error: any) {
@@ -113,7 +112,7 @@ export default function DisplayCategories() {
     try {
       await deleteImages("categories", category.cloudinaryFolderId)
       const response = await deleteDocument("categories", category._id)
-      dispatch({ type: "DELETE_CATEGORY", payload: [response.category] })
+      dispatchCategories({ type: "DELETE_CATEGORY", payload: [response.category] })
     }
     catch (error: any) {
       setError(error.message)

@@ -6,32 +6,40 @@ import { useCategoriesContext } from "./hooks/useContextHooks/useCategoriesConte
 import { useAuthContext } from "./hooks/useContextHooks/useAuthContext";
 import { useDataAPI } from "./hooks/useDataAPI";
 import { UsersContextProvider } from "./contexts/UsersContext";
-import { CartContextProvider } from "./contexts/CartContext";
+import { useCartContext } from "./hooks/useContextHooks/useCartContext";
 
 // Pages & Components
-import { Dashboard, Login, Signup } from "./pages/index"
+import { Dashboard, Login, Signup, Success } from "./pages/index"
 import { Navbar } from "./components/index"
 const Cart = lazy(() => import("./pages/cart/Cart"))
-const Product = lazy(() => import("./pages/product/Products"))
+const Search = lazy(() => import("./pages/search/Search"))
+const Product = lazy(() => import("./pages/product/Product"))
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"))
+const Category = lazy(() => import("./pages/category/Category"))
 
 function App() {
-  const { getData } = useDataAPI();
-  const { state } = useAuthContext();
-  const user = state.user
-  const { dispatch: dispatchProducts } = useProductsContext();
-  const { dispatch: dispatchCategories } = useCategoriesContext();
+  const { getData, getSingleDocument } = useDataAPI();
+  const { user } = useAuthContext();
+  const { dispatchProducts } = useProductsContext();
+  const { dispatchCategories } = useCategoriesContext();
+  const { dispatchCart } = useCartContext();
 
   useEffect(() => {
     getData("products")
-    .then(response => dispatchProducts({type: "SET_PRODUCTS", payload: response.data}))
+    .then(response => dispatchProducts({type: "SET_PRODUCTS", payload: response}))
     .catch(error => console.log(error))
 
     getData("categories")
-    .then(response => dispatchCategories({type: "SET_CATEGORIES", payload: response.data}))
+    .then(response => dispatchCategories({type: "SET_CATEGORIES", payload: response}))
     .catch(error => console.log(error))
 
-  }, [dispatchProducts, dispatchCategories])
+    if (user) {
+      getSingleDocument("carts", user.cartId)
+      .then(response => dispatchCart({type: "SET_CART", payload: response}))
+      .catch(error => console.log(error))
+    }
+
+  }, [getData, getSingleDocument, dispatchProducts, dispatchCategories, dispatchCart, user])
 
   return (
     <div>
@@ -42,23 +50,32 @@ function App() {
           <Route path="/" element={<Dashboard />}/>
           <Route path="/login" element={user ? <Navigate to="/"/> : <Login />}/>
           <Route path="/signup" element={user ? <Navigate to="/"/> : <Signup />}/>
+          <Route path="/success" element={<Success />}/>
+
+          <Route path="/categories/:categoryName" element={
+            <Suspense>
+              <Category />
+            </Suspense>
+          }/>
 
           <Route path="/products/:id" element={
             <Suspense>
-              <CartContextProvider>
                 <Product />
-              </CartContextProvider>
             </Suspense>
           }/>
 
           <Route path="/cart" element={user ?
             <Suspense>
-              <CartContextProvider>
                 <Cart />
-              </CartContextProvider>
             </Suspense>
             :
             <Login />
+          }/>
+
+          <Route path="/search/:querry" element={
+            <Suspense>
+              <Search />
+            </Suspense>
           }/>
 
           {/* allow only admins to access admin panel */}

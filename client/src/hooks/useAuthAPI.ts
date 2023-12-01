@@ -6,7 +6,7 @@ import axios from "axios";
 export const useAuthAPI = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { dispatch } = useAuthContext();
+  const { dispatchAuth } = useAuthContext();
 
   const login = async (email: string, password: string) => {
     setIsLoading(true)
@@ -18,7 +18,7 @@ export const useAuthAPI = () => {
     )
     .then(response => {
       localStorage.setItem("user", JSON.stringify(response.data))
-      dispatch({ type: "LOGIN", payload: response.data })
+      dispatchAuth({ type: "LOGIN", payload: response.data })
     })
     .catch(error => {
       setError(error.response.data.error)
@@ -37,7 +37,7 @@ export const useAuthAPI = () => {
     )
     .then(response => {
       localStorage.setItem("user", JSON.stringify(response.data))
-      dispatch({ type: "LOGIN", payload: response.data })
+      dispatchAuth({ type: "LOGIN", payload: response.data })
     })
     .catch(error => {
       setError(error.response.data.error)

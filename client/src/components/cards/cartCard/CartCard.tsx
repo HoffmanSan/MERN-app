@@ -25,8 +25,7 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
   const [isDeleting] = useState(false)
 
   // GLOBAL STATES & CUSTOM HOOKS
-  const { state } = useProductsContext()
-  const products = state.products
+  const { products } = useProductsContext()
   
   // ---- FIND PRODUCT IN PRODUCTS CONTEXT ON MOUNT ---- \\
   const product = useMemo(() => {
@@ -37,6 +36,7 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
     dispatchCart({type: "DELETE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity }]})
   }
 
+  // ---- IF CART ITEM HAS BEEN REMOVED FROM THE DATABASE ---- \\
   if (!product) {
     return null
   }
@@ -45,7 +45,7 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
     <div className={`grid grid-cols-6 border-b border-orange-400 ${isDeleting && "hidden"}`}>
 
       <div className="grid grid-cols-3 col-span-3 py-2">
-        <img src={product?.photoURLs[0]} alt={product?.name} className="object-scale-down object-center w-24 h-24 mx-auto bg-gray-200"/>
+        <img src={product.photoURLs[0]} alt={product.name} className="object-scale-down object-center w-24 h-24 mx-auto bg-gray-200"/>
         <a href={`/products/${product._id}`}className="col-span-2 my-auto ml-2 text-center uppercase hover:text-orange-400">{product.name}</a>
       </div>
 
@@ -106,7 +106,7 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
 
         <div className="flex flex-col items-end justify-center col-span-2 mr-3">
           <h3 className="tracking-wide">{(product.price * purchaseQuantity).toFixed(2)} zł</h3>
-          <small className="text-gray-400">za sztukę zł</small>
+          {purchaseQuantity !== 1 && <small className="text-gray-400">{product.price} zł za sztukę</small>}
         </div>
 
       </div>

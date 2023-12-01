@@ -32,8 +32,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
   const [query, setQuery] = useState("");
 
   // GLOBAL STATES & UTILITIES
-  const { state, dispatch } = useProductsContext();
-  const products = state.products;
+  const { products, dispatchProducts } = useProductsContext();
   const { deleteImages } = useImagesAPI();
   const { deleteDocument } = useDataAPI();
 
@@ -46,7 +45,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
     }
     return products.filter(item => {
       return Object.values(item).some(el => 
-        el.toString().toLowerCase().includes(debouncedQuery.toLowerCase())
+        el.toString().toLowerCase().includes(debouncedQuery.toString().toLowerCase())
       )
     })
   }, [debouncedQuery, products])
@@ -60,7 +59,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
     try {
       const response = await deleteDocument("products", product._id)
       await deleteImages("products", product.cloudinaryFolderId)
-      dispatch({ type: "DELETE_PRODUCT", payload: [response.product] })
+      dispatchProducts({ type: "DELETE_PRODUCT", payload: [response.product] })
     }
     catch (error: any) {
       console.log(error)

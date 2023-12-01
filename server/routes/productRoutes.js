@@ -2,7 +2,7 @@
 const express = require("express");
 const requireAdminAuth = require("../middleware/requireAdminAuth");
 
-// Controller functions
+// Controllers
 const {
   getProduct,
   getProducts,

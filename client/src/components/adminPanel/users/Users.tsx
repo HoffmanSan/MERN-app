@@ -22,8 +22,7 @@ export default function Users() {
   const [query, setQuery] = useState("")
 
   // GLOBAL STATES & UTILITIES
-  const { state, dispatch } = useUsersContext()
-  const users = state.users;
+  const { users, dispatchUsers } = useUsersContext()
   const { deleteDocument } = useDataAPI()
 
   // ---- SEARCH BAR LOGIC ---- \\
@@ -34,7 +33,7 @@ export default function Users() {
       return users
     }
     return users.filter(item => 
-      Object.values(item).toString().toLowerCase().includes(debouncedQuery.toLowerCase())
+      Object.values(item).toString().toLowerCase().includes(debouncedQuery.toString().toLowerCase())
     )
   }, [debouncedQuery, users])
 
@@ -45,7 +44,7 @@ export default function Users() {
 
     try {
       const response = await deleteDocument("users", user._id)
-      dispatch({ type: "DELETE_USER", payload: [response.user] })
+      dispatchUsers({ type: "DELETE_USER", payload: [response.user] })
     }
     catch (error: any) {
       setError(error.message)

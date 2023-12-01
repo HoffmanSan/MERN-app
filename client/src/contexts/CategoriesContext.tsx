@@ -20,7 +20,7 @@ type CategoriesProviderProps = {
   children: React.ReactNode
 }
 
-export const CategoriesContext = createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
+export const CategoriesContext = createContext<{categories: Category[]; dispatchCategories: Dispatch} | undefined>(undefined);
 
 export const productsReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -44,12 +44,10 @@ export const productsReducer = (state: State, action: Action): State => {
 };
 
 export const CategoriesContextProvider = ({children}: CategoriesProviderProps) => {
-  const [state, dispatch] = useReducer(productsReducer, {
-    categories: []
-  })
+  const [state, dispatchCategories] = useReducer(productsReducer, { categories: [] })
 
   return (
-    <CategoriesContext.Provider value={{state, dispatch}}>
+    <CategoriesContext.Provider value={{...state, dispatchCategories}}>
       {children}
     </CategoriesContext.Provider>
   )

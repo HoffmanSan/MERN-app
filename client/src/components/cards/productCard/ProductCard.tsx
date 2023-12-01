@@ -18,15 +18,15 @@ type CardProps = {
 export default function ProductCard({product}: CardProps) {
   return (
     <Link to={`/products/${product._id}`} className="mb-4">
-      <div className="flex flex-col items-center min-h-full m-2 mb-4 transition duration-200 ease-out rounded-md shadow-md group hover:scale-105">
+      <div className="flex flex-col items-center min-h-full m-2 mb-4 transition duration-200 ease-out border border-gray-100 rounded-md shadow-md group hover:scale-105">
         
-        <div className="p-2 bg-gray-100 rounded-md">
+        <div className="w-full p-2 bg-gray-100 rounded-md rounded-b-none">
           <img
             src={product.photoURLs[0]}
             alt={product.name}
             loading="lazy"
             rel="preload"
-            className="object-scale-down h-56 transition duration-200 ease-out "
+            className="object-scale-down h-56 mx-auto transition duration-200 ease-out"
           />
         </div>
 
