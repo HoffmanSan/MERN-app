@@ -1,19 +1,19 @@
-// Imports
+// IMPORTS
 const express = require("express");
 
-// Controller functions
+// CONTROLLERS
 const {
   loginUser,
   signupUser
 } = require ("../controllers/userAuthController");
 
-// Routes
+// ROUTES
 const router = express.Router();
 
-// LOGIN route
+// LOGIN
 router.post("/login", loginUser);
 
-// SIGNUP route
+// SIGNUP
 router.post("/signup", signupUser);
 
 module.exports = router;

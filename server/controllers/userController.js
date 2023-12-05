@@ -1,16 +1,16 @@
-// Imports
+// IMPORTS
 const User = require("../models/userModel");
-const Cart = require("../models/cartModel")
+const Cart = require("../models/cartModel");
 const mongoose = require("mongoose");
 
-// Get all users
+// GET ALL USERS
 const getUsers = async (req, res) => {
   const users = await User.find({}).sort({createdAt: -1});
 
   res.status(200).json(users);
 };
 
-// Get a single user
+// GET A SINGLE USER
 const getUser = async (req, res) => {
   const { id } = req.params;
 
@@ -18,16 +18,16 @@ const getUser = async (req, res) => {
     return res.status(404).json({error: "Nieprawidłowy numer identyfikacyjny użytkownika"});
   }
 
-  const user = await User.findById(id)
+  const user = await User.findById(id);
 
   if (!user) {
     return res.status(404).json({error: "Nie ma takiego użytkownika"});
   }
 
-  res.status(200).json(user)
+  res.status(200).json(user);
 };
 
-// Update a user
+// UPDATE A USER
 const updateUser = async (req, res) => {
   const { id } = req.params;
 
@@ -46,9 +46,9 @@ const updateUser = async (req, res) => {
   }
 
   res.status(200).json({user});
-}
+};
 
-// Delete a user
+// DELETE A USER
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 
@@ -57,7 +57,8 @@ const deleteUser = async (req, res) => {
   }
 
   const user = await User.findOneAndDelete({_id: id});
-  await Cart.findOneAndDelete({ _id: user.cartId})
+
+  await Cart.findOneAndDelete({ _id: user.cartId});
 
   if (!user) {
     return res.status(404).json({error: "Nie ma takiego użytkownika"});

@@ -1,7 +1,7 @@
-// Imports
+// IMPORTS
 import { createContext, useReducer } from "react";
 
-// TS types
+// TYPES
 type User = {
   email: string
   _id: string
@@ -10,7 +10,7 @@ type User = {
 }
 type Dispatch = (action: Action) => void
 type Action = {
-  type: "SET_USERS" | "DELETE_USER",
+  type: "SET_USERS" | "DELETE_USER"
   payload: User[]
 }
 type State = {
@@ -40,11 +40,11 @@ export const usersReducer = (state: State, action: Action): State => {
 };
 
 export const UsersContextProvider = ({children}: UsersProviderProps) => {
-  const [state, dispatchUsers] = useReducer(usersReducer, { users: [] })
+  const [state, dispatchUsers] = useReducer(usersReducer, { users: [] });
 
   return (
     <UsersContext.Provider value={{...state, dispatchUsers}}>
       {children}
     </UsersContext.Provider>
   )
-}
+};

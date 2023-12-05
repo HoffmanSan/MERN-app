@@ -1,4 +1,4 @@
-// Imports
+// IMPORTS
 import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useProductsContext } from "./hooks/useContextHooks/useProductsContext";
@@ -8,14 +8,14 @@ import { useDataAPI } from "./hooks/useDataAPI";
 import { UsersContextProvider } from "./contexts/UsersContext";
 import { useCartContext } from "./hooks/useContextHooks/useCartContext";
 
-// Pages & Components
-import { Dashboard, Login, Signup, Success } from "./pages/index"
-import { Navbar } from "./components/index"
-const Cart = lazy(() => import("./pages/cart/Cart"))
-const Search = lazy(() => import("./pages/search/Search"))
-const Product = lazy(() => import("./pages/product/Product"))
-const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"))
-const Category = lazy(() => import("./pages/category/Category"))
+// PAGES & COMPONENTS
+import { Dashboard, Login, Signup, Success, Failure } from "./pages/index";
+import { Navbar } from "./components/index";
+const Cart = lazy(() => import("./pages/cart/Cart"));
+const Search = lazy(() => import("./pages/search/Search"));
+const Product = lazy(() => import("./pages/product/Product"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const Category = lazy(() => import("./pages/category/Category"));
 
 function App() {
   const { getData, getSingleDocument } = useDataAPI();
@@ -27,19 +27,19 @@ function App() {
   useEffect(() => {
     getData("products")
     .then(response => dispatchProducts({type: "SET_PRODUCTS", payload: response}))
-    .catch(error => console.log(error))
+    .catch(error => console.log(error));
 
     getData("categories")
     .then(response => dispatchCategories({type: "SET_CATEGORIES", payload: response}))
-    .catch(error => console.log(error))
+    .catch(error => console.log(error));
 
     if (user) {
       getSingleDocument("carts", user.cartId)
       .then(response => dispatchCart({type: "SET_CART", payload: response}))
-      .catch(error => console.log(error))
+      .catch(error => console.log(error));
     }
 
-  }, [getData, getSingleDocument, dispatchProducts, dispatchCategories, dispatchCart, user])
+  }, [getData, getSingleDocument, dispatchProducts, dispatchCategories, dispatchCart, user]);
 
   return (
     <div>
@@ -51,6 +51,7 @@ function App() {
           <Route path="/login" element={user ? <Navigate to="/"/> : <Login />}/>
           <Route path="/signup" element={user ? <Navigate to="/"/> : <Signup />}/>
           <Route path="/success" element={<Success />}/>
+          <Route path="/failure" element={<Failure />}/>
 
           <Route path="/categories/:categoryName" element={
             <Suspense>
@@ -78,7 +79,6 @@ function App() {
             </Suspense>
           }/>
 
-          {/* allow only admins to access admin panel */}
           <Route path="/admin" element={user && user.role === "Administrator" ?
             <Suspense>
               <UsersContextProvider>
@@ -93,6 +93,6 @@ function App() {
       </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;

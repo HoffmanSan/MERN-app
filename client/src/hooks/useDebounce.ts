@@ -1,7 +1,8 @@
-// Imports
+// IMPORTS
 import { useEffect, useState } from "react";
 
 export const useDebounce = (value: string | number, delay: number) => {
+  // LOCAL STATES
   const [debouncedValue, setDebouncedValue] = useState<string | number>("");
 
   useEffect(() => {
@@ -17,4 +18,4 @@ export const useDebounce = (value: string | number, delay: number) => {
   }, [value, delay]);
 
   return debouncedValue;
-}
+};

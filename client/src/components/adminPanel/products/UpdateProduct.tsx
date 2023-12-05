@@ -1,12 +1,12 @@
 // IMPORTS
-import { ChangeEvent, FormEvent, Fragment, useRef, useState } from "react"
-import { useImagesAPI } from "../../../hooks/useImagesAPI"
-import { useDataAPI } from "../../../hooks/useDataAPI"
-import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext"
-import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategoriesContext"
+import { ChangeEvent, FormEvent, Fragment, useRef, useState } from "react";
+import { useImagesAPI } from "../../../hooks/useImagesAPI";
+import { useDataAPI } from "../../../hooks/useDataAPI";
+import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext";
+import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategoriesContext";
 
 // COMPONENTS
-import { LoadingSpinner } from "../../index"
+import { LoadingSpinner } from "../../index";
 
 // TYPES
 type Product = {
@@ -35,19 +35,19 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
   const [product, setProduct] = useState<Product>({ ...updatedProduct });
   const fileInput = useRef<HTMLInputElement>(null);
 
-  // GLOBAL STATES
+  // GLOBAL STATES & UTILITIES
   const { updateDocument } = useDataAPI();
   const { convertImageToBase64String, uploadImage, deleteImages } = useImagesAPI();
   const { dispatchProducts } = useProductsContext();
   const { categories } = useCategoriesContext();
 
-  // ON FILE INPUT CHANGE
+  // ---- ON FILE INPUT CHANGE ---- \\
   const handleFileChange = (e: ChangeEvent) => {
     setImageList(null);
     setImagesSize([]);
     setError("");
     
-    let files = (e.target as HTMLInputElement).files
+    let files = (e.target as HTMLInputElement).files;
     
     if (!files || files.length === 0) {
       return 
@@ -71,29 +71,29 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
 
     setError("");
     setImageList(filesArray);
-  }
+  };
  
-  // CATEGORY CHECKBOX ON CHECK
+  // ---- CATEGORY CHECKBOX ON CHECK ---- \\
   const handleCheckboxCheck = (newCategory: string) => {
     if (product.categories.includes(newCategory)) {
       // remove category
       setProduct({
         ...product,
         categories: product.categories.filter(category => category !== newCategory)
-      })
+      });
     } else {
       // add category
       setProduct({
         ...product,
         categories: [...product.categories, newCategory]
-      })
+      });
     }
   };
 
   // ---- UPDATE PRODUCT ---- \\
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     // validation
     if (!product.name || !product.price || !product.description || !product.inStock) {
@@ -101,7 +101,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
       return
     }
     if (product.categories.length === 0) {
-      setError("Przydziel kategorie do produktu")
+      setError("Przydziel kategorie do produktu");
       return
     }
   
@@ -113,11 +113,11 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
       if (imageList && imageList.length !== 0) {
 
         // clear old urls and hide previous images
-        product.photoURLs = []
-        setShowPreviousPhotos(false)
+        product.photoURLs = [];
+        setShowPreviousPhotos(false);
 
         // delete old images in storage
-        await deleteImages("products", product.cloudinaryFolderId)
+        await deleteImages("products", product.cloudinaryFolderId);
 
         // add new images to storage
         await Promise.all(
@@ -126,35 +126,33 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
             const imageURL = await uploadImage(imageString, "products", product.cloudinaryFolderId)
             return product.photoURLs.push(imageURL)
           })
-        )
+        );
       }
 
       // update product in the database
-      const response = await updateDocument("products", product, product._id.toString())
-      dispatchProducts({ type: "UPDATE_PRODUCT", payload: [response.product] })
-      setError("")
-      setOutcome("Produkt zaktualizowany")
-      setTimeout(() => setOutcome(""), 3000)
+      const response = await updateDocument("products", product, product._id.toString());
+      dispatchProducts({ type: "UPDATE_PRODUCT", payload: [response.product] });
+      setError("");
+      setOutcome("Produkt zaktualizowany");
+      setTimeout(() => setOutcome(""), 3000);
     }
     catch (error: any) {
-      setError(error.message)
-      console.log(error)
+      setError(error.message);
+      console.log(error);
     }
     finally {
-      setIsUpdating(false)
+      setIsUpdating(false);
     }
   }
-  // ------------------------ \\
 
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
       
       <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md">EDYTUJ PRODUKT</h2>
-
-      {/* GENERAL DATA SECTION */}
       
       <h3 className="p-1 text-white bg-orange-400">Dane</h3>
 
+      {/* product name input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Nazwa:</span>
         <input
@@ -165,6 +163,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
         />
       </label>
 
+      {/* product price input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Cena (zł / szt.):</span>
         <input
@@ -176,6 +175,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
         />
       </label>
 
+      {/* product in stock quantity input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Ilość na magazynie (szt.):</span>
         <input
@@ -187,6 +187,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
         />
       </label>
 
+      {/* product description */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Opis:</span>
         <textarea
@@ -196,11 +197,10 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
           id="product-description"
         />
       </label>
-
-      {/* CATEGORIES SECTION */}
       
       <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
 
+      {/* product categories input */}
       <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
         {categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
@@ -215,12 +215,12 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
           </div>
         ))}
       </div>
-
-      {/* IMAGES SECTION */}
       
       <h3 className="p-1 m-2 text-white bg-orange-400">Zdjęcia</h3>
       
+      {/* product images input */}
       <div className="m-2 mb-4">
+
         <input
           ref={fileInput}
           onChange={handleFileChange}
@@ -266,14 +266,15 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
         }
       </div>
 
-      {/* SUBMIT BUTTON */}
-
-      <button disabled={isUpdating || error !== ""} className={`btn w-2/12 mx-auto `}>
-      {isUpdating ?
-        <LoadingSpinner />
+      <button
+        disabled={isUpdating || error !== ""}
+        className="w-2/12 mx-auto btn"
+      >
+        {isUpdating ?
+          <LoadingSpinner />
         :
-        "Aktualizuj produkt"
-      }
+          "Aktualizuj produkt"
+        }
       </button>
 
       {error && <div className="m-2 mx-auto error">{error}</div>}

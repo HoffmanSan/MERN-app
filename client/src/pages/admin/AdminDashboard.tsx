@@ -1,16 +1,16 @@
-// Imports
+// IMPORTS
 import { useState, useEffect } from "react";
 import { useUsersContext } from "../../hooks/useContextHooks/useUsersContext";
 import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext";
-import axios from "axios"
+import axios from "axios";
 
-// Components
+// COMPONENTS
 import { Products, Categories, Users } from "../../components/index";
 
 export default function AdminPanel() {
   // LOCAL STATES
-  const [error, setError] = useState("")
-  const [currentPanel, setCurrentPanel] = useState<string>("Products")
+  const [error, setError] = useState("");
+  const [currentPanel, setCurrentPanel] = useState<string>("Products");
   
   // GLOBAL STATES & UTILITIES
   const { dispatchUsers } = useUsersContext();
@@ -25,12 +25,13 @@ export default function AdminPanel() {
         { headers: {'Authorization': `Bearer ${userToken}`} 
       })
       .then((response) => dispatchUsers({ type: "SET_USERS", payload: response.data }))
-      .catch(error => setError(error.message))
-    }
+      .catch(error => setError(error.message));
+    };
 
     getUsers();
-  }, [dispatchUsers, userToken])
+  }, [dispatchUsers, userToken]);
 
+  // ---- RENDER CORRECT PANEL ---- \\
   const showCorrectPanel = () => {
     switch (currentPanel) {
       case ("Products"):
@@ -42,7 +43,7 @@ export default function AdminPanel() {
       default:
         return <Products/>
     }
-  }
+  };
 
   return (
     <div className="flex flex-col justify-center w-9/12 pb-6 m-6 mx-auto bg-white rounded-md shadow-md">
@@ -78,4 +79,4 @@ export default function AdminPanel() {
       
     </div>
   )
-}
+};

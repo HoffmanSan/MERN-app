@@ -1,18 +1,20 @@
-// Imports
+// IMPORTS
 import { Link } from "react-router-dom";
 import { useAuthAPI } from "../../hooks/useAuthAPI";
 
-// Components
+// COMPONENTS
 import { AuthForm } from "../../components";
 
 export default function Signup() {
+  // GLOBAL STATES & UTILITIES
   const {signup, error, isLoading} = useAuthAPI();
 
+  // ---- SIGNUP PROCESS ---- \\
   const handleSignup = async (e: React.FormEvent, email: string, password: string) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    await signup(email, password)
-  }
+    await signup(email, password);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-9/10-screen">
@@ -25,6 +27,7 @@ export default function Signup() {
           <p>Posiadasz już konto?</p>
           <Link to="/login" className="font-bold">Zaloguj się</Link>
         </div>
+        
       </div>
     </div>
   )

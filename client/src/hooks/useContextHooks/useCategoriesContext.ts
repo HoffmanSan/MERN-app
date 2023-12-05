@@ -1,4 +1,4 @@
-// Imports
+// IMPORTS
 import { CategoriesContext } from "../../contexts/CategoriesContext";
 import { useContext } from "react";
 
@@ -10,4 +10,4 @@ export const useCategoriesContext = () => {
   }
 
   return context;
-}
+};

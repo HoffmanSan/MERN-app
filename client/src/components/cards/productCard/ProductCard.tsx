@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom"
+// IMPORTS
+import { Link } from "react-router-dom";
 
-// TS types
+// TYPES
 type Product = {
   _id: string
   name: string
@@ -26,17 +27,17 @@ export default function ProductCard({product}: CardProps) {
             alt={product.name}
             loading="lazy"
             rel="preload"
-            className="object-scale-down h-56 mx-auto transition duration-200 ease-out"
+            className="object-scale-down h-56 mx-auto transition duration-200 ease-out max-mobile:h-36"
           />
         </div>
 
         <div className="px-2 pt-1 text-center transition duration-200 ease-out ">
-          <h2>{product.price} zł</h2>
-          <h3 className="text-base">{product.name}</h3>
+          <h2 className="max-mobile:text-sm">{product.price} zł</h2>
+          <h3 className="text-base max-mobile:text-sm">{product.name.slice(0, 28)}{product.name.length > 28 && "..."}</h3>
         </div>
 
         <div className="mt-auto">
-          <small className="text-gray-400">Pozostało {product.inStock} {product.inStock === 1 ? "sztuka" : "sztuk"}</small>
+          <small className="text-gray-400 max-mobile:text-xs">Dodano {new Date(product.createdAt).toLocaleDateString('pl-PL')}</small>
         </div>
 
       </div>

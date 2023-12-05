@@ -47,7 +47,7 @@ input[type=number] {
   -moz-appearance: textfield; 
 }
 
-/* Table styles */
+/* Tables */
 td {
   @apply text-center
 }
@@ -63,7 +63,7 @@ thead td {
 
 /* Replace original checkbox style */
 input[type="checkbox"] {
-  display: none;
+  @apply hidden
 }
 
 input[type="checkbox"] + span {
@@ -78,7 +78,16 @@ input[type="checkbox"]:checked + span + label {
   @apply text-orange-400 transition duration-300 ease-out;
 }
 
-/* Carousel item  */
+/* Carousel items */
 .react-multi-carousel-track > li {
-  @apply pb-7
+  @apply pb-7 max-mobile:pb-4
+}
+
+.react-multiple-carousel__arrow {
+  @apply z-0 
+}
+
+/* Navbar */
+.dropdown-link {
+  @apply px-2 text-white rounded cursor-pointer hover:font-bold;
 }

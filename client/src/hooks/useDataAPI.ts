@@ -1,46 +1,44 @@
 // IMPORTS
 import { useCallback } from "react";
 import { useAuthContext } from "./useContextHooks/useAuthContext";
-import axios from "axios"
+import axios from "axios";
 
 export const useDataAPI = () => {
-  
-  // get user token for authentication
+  // GLOBAL STATES & UTILITIES
   const { user } = useAuthContext();
   const userToken = user ? user.token : "";
 
   // ---- GET ALL DOCUMENTS ---- \\
   const getData = useCallback(async (dataType: string) => {
+
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_SERVER_URI}/api/${dataType}`,
         { headers: {'Authorization': `Bearer ${userToken}`} }
       )
-      return response.data
+      return response.data;
     }
     catch (error: any) {
-      console.log(error)
-      throw new Error("Błąd pobierania danych: " + error.response.data.error)
+      console.log(error);
+      throw new Error("Błąd pobierania danych: " + error.response.data.error);
     }
-    
-  }, [userToken])
-  // --------------------------- \\
+  }, [userToken]);
 
   // ---- GET SINGLE DOCUMENT ---- \\
   const getSingleDocument = useCallback(async (dataType: string, documentId: string) => {
+
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_SERVER_URI}/api/${dataType}/${documentId}`,
         { headers: {'Authorization': `Bearer ${userToken}`} }
       )
-      return response.data
+      return response.data;
     }
     catch (error: any) {
-      console.log(error)
-      throw new Error("Błąd pobierania dokumentu: " + error.response.data.error)
+      console.log(error);
+      throw new Error("Błąd pobierania dokumentu: " + error.response.data.error);
     }
-  }, [userToken])
-  // ----------------------------- \\
+  }, [userToken]);
 
   // ---- CREATE NEW DOCUMENT ---- \\
   const createDocument = async (dataType: string, documentBody: object) => {
@@ -51,14 +49,13 @@ export const useDataAPI = () => {
         { ...documentBody },
         { headers: {'Authorization': `Bearer ${userToken}`} }
       )
-      return response.data
+      return response.data;
     }
     catch (error: any) {
-      console.log(error)
-      throw new Error("Błąd tworzenia dokumentu: " + error.response.data.error)
+      console.log(error);
+      throw new Error("Błąd tworzenia dokumentu: " + error.response.data.error);
     }
-  }
-  // ----------------------------- \\
+  };
 
   // ---- UPDATE DOCUMENT ---- \\
   const updateDocument = useCallback(async (dataType: string, documentBody: object, documentId: string) => {
@@ -69,14 +66,13 @@ export const useDataAPI = () => {
         { ...documentBody },
         { headers: {'Authorization': `Bearer ${userToken}`} }
       )
-      return response.data
+      return response.data;
     }
     catch (error: any) {
-      console.log(error)
-      throw new Error("Błąd aktualizacji dokumentu: " + error.response.data.error)
+      console.log(error);
+      throw new Error("Błąd aktualizacji dokumentu: " + error.response.data.error);
     }
-  }, [userToken])
-  // --------------------------- \\
+  }, [userToken]);
 
   // ---- DELETE DOCUMENT ---- \\
   const deleteDocument = async (dataType: string, documentId: string) => {
@@ -86,15 +82,13 @@ export const useDataAPI = () => {
         `${process.env.REACT_APP_API_SERVER_URI}/api/${dataType}/${documentId}`,
         { headers: {'Authorization': `Bearer ${userToken}`} }
       )
-      return response.data
+      return response.data;
     }
     catch (error: any) {
-      console.log(error)
-      throw Error("Błąd usuwania dokumentu: " + error.response.data.error)
+      console.log(error);
+      throw Error("Błąd usuwania dokumentu: " + error.response.data.error);
     }
-  }
-  // ------------------------- \\
+  };
 
-
-  return { getData, getSingleDocument, createDocument, deleteDocument, updateDocument }
-}
+  return { getData, getSingleDocument, createDocument, deleteDocument, updateDocument };
+};

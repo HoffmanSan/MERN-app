@@ -11,13 +11,13 @@ import { LoadingSpinner } from "../../index";
 
 // TYPES
 type Product = {
-  name: string,
-  price: number,
-  description: string,
-  inStock: number,
-  categories: string[],
-  photoURLs: string[],
-  cloudinaryFolderId: string,
+  name: string
+  price: number
+  description: string
+  inStock: number
+  categories: string[]
+  photoURLs: string[]
+  cloudinaryFolderId: string
 }
 
 export default function CreateProduct() {
@@ -38,13 +38,11 @@ export default function CreateProduct() {
   });
   const fileInput = useRef<HTMLInputElement>(null);
 
-  // GLOBAL STATES
+  // GLOBAL STATES & UTILITIES
   const { convertImageToBase64String, uploadImage} = useImagesAPI();
   const { createDocument } = useDataAPI();
   const { dispatchProducts } = useProductsContext();
   const { categories } = useCategoriesContext();
-
-  
 
   // ---- HANDLE FILE CHANGE ---- \\
   const handleFileChange = (e: ChangeEvent) => {
@@ -77,8 +75,7 @@ export default function CreateProduct() {
 
     setError("");
     setImageList(filesArray);
-  }
-  // ---------------------------- \\
+  };
  
   // ---- CATEGORY CHECKBOX ON CHECK ---- \\
   const handleCheckboxCheck = (newCategory: string) => {
@@ -87,18 +84,17 @@ export default function CreateProduct() {
       setProduct({
         ...product,
         categories: product.categories.filter(category => category !== newCategory)
-      })
+      });
     } else {
       // add category
       setProduct({
         ...product,
         categories: [...product.categories, newCategory]
-      })
+      });
     }
-  }
-  // ------------------------------------ \\
+  };
 
-  // RESET FORM DATA
+  // ---- RESET FORM DATA ---- \\
   const resetForm = () => {
     setProduct({
       name: "",
@@ -109,8 +105,8 @@ export default function CreateProduct() {
       photoURLs: [],
       cloudinaryFolderId: nanoid()
     });
-    setImageList(null)
-    setImageSizes([])
+    setImageList(null);
+    setImageSizes([]);
     if (fileInput.current != null) {
       fileInput.current.value = "";
     }
@@ -118,55 +114,54 @@ export default function CreateProduct() {
 
   // ---- ADD PRODUCT ---- \\
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // validation
     if (!product.name || !product.price || !product.description || !product.inStock) {
-      setError("Uzupełnij dane produktu")
+      setError("Uzupełnij dane produktu");
       return
     }
     if (product.categories.length === 0) {
-      setError("Przydziel kategorie do produktu")
+      setError("Przydziel kategorie do produktu");
       return
     }
     if (!imageList || imageList.length === 0) {
-      setError("Dodaj zdjęcia produktu")
+      setError("Dodaj zdjęcia produktu");
       return
     }
     
     // start the process if validation is passed
-    setError("")
-    setIsAdding(true)
+    setError("");
+    setIsAdding(true);
 
     // convert and upload images then save their urls in product data
     Promise.all(
       imageList.map(async (image) => {
         const imageString = await convertImageToBase64String(image);
-        const response = await uploadImage(imageString, "products", product.cloudinaryFolderId)
+        const response = await uploadImage(imageString, "products", product.cloudinaryFolderId);
 
-        return product.photoURLs.push(response)
+        return product.photoURLs.push(response);
       })
     )
     .then(async () => {
 
       // add product to database
-      const result = await createDocument("products", product)
-      dispatchProducts({ type: "CREATE_PRODUCT", payload: [result] })
-      resetForm()
-      setError("")
-      setOutcome("Produkt dodany")
-      setTimeout(() => setOutcome(""), 3000)
+      const result = await createDocument("products", product);
+      dispatchProducts({ type: "CREATE_PRODUCT", payload: [result] });
+      resetForm();
+      setError("");
+      setOutcome("Produkt dodany");
+      setTimeout(() => setOutcome(""), 3000);
       
     })
     .catch(error => {
-      console.log(error)
-      setError(error.message)
+      console.log(error);
+      setError(error.message);
     })
     .finally(() => {
-      setIsAdding(false)
+      setIsAdding(false);
     })
   }
-  // --------------------- \\
 
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
@@ -174,6 +169,7 @@ export default function CreateProduct() {
       
       <h3 className="p-1 text-white bg-orange-400">Dane</h3>
 
+      {/* product name input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Nazwa:</span>
         <input
@@ -184,6 +180,7 @@ export default function CreateProduct() {
         />
       </label>
 
+      {/* product price input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Cena (zł / szt.):</span>
         <input
@@ -195,6 +192,7 @@ export default function CreateProduct() {
         />
       </label>
 
+      {/* product in stock quantity input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Ilość na magazynie (szt.):</span>
         <input
@@ -206,6 +204,7 @@ export default function CreateProduct() {
         />
       </label>
 
+      {/* product description input */}
       <label className="flex flex-col items-center">
         <span className="m-1 font-bold">Opis:</span>
         <textarea
@@ -218,6 +217,7 @@ export default function CreateProduct() {
 
       <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
 
+      {/* product categories input */}
       <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
         {categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
@@ -235,30 +235,39 @@ export default function CreateProduct() {
 
       <h3 className="p-1 m-2 text-white bg-orange-400">Zdjęcia</h3>
 
+      {/* product images input */}
       <div className="m-2 mb-4">
+
         <input
           ref={fileInput}
           onChange={handleFileChange}
           type="file"
           multiple
         />
+
         {imageSizes && imageSizes.map(item => (
           <Fragment key={item.name}>
             <br />
             <span>{item.name.slice(0, 25)}</span> - <span>{(item.size / 1000000).toFixed(2)} mb</span>
           </Fragment>
         ))}
+
       </div>
 
-      <button disabled={isAdding || error !== ""} className={`btn w-2/12 mx-auto `}>
-      {isAdding ?
-        <LoadingSpinner />
+      <button
+        disabled={isAdding || error !== ""}
+        className="w-2/12 mx-auto btn"
+      >
+        {isAdding ?
+          <LoadingSpinner />
         :
-        "Dodaj produkt"
-      }
+          "Dodaj produkt"
+        }
       </button>
+
       {error && <div className="m-2 mx-auto error">{error}</div>}
       {outcome && <div className="p-2 m-2 mx-auto text-green-500 bg-green-100 border border-green-500">{outcome}</div>}
+
     </form>
   )
 }

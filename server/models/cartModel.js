@@ -1,5 +1,5 @@
-// Imports
-const mongoose = require("mongoose")
+// IMPORTS
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema
 
@@ -13,6 +13,6 @@ const cartSchema = new Schema({
       type: Number
     }
   }]
-})
+});
 
 module.exports = mongoose.model("Cart", cartSchema);

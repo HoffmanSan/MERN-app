@@ -1,7 +1,7 @@
-// Imports
+// IMPORTS
 import { createContext, useReducer } from "react";
 
-// TS Types
+// TYPES
 type CartItem = {
   cartItemId: string
   cartItemQuantity: number
@@ -62,14 +62,14 @@ const cartReducer = (state: State, action: Action) => {
         }
       }
   }
-}
+};
 
 export const CartContextProvider = ({children}: CartProviderProps) => {
-  const [state, dispatchCart] = useReducer(cartReducer, { cart: {_id: "", cartItems: []} })
+  const [state, dispatchCart] = useReducer(cartReducer, { cart: { _id: "", cartItems: [] } });
 
   return (
     <CartContext.Provider value={{...state, dispatchCart}}>
       {children}
     </CartContext.Provider>
   )
-}
+};

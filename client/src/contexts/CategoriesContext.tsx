@@ -1,7 +1,7 @@
-// Imports
+// IMPORTS
 import { createContext, useReducer } from "react";
 
-// TS Types
+// TYPES
 type Category = {
   _id: string
   name: string
@@ -44,11 +44,11 @@ export const productsReducer = (state: State, action: Action): State => {
 };
 
 export const CategoriesContextProvider = ({children}: CategoriesProviderProps) => {
-  const [state, dispatchCategories] = useReducer(productsReducer, { categories: [] })
+  const [state, dispatchCategories] = useReducer(productsReducer, { categories: [] });
 
   return (
     <CategoriesContext.Provider value={{...state, dispatchCategories}}>
       {children}
     </CategoriesContext.Provider>
   )
-}
+};

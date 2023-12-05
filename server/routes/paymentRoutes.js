@@ -1,19 +1,20 @@
-// Imports
+// IMPORTS
 const express = require("express");
-const requireUserAuth = require("../middleware/requireUserAuth")
+const requireUserAuth = require("../middleware/requireUserAuth");
 
-// Controllers
+// CONTROLLERS
 const {
-  checkoutSession
-} = require("../controllers/paymentController")
+  createCheckoutSession,
+  paymentSuccessful
+} = require("../controllers/paymentController");
 
-// Routes
+// ROUTES
 const router = express.Router();
 
-// Middleware
-router.use(requireUserAuth)
+// CREATE NEW CHECKOUT SESSION
+router.post("/create-checkout-session", requireUserAuth, createCheckoutSession);
 
-// CREATE new checkout session
-router.post("/create-checkout-session", checkoutSession);
+// SUCCESSFUL PAYMENT
+router.get("/payment-successful", paymentSuccessful);
 
 module.exports = router;

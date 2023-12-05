@@ -18,6 +18,7 @@ type Product = {
 }
 
 export default function Products() {
+  // LOCAL STATES
   const [showPanel, setShowPanel] = useState("Display");
   const [updatedProduct, setUpdatedProduct] = useState<Product>();
 

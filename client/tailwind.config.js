@@ -4,6 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx,css}",
   ],
   theme: {
+    screens: {
+      "mobile": "375px",
+      "tablet": "768px",
+      "laptop": "1200px"
+    },
     extend: {
       fontFamily: {
         main: ["Nunito"]

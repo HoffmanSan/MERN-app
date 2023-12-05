@@ -1,14 +1,14 @@
-// Imports
+// IMPORTS
 import { useState, useMemo } from "react";
 import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext";
 import { useImagesAPI } from "../../../hooks/useImagesAPI";
 import { useDataAPI } from "../../../hooks/useDataAPI";
 import { useDebounce } from "../../../hooks/useDebounce";
 
-// Components
+// COMPONENTS
 import { LoadingSpinner } from "../../index";
 
-// TS types
+// TYPES
 type Product = {
   _id: string
   name: string
@@ -37,7 +37,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
   const { deleteDocument } = useDataAPI();
 
   // ---- SEARCH BAR LOGIC ---- \\
-  const debouncedQuery = useDebounce(query, 500)
+  const debouncedQuery = useDebounce(query, 500);
 
   const filteredProducts = useMemo(() => {
     if (!debouncedQuery) {
@@ -48,32 +48,32 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
         el.toString().toLowerCase().includes(debouncedQuery.toString().toLowerCase())
       )
     })
-  }, [debouncedQuery, products])
-  // -------------------------- \\
+  }, [debouncedQuery, products]);
 
   // ---- DELETE PRODUCT ---- \\
   const deleteProduct = async (product: Product) => {
-    setIsDeleting(product._id)
-    setError("")
+    setIsDeleting(product._id);
+    setError("");
 
     try {
-      const response = await deleteDocument("products", product._id)
-      await deleteImages("products", product.cloudinaryFolderId)
-      dispatchProducts({ type: "DELETE_PRODUCT", payload: [response.product] })
+      const response = await deleteDocument("products", product._id);
+      await deleteImages("products", product.cloudinaryFolderId);
+      dispatchProducts({ type: "DELETE_PRODUCT", payload: [response.product] });
     }
     catch (error: any) {
-      console.log(error)
-      setError(error.message)
+      console.log(error);
+      setError(error.message);
     }
     finally {
-      setIsDeleting(null)
+      setIsDeleting(null);
     }
-  }
-  // ------------------------ \\
+  };
 
   return (
     <>
       <div className="flex justify-center m-6 text-white">
+
+        {/* search bar */}
         <input
           type="text"
           id="product-search-bar"
@@ -82,11 +82,14 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+
       </div>
 
       {error && <div className="mx-auto mb-5 error">{error}</div>}
 
+      {/* products table */}
       <table className="w-11/12 mx-auto border border-orange-400">
+
         <thead className="text-lg font-bold text-white">
           <tr>
             <td>Nazwa</td>
@@ -99,6 +102,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
             <td>Opcje</td>
           </tr>
         </thead>
+
         <tbody>
           {filteredProducts && filteredProducts.map(product => (
             <tr key={product._id}>
@@ -128,6 +132,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
                 ))}
               </td>
               <td>
+
                 <button
                   className="m-1 btn"
                   onClick={() => {
@@ -137,6 +142,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
                 >
                   Edytuj
                 </button>
+
                 <button
                   className="m-1 btn"
                   disabled={isDeleting !== null}
@@ -144,10 +150,12 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
                 >
                   {isDeleting === product._id ? <LoadingSpinner /> : "Usuń"}
                 </button>
+
               </td>
             </tr>
           ))}
         </tbody>
+
       </table>
     </>
   )

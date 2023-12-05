@@ -7,3 +7,4 @@ export { default as Cart } from "./cart/Cart";
 export { default as Category } from "./category/Category";
 export { default as Search } from "./search/Search";
 export { default as Success } from "./purchaseResults/Success";
+export { default as Failure } from "./purchaseResults/Failure";

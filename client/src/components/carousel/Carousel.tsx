@@ -1,4 +1,4 @@
-// Imports
+// IMPORTS
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -14,18 +14,18 @@ const responsive = {
     slidesToSlide: 8
   },
   desktop: {
-    breakpoint: { max: 3000, min: 1024 },
+    breakpoint: { max: 3000, min: 767 },
     items: 5,
     slidesToSlide: 5
   },
   tablet: {
-    breakpoint: { max: 1024, min: 464 },
+    breakpoint: { max: 768, min: 376 },
     items: 2,
-    slidesToSlide: 2
+    slidesToSlide: 3
   },
   mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1
+    breakpoint: { max: 375, min: 0 },
+    items: 2
   }
 };
 

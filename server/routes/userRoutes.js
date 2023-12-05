@@ -1,8 +1,8 @@
-// Imports
+// IMPORTS
 const express = require("express");
 const requireAdminAuth = require("../middleware/requireAdminAuth");
 
-// Controller functions
+// CONTROLLERS
 const {
   getUser,
   getUsers,
@@ -10,22 +10,22 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
-// Routes
+// ROUTES
 const router = express.Router();
 
-// Middleware
+// MIDDLEWARE
 router.use(requireAdminAuth);
 
-// GET all users
+// GET ALL USERS
 router.get("/", getUsers);
 
-// GET a single user
+// GET A SINGLE USER
 router.get("/:id", getUser);
 
-// UPDATE a user
-router.patch("/:id", updateUser)
+// UPDATE A USER
+router.patch("/:id", updateUser);
 
-// DELETE a user
+// DELETE A USER
 router.delete("/:id", deleteUser);
 
 module.exports = router;

@@ -1,15 +1,15 @@
-// Imports
+// IMPORTS
 const Product = require("../models/productModel");
 const mongoose = require("mongoose");
 
-// Get all products
+// GET ALL PRODUCTS
 const getProducts = async (req, res) => {
   const products = await Product.find({}).sort({createdAt: -1});
 
   res.status(200).json(products);
 };
 
-// Get a single product
+// GET A SINGLE PRODUCT
 const getProduct = async (req, res) => {
   const { id } = req.params;
 
@@ -26,7 +26,7 @@ const getProduct = async (req, res) => {
   res.status(200).json(product)
 };
 
-// Create a new product
+// CREATE A NEW PRODUCT
 const createProduct = async (req, res) => {
   const { name, price, categories, description, inStock, photoURLs, cloudinaryFolderId } = req.body;
 
@@ -38,7 +38,7 @@ const createProduct = async (req, res) => {
   }
 };
 
-// Delete a product
+// DELETE A PRODUCT
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
@@ -55,7 +55,7 @@ const deleteProduct = async (req, res) => {
   res.status(200).json({product});
 };
 
-// Update a product
+// UPDATE A PRODUCT
 const updateProduct = async (req, res) => {
   const { id } = req.params;
 

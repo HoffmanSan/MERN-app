@@ -1,7 +1,7 @@
-// Imports
+// IMPORTS
 import { createContext, useReducer } from "react";
 
-// TS types
+// TYPES
 type Dispatch = (action: Action) => void
 type User = {
   email: string
@@ -20,11 +20,10 @@ type AuthProviderProps = {
   children: React.ReactNode
 }
 
-// Check local storage for "user" item
+// ---- CHECK LOCAL STORAGE FOR USER ITEM ---- \\
 const userJson = localStorage.getItem("user");
-const user = (userJson !== null) && JSON.parse(userJson)
+const user = (userJson !== null) && JSON.parse(userJson);
 
-// Create context
 export const AuthContext = createContext<{user: User | null; dispatchAuth: Dispatch} | undefined>(undefined);
 
 export const authReducer = (state: State, action: Action): State => {
@@ -36,7 +35,7 @@ export const authReducer = (state: State, action: Action): State => {
     default:
       return state
   }
-}
+};
 
 export const AuthContextProvider = ({children}: AuthProviderProps) => {
   const [state, dispatchAuth] = useReducer(authReducer, { user: user });
@@ -46,4 +45,4 @@ export const AuthContextProvider = ({children}: AuthProviderProps) => {
       { children }
     </AuthContext.Provider>
   )
-}
+};

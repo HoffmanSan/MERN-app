@@ -3,8 +3,7 @@ import { useAuthContext } from "./useContextHooks/useAuthContext";
 import axios from "axios";
 
 export const useImagesAPI = () => {
-  
-   // get user token for authentication
+  // GLOBAL STATES & UTILITIES
   const { user } = useAuthContext();
   const userToken = user ? user.token : "";
 
@@ -20,7 +19,6 @@ export const useImagesAPI = () => {
       };
     });
   };
-  // ---------------------------------------- \\
 
   // ---- UPLOAD IMAGE ---- \\
   const uploadImage = async (base64String: string, imageSource: string, cloudinaryFolderId: string) => {
@@ -30,14 +28,13 @@ export const useImagesAPI = () => {
         { image: base64String, folder: `/${imageSource}/${cloudinaryFolderId}` },
         { headers: {'Authorization': `Bearer ${userToken}`} }
       )
-      return response.data
+      return response.data;
     }
     catch (error: any) {
-      console.log(error)
-      throw new Error("Błąd zapisywania obrazów: " + error.message)
+      console.log(error);
+      throw new Error("Błąd zapisywania obrazów: " + error.message);
     } 
   }
-  // ----------------------- \\
 
   // ---- DELETE IMAGES ---- \\
   const deleteImages = async (imageSource: string, cloudinaryFolderId: string) => {
@@ -49,11 +46,10 @@ export const useImagesAPI = () => {
       )
     }
     catch (error: any) {
-      console.log(error)
-      throw Error("Błąd usuwania obrazów: " + error.message)
+      console.log(error);
+      throw Error("Błąd usuwania obrazów: " + error.message);
     }
   }
-  // ----------------------- \\
 
-  return { convertImageToBase64String, uploadImage, deleteImages }
-}
+  return { convertImageToBase64String, uploadImage, deleteImages };
+};

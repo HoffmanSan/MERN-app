@@ -1,4 +1,4 @@
-// Imports
+// IMPORTS
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
@@ -6,7 +6,7 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
-// LOGIN user
+// LOGIN
 const loginUser = async (req, res) => {
   const {email, password} = req.body;
 
@@ -22,7 +22,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-// SIGNUP User
+// SIGNUP
 const signupUser = async (req, res) => {
   const {email, password} = req.body;
 

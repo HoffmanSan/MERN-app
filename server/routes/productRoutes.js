@@ -1,8 +1,8 @@
-// Imports
+// IMPORTS
 const express = require("express");
 const requireAdminAuth = require("../middleware/requireAdminAuth");
 
-// Controllers
+// CONTROLLERS
 const {
   getProduct,
   getProducts,
@@ -11,22 +11,22 @@ const {
   updateProduct
 } = require("../controllers/productController");
 
-// Routes
+// ROUTES
 const router = express.Router();
 
-// GET all products
+// GET ALL PRODUCTS
 router.get("/", getProducts);
 
-// GET a single product
+// GET A SINGLE PRODUCT
 router.get("/:id", getProduct);
 
-// POST a new product
+// CREATE A NEW PRODUCT
 router.post("/", requireAdminAuth, createProduct);
 
-// DELETE a product
+// DELETE A PRODUCT
 router.delete("/:id", requireAdminAuth, deleteProduct);
 
-// UPDATE a product
+// UPDATE A PRODUCT
 router.patch("/:id", requireAdminAuth, updateProduct);
 
 module.exports = router;

@@ -1,15 +1,15 @@
-// Imports
+// IMPORTS
 const Category = require("../models/categoryModel");
 const mongoose = require("mongoose");
 
-// Get all categories
+// GET ALL CATEGORIES
 const getCategories = async (req, res) => {
   const categories = await Category.find({});
 
   res.status(200).json(categories);
 };
 
-// Create a new category
+// CREATE A NEW CATEGORY
 const createCategory = async (req, res) => {
   const { name, imageURL, cloudinaryFolderId } = req.body;
 
@@ -21,7 +21,7 @@ const createCategory = async (req, res) => {
   }
 };
 
-// Delete a category
+// DELETE A CATEGORY
 const deleteCategory = async (req, res) => {
   const { id } = req.params;
 
@@ -38,7 +38,7 @@ const deleteCategory = async (req, res) => {
   res.status(200).json({category});
 };
 
-// Update a category
+// UPDATE A CATEGORY
 const updateCategory = async (req, res) => {
   const { id } = req.params;
 

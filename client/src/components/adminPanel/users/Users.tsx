@@ -18,15 +18,15 @@ type User = {
 export default function Users() {
   // LOCAL STATES
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
-  const [error, setError] = useState("")
-  const [query, setQuery] = useState("")
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
 
   // GLOBAL STATES & UTILITIES
-  const { users, dispatchUsers } = useUsersContext()
-  const { deleteDocument } = useDataAPI()
+  const { users, dispatchUsers } = useUsersContext();
+  const { deleteDocument } = useDataAPI();
 
   // ---- SEARCH BAR LOGIC ---- \\
-  const debouncedQuery = useDebounce(query, 500)
+  const debouncedQuery = useDebounce(query, 500);
 
   const filteredUsers = useMemo(() => {
     if (!debouncedQuery) {
@@ -35,29 +35,31 @@ export default function Users() {
     return users.filter(item => 
       Object.values(item).toString().toLowerCase().includes(debouncedQuery.toString().toLowerCase())
     )
-  }, [debouncedQuery, users])
+  }, [debouncedQuery, users]);
 
   // ---- DELETE USER ---- \\
   const deleteUser = async (user: User) => {
-    setIsDeleting(user._id)
-    setError("")
+    setIsDeleting(user._id);
+    setError("");
 
     try {
-      const response = await deleteDocument("users", user._id)
-      dispatchUsers({ type: "DELETE_USER", payload: [response.user] })
+      const response = await deleteDocument("users", user._id);
+      dispatchUsers({ type: "DELETE_USER", payload: [response.user] });
     }
     catch (error: any) {
-      setError(error.message)
-      console.log(error.message)
+      setError(error.message);
+      console.log(error.message);
     }
     finally {
-      setIsDeleting(null)
+      setIsDeleting(null);
     }
-  }
+  };
   
   return (
     <>
-    <div className="flex justify-center m-6 text-white">
+      <div className="flex justify-center m-6 text-white">
+
+        {/* search bar */}
         <input
           type="text"
           id="user-search-bar"
@@ -66,11 +68,14 @@ export default function Users() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+
       </div>
 
       {error && <div className="mx-auto mb-5 error">{error}</div>}
 
+      {/* users table */}
       <table className="w-6/12 mx-auto border border-orange-400">
+
         <thead className="text-lg font-bold text-white">
           <tr>
             <td>Email</td>
@@ -79,6 +84,7 @@ export default function Users() {
             <td>Opcje</td>
           </tr>
         </thead>
+
         <tbody>
           {filteredUsers && filteredUsers.map(user => (
             <tr key={user._id}>
@@ -100,6 +106,7 @@ export default function Users() {
           ))}
           
         </tbody>
+        
       </table>
     </>
   )

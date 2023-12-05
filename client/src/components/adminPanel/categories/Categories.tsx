@@ -18,17 +18,21 @@ type Category = {
 
 export default function DisplayCategories() {
   // LOCAL STATES
-  const [newCategory, setNewCategory] = useState({ name: "", imageURL: "", cloudinaryFolderId: nanoid() })
-  const [categoryImage, setCategoryImage] = useState<File>()
-  const [isAdding, setIsAdding] = useState(false)
-  const [isDeleting, setIsDeleting] = useState<string | null>(null)
-  const [error, setError] = useState("")
-  const [query, setQuery] = useState("")
+  const [newCategory, setNewCategory] = useState({ 
+    name: "",
+    imageURL: "",
+    cloudinaryFolderId: nanoid()
+  });
+  const [categoryImage, setCategoryImage] = useState<File>();
+  const [isAdding, setIsAdding] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
   
   // GLOBAL STATES & UTILITIES
-  const { categories, dispatchCategories } = useCategoriesContext()
-  const { convertImageToBase64String, uploadImage, deleteImages} = useImagesAPI()
-  const { createDocument, deleteDocument } = useDataAPI()
+  const { categories, dispatchCategories } = useCategoriesContext();
+  const { convertImageToBase64String, uploadImage, deleteImages} = useImagesAPI();
+  const { createDocument, deleteDocument } = useDataAPI();
   
   // ---- SEARCH BAR LOGIC ---- \\
   const debouncedQuery = useDebounce(query, 500);
@@ -39,12 +43,12 @@ export default function DisplayCategories() {
     }
     return categories.filter(item => 
       item.name.toLowerCase().includes(debouncedQuery.toString().toLowerCase())
-    )
-  }, [debouncedQuery, categories])
+    );
+  }, [debouncedQuery, categories]);
 
   // ---- FILE INPUT CHANGE ---- \\
   const handleFileChange = (e: ChangeEvent) => {
-    let files = (e.target as HTMLInputElement).files
+    let files = (e.target as HTMLInputElement).files;
 
     // validation
     if (!files || files.length === 0) {
@@ -60,13 +64,13 @@ export default function DisplayCategories() {
     }
 
     // accept file if validation passed
-    setError("")
-    setCategoryImage(files[0])
+    setError("");
+    setCategoryImage(files[0]);
   }
 
   // ---- ADD CATEGORY ---- \\
   const addCategory = async () => {
-    setError("")
+    setError("");
     
     // validation
     if (!newCategory.name) {
@@ -85,52 +89,56 @@ export default function DisplayCategories() {
     }
     
     // start process if validation is passed
-    setIsAdding(true)
+    setIsAdding(true);
 
     try {
-      const imageString = await convertImageToBase64String(categoryImage)
-      const imageURL = await uploadImage(imageString, "categories", newCategory.cloudinaryFolderId)
+      const imageString = await convertImageToBase64String(categoryImage);
+      const imageURL = await uploadImage(imageString, "categories", newCategory.cloudinaryFolderId);
       newCategory.imageURL = imageURL;
-      const response = await createDocument("categories", newCategory)
-      dispatchCategories({ type: "CREATE_CATEGORY", payload: [response] })
-      setNewCategory({ name: "", imageURL: "", cloudinaryFolderId: nanoid() })
+      const response = await createDocument("categories", newCategory);
+      dispatchCategories({ type: "CREATE_CATEGORY", payload: [response] });
+      setNewCategory({ name: "", imageURL: "", cloudinaryFolderId: nanoid() });
     }
     catch (error: any) {
-      setError(error.message)
-      console.log(error)
+      setError(error.message);
+      console.log(error);
     }
     finally {
-      setIsAdding(false)
+      setIsAdding(false);
     }
   }
 
   // ---- DELETE CATEGORY ---- \\
   const deleteCategory = async (category: Category) => {
-    setError("")
-    setIsDeleting(category._id)
+    setError("");
+    setIsDeleting(category._id);
 
     try {
-      await deleteImages("categories", category.cloudinaryFolderId)
-      const response = await deleteDocument("categories", category._id)
-      dispatchCategories({ type: "DELETE_CATEGORY", payload: [response.category] })
+      await deleteImages("categories", category.cloudinaryFolderId);
+      const response = await deleteDocument("categories", category._id);
+      dispatchCategories({ type: "DELETE_CATEGORY", payload: [response.category] });
     }
     catch (error: any) {
-      setError(error.message)
-      console.log(error)
+      setError(error.message);
+      console.log(error);
     }
     finally {
-      setIsDeleting(null)
+      setIsDeleting(null);
     }
   }
 
   return (
     <>
       <div className="flex justify-center mt-6">
+
+        {/* category img input */}
         <input 
           type="file"
           className="text-orange-400"
           onChange={handleFileChange}
         />
+
+        {/* category name input */}
         <input
           type="text"
           id="category-add-bar"
@@ -145,11 +153,14 @@ export default function DisplayCategories() {
         >
           {isAdding ? <LoadingSpinner /> : "Dodaj kategorie"}
         </button>
+
       </div>
 
       {error && <div className="mx-auto mt-2 error">{error}</div>}
 
       <div className="flex justify-center m-6">
+
+        {/* search bar */}
         <input
           type="text"
           id="category-search-bar"
@@ -158,9 +169,12 @@ export default function DisplayCategories() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+
       </div>
       
       <table className="w-3/12 mx-auto border border-orange-400">
+
+        {/* category table */}
         <thead className="text-lg font-bold text-white">
           <tr>
             <td>Nazwa</td>
@@ -168,6 +182,7 @@ export default function DisplayCategories() {
             <td>Opcje</td>
           </tr>
         </thead>
+
         <tbody>
           {filteredCategories && filteredCategories.map(item => (
             <tr key={item._id}>
@@ -187,6 +202,7 @@ export default function DisplayCategories() {
             </tr>
           ))}
         </tbody>
+
       </table>
     </>
   )

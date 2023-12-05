@@ -1,12 +1,12 @@
-// Imports
+// ImMPORTS
 import { useState } from "react";
 import { useProductsContext } from "../../hooks/useContextHooks/useProductsContext";
 import { useCategoriesContext } from "../../hooks/useContextHooks/useCategoriesContext";
 
-// Components
+// COMPONENTS
 import { Carousel, FilterForm, ProductList, ProductCard, CategoryCard } from "../../components/index";
 
-// TS types
+// TYPES
 type Product = {
   _id: string
   name: string
@@ -19,11 +19,16 @@ type Product = {
 }
 
 export default function Dashboard() {
-  const { products } = useProductsContext();
+  // GLOBAL STATES & UTILITIES
+  const { products: allProducts } = useProductsContext();
+  const products = allProducts.filter(item => item.inStock > 0);
   const { categories } = useCategoriesContext();
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
-  const [filtersApplied, setFiltersApplied] = useState(false)
+
+  // LOCAL STATES
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [filtersApplied, setFiltersApplied] = useState(false);
   
+  // ---- FILTERING LOGIC ---- \\
   const handleFilter = (minPrice: number, maxPrice: number, categories: string[]) => {
     let filteredByPrice = products;
     let filteredByCategory = products;
@@ -46,7 +51,7 @@ export default function Dashboard() {
     // filter by category
     if (categories.length !== 0) {
       filteredByCategory = (products).filter(item => {
-        return (item.categories.some(val => categories.includes(val)))
+        return (item.categories.some(val => categories.includes(val)));
       }) 
     }
 
@@ -57,13 +62,13 @@ export default function Dashboard() {
       setFiltersApplied(true);
       return
     }
-    setFiltersApplied(false)
-  }
+    setFiltersApplied(false);
+  };
   
   return (
     <>
-      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md min-h-max">
-        <h2>Najnowsze produkty</h2>
+      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 min-h-max max-mobile:w-11/12">
+        <h2 className="max-mobile:text-center max-mobile:text-lg">Najnowsze produkty</h2>
         {products.length > 0 ?
           <Carousel>
             {
@@ -72,13 +77,13 @@ export default function Dashboard() {
               )) || <div/>
             }
           </Carousel>
-          :
-          <h3 className="text-center text-gray-300">Ładowanie...</h3>
+        :
+          <h3 className="pb-3 text-center text-gray-300 max-mobile:text-base">Ładowanie...</h3>
         }
       </div>
 
-      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md">
-        <h2>Szukaj produktów wg Kategorii</h2>
+      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 max-mobile:w-11/12">
+        <h2 className="max-mobile:text-center max-mobile:text-lg">Szukaj wg Kategorii</h2>
         {categories.length > 0 ?
           <Carousel>
             {
@@ -87,28 +92,26 @@ export default function Dashboard() {
               ))
             }
           </Carousel>
-          :
-          <h3 className="text-center text-gray-300">Ładowanie...</h3>
+        :
+          <h3 className="pb-5 text-center text-gray-300 max-mobile:text-base">Ładowanie...</h3>
         }
       </div>
 
       {products.length > 0 ?
 
-      <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max">
-        <FilterForm categoryList={categories} handleFilter={handleFilter}/>
+        <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max max-mobile:w-11/12">
 
-        <ProductList filteredProducts={filtersApplied ? filteredProducts : products} />
-      </div>
+          <FilterForm categoryList={categories} handleFilter={handleFilter}/>
+
+          <ProductList filteredProducts={filtersApplied ? filteredProducts : products} />
+        </div>
 
       :
 
-      <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white">
-        <h3 className="text-gray-300">Ładowanie...</h3>
-      </div>
-
+        <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white">
+          <h3 className="text-gray-300 max-mobile:text-base">Ładowanie...</h3>
+        </div>
       }
-
-      <div className="h-80"></div>
     </>
   )
 }
