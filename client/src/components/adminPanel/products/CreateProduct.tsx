@@ -115,10 +115,15 @@ export default function CreateProduct() {
   // ---- ADD PRODUCT ---- \\
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError("");
 
     // validation
     if (!product.name || !product.price || !product.description || !product.inStock) {
       setError("Uzupełnij dane produktu");
+      return
+    }
+    if(product.inStock % 1 !== 0) {
+      setError("Ilość dostępnego produktu nie może być ułamkiem")
       return
     }
     if (product.categories.length === 0) {
@@ -165,15 +170,15 @@ export default function CreateProduct() {
 
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
-      <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md">NOWY PRODUKT</h2>
+      <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md max-tablet:text-xl">NOWY PRODUKT</h2>
       
-      <h3 className="p-1 text-white bg-orange-400">Dane</h3>
+      <h3 className="p-1 text-white bg-orange-400 max-tablet:text-base">Dane</h3>
 
       {/* product name input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Nazwa:</span>
         <input
-          className="w-4/12 p-2 text-center text-black border border-orange-400 rounded-md"
+          className="w-4/12 p-2 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:w-6/12"
           onChange={(e) => setProduct({...product, name: e.target.value})}
           value={product.name}
           id="product-name"
@@ -181,44 +186,44 @@ export default function CreateProduct() {
       </label>
 
       {/* product price input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Cena (zł / szt.):</span>
         <input
           type="number"
           value={product.price}
           onChange={(e) => setProduct({...product, price: Number(e.target.value)})}
-          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md"
+          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:w-4/12"
           id="product-price"
         />
       </label>
 
       {/* product in stock quantity input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Ilość na magazynie (szt.):</span>
         <input
           type="number"
           value={product.inStock}
           onChange={(e) => setProduct({...product, inStock: Number(e.target.value)})}
-          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md"
+          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:w-4/12"
           id="product-quantity"
         />
       </label>
 
       {/* product description input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Opis:</span>
         <textarea
-          className="w-6/12 h-40 text-black border border-orange-400 rounded-md outline-none"
+          className="w-6/12 h-40 text-black border border-orange-400 rounded-md outline-none max-mobile:w-11/12 max-tablet:w-10/12"
           value={product.description}
           onChange={(e) => setProduct({...product, description: e.target.value})}
           id="product-description"
         />
       </label>
 
-      <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
+      <h3 className="p-1 m-2 text-white bg-orange-400 max-tablet:text-base">Kategorie</h3>
 
       {/* product categories input */}
-      <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
+      <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left max-mobile:w-11/12 max-mobile:grid-cols-2 max-tablet:w-10/12">
         {categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
             <input
@@ -228,12 +233,12 @@ export default function CreateProduct() {
               readOnly
             />
             <span onClick={() => handleCheckboxCheck(item.name)}/>
-            <label className="pl-2" htmlFor={item.name}>{item.name}</label>
+            <label className="pl-2 max-tablet:text-sm" htmlFor={item.name}>{item.name}</label>
           </div>
         ))}
       </div>
 
-      <h3 className="p-1 m-2 text-white bg-orange-400">Zdjęcia</h3>
+      <h3 className="p-1 m-2 text-white bg-orange-400 max-tablet:text-base">Zdjęcia</h3>
 
       {/* product images input */}
       <div className="m-2 mb-4">
@@ -242,6 +247,7 @@ export default function CreateProduct() {
           ref={fileInput}
           onChange={handleFileChange}
           type="file"
+          className="w-1/12 text-transparent max-mobile:w-5/12 max-mobile:text-sm max-tablet:w-3/12"
           multiple
         />
 
@@ -255,8 +261,8 @@ export default function CreateProduct() {
       </div>
 
       <button
-        disabled={isAdding || error !== ""}
-        className="w-2/12 mx-auto btn"
+        disabled={isAdding}
+        className="w-2/12 mx-auto btn max-mobile:w-6/12 max-tablet:text-sm max-tablet:w-4/12"
       >
         {isAdding ?
           <LoadingSpinner />
@@ -265,8 +271,8 @@ export default function CreateProduct() {
         }
       </button>
 
-      {error && <div className="m-2 mx-auto error">{error}</div>}
-      {outcome && <div className="p-2 m-2 mx-auto text-green-500 bg-green-100 border border-green-500">{outcome}</div>}
+      {error && <div className="m-2 mx-auto error max-mobile:text-sm">{error}</div>}
+      {outcome && <div className="p-2 m-2 mx-auto text-green-500 bg-green-100 border border-green-500 max-mobile:text-sm">{outcome}</div>}
 
     </form>
   )

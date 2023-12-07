@@ -34,19 +34,19 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
   };
 
   return (
-    <form className="p-5 bg-white shadow-md h-min max-mobile:col-span-4 max-mobile:flex max-mobile:justify-center max-mobile:mb-4 max-mobile:flex-col" onSubmit={(e) => handleSubmit(e)}>
-      <h2 className="max-mobile:text-center max-mobile:text-xl">Filtry</h2>
+    <form className="p-5 mb-5 bg-white shadow-md h-min max-tablet:col-span-4 max-tablet:flex max-tablet:justify-center max-mobile:mb-4 max-tablet:flex-col" onSubmit={(e) => handleSubmit(e)}>
+      <h2 className="max-tablet:text-center max-tablet:text-xl">Filtry</h2>
 
-      <h3 className="py-1 text-lg font-bold max-mobile:text-center">Cena</h3>
+      <h3 className="py-1 text-lg font-bold max-tablet:text-center">Cena</h3>
 
-      <div className="max-mobile:flex max-mobile:justify-center max-mobile:items-center">
+      <div className="max-tablet:flex max-tablet:justify-center max-tablet:items-center">
 
         {/* min price input */}
         <input
           type="number"
           placeholder="od"
           onChange={(e) => setMinPrice(Number(e.target.value))}
-          className="w-5/12 px-2 py-1 border border-black"
+          className="w-5/12 px-2 py-1 border border-black max-mobile:w-5/12 max-tablet:w-3/12"
           id="filter-minimum-price"
         />
 
@@ -57,15 +57,15 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
           type="number"
           placeholder="do"
           onChange={(e) => setMaxPrice(Number(e.target.value))}
-          className="w-5/12 px-2 py-1 border border-black"
+          className="w-5/12 px-2 py-1 border border-black max-mobile:w-5/12 max-tablet:w-3/12"
           id="filter-maximum-price"
         />
       </div>
 
-      <h3 className="py-1 text-lg font-bold max-mobile:text-center">Kategorie</h3>
+      <h3 className="py-1 text-lg font-bold max-tablet:text-center">Kategorie</h3>
       
       {/* category selection checkboxes */}
-      <div className="grid grid-cols-2 gap-y-2">
+      <div className="grid grid-cols-2 gap-y-2 max-mobile:grid-cols-2 max-tablet:grid-cols-3">
         {categoryList.map((item) => (
           <div className="flex items-center px-0.5" key={item.name}>
             <>
@@ -82,7 +82,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
         ))}
       </div>
       
-      <button className="float-right mt-5 btn">Szukaj</button>
+      <button className="float-right mt-5 btn max-tablet:w-5/12 max-tablet:mx-auto">Szukaj</button>
     </form>
   )
 }

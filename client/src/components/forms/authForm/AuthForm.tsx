@@ -21,7 +21,7 @@ export default function AuthForm({handleSubmit, error, isLoading, submitButtonTe
     <form className="flex flex-col mx-auto" onSubmit={(e) => handleSubmit(e, email, password)}>
 
       {/* email input */}
-      <label htmlFor="login-email" className="text-lg">Adres e-mail</label>
+      <label htmlFor="login-email" className="text-lg max-mobile:text-sm max-tablet:text-base">Adres e-mail</label>
       <input
         className="p-2 my-1 text-black border border-orange-400 rounded-md"
         id="login-email"
@@ -31,7 +31,7 @@ export default function AuthForm({handleSubmit, error, isLoading, submitButtonTe
       />
 
       {/* password input */}
-      <label htmlFor="login-password" className="text-lg">Hasło</label>
+      <label htmlFor="login-password" className="text-lg max-mobile:text-sm max-tablet:text-base">Hasło</label>
       <input
         className="p-2 my-1 text-black border border-orange-400 rounded-md"
         id="login-password"
@@ -40,9 +40,9 @@ export default function AuthForm({handleSubmit, error, isLoading, submitButtonTe
         value={password}
       />
 
-      <button className="mt-5 tracking-wider uppercase btn" disabled={isLoading}>{isLoading ? <LoadingSpinner /> : submitButtonText}</button>
+      <button className="mt-5 tracking-wider uppercase btn max-mobile:text-xs" disabled={isLoading}>{isLoading ? <LoadingSpinner /> : submitButtonText}</button>
 
-      {error && <div className="mt-3 error">{error}</div>}
+      {error && <div className="mt-3 error max-mobile:text-sm">{error}</div>}
       
     </form>
   )

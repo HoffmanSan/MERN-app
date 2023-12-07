@@ -17,9 +17,9 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-9/10-screen">
+    <div className="flex items-center justify-center min-h-9/10-screen max-mobile:text-sm">
       <div className="p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96">
-        <h3 className="text-center pb-7">ZALOGUJ SIĘ</h3>
+        <h3 className="text-center pb-7 max-mobile:text-base">ZALOGUJ SIĘ</h3>
 
         <AuthForm handleSubmit={handleLogin} error={error} isLoading={isLoading} submitButtonText="logowanie"/>
 

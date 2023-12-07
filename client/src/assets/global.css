@@ -9,11 +9,11 @@ body {
 }
 
 h2 {
-  @apply text-2xl font-bold;
+  @apply text-2xl font-bold max-mobile:text-base
 }
 
 h3 {
-  @apply text-xl font-bold;
+  @apply text-xl font-bold max-mobile:text-sm
 }
 
 a, input, button {
@@ -48,8 +48,11 @@ input[type=number] {
 }
 
 /* Tables */
+#products-table td, #users-table td {
+ @apply max-tablet:flex max-tablet:justify-center max-tablet:!w-full max-tablet:border-b max-tablet:border-orange-200 max-tablet:text-sm
+}
 td {
-  @apply text-center
+  @apply text-center 
 }
 tr {
   @apply h-14

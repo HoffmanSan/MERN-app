@@ -25,7 +25,7 @@ export default function Products() {
   return (
     <>
       <button
-        className="w-3/12 mx-auto mt-6 btn"
+        className="w-3/12 mx-auto mt-6 btn max-mobile:w-6/12 max-tablet:text-sm"
         onClick={() => setShowPanel(showPanel === "Display" ? "Create" : "Display")}
       >
         {showPanel === "Display" ? "Dodaj produkt" : "Pokaż produkty"}

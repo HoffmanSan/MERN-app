@@ -29,10 +29,10 @@ export default function ProductRow({product, user}: ProductRowProps) {
       </div>
 
       <div className="flex flex-col col-span-2 py-2 max-mobile:col-span-5 max-mobile:p-0">
-        <h4 className="text-lg font-bold group-hover:text-orange-400 max-mobile:text-base">{product.name}</h4>
-        <p className="pt-2 text-gray-400 max-mobile:hidden">{product.inStock} {product.inStock === 1 ? "sztuka na magazynie" : "sztuk na magazynie"}</p>
-        <p className="py-2 max-mobile:text-sm">{product.description.slice(0, 125)}...</p>
-        <ul className="flex mt-auto max-mobile:hidden">
+        <h4 className="text-lg font-bold group-hover:text-orange-400 max-tablet:text-base">{product.name}</h4>
+        <p className="pt-2 text-gray-400 max-mobile:hidden max-tablet:text-xs">{product.inStock} {product.inStock === 1 ? "sztuka na magazynie" : "sztuk na magazynie"}</p>
+        <p className="py-2 max-mobile:text-sm max-tablet:text-sm">{product.description.slice(0, 125)}...</p>
+        <ul className="flex mt-auto max-mobile:hidden max-tablet:text-sm">
           {product.categories.slice(0, 4).map(category => (
             <li className="px-1" key={category}>{category}{product.categories.indexOf(category) + 1 !== product.categories.length ? "," : ""}</li>
           ))}
@@ -41,9 +41,8 @@ export default function ProductRow({product, user}: ProductRowProps) {
       </div>
 
       <div className="flex flex-col col-span-2 p-2 m-3 border-l border-gray-300 max-mobile:col-span-5 max-mobile:border-0 max-mobile:m-0">
-        <h3 className="text-2xl text-orange-400 max-mobile:text-lg">{product.price} zł</h3>
-        {!user && <p className="text-gray-400">Zaloguj się aby zakupić ten produkt</p>}
-        <small className="mt-auto text-center text-gray-400 max-mobile:text-xs">Dodano {new Date(product.createdAt).toLocaleDateString('pl-PL')}</small>
+        <h3 className="text-2xl text-orange-400 max-mobile:text-lg max-tablet:text-lg">{product.price} zł</h3>
+        <small className="mt-auto text-center text-gray-400 max-tablet:text-xs">Dodano {new Date(product.createdAt).toLocaleDateString('pl-PL')}</small>
       </div>
 
     </div>

@@ -129,34 +129,37 @@ export default function DisplayCategories() {
 
   return (
     <>
-      <div className="flex justify-center mt-6">
+      <div className="flex flex-col items-center justify-center pb-5 mt-6 border-b border-orange-400">
+
+        <h3 className="w-full p-1 mb-3 text-center text-white bg-orange-400 max-tablet:text-base">Nowa kategoria</h3>
 
         {/* category img input */}
         <input 
           type="file"
-          className="text-orange-400"
+          className="w-1/12 text-transparent text-orange-400 max-mobile:w-4/12 max-mobile:pb-2 max-mobile:scale-90 max-tablet:w-2/12 max-tablet:scale-95"
           onChange={handleFileChange}
         />
 
         {/* category name input */}
-        <input
-          type="text"
-          id="category-add-bar"
-          className="w-2/12 p-2 text-center text-black border border-orange-400 rounded-l-md"
-          value={newCategory.name}
-          onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-        />
+          <input
+            type="text"
+            id="category-add-bar"
+            className="w-3/12 p-2 my-3 text-center text-black border border-orange-400 rounded-md max-tablet:text-sm max-mobile:w-9/12 max-tablet:w-6/12"
+            placeholder="Nowa kategoria..."
+            value={newCategory.name}
+            onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+          />
 
-        <button
-          className="p-2 font-bold text-white bg-orange-400 min-w-1/12 hover:bg-orange-600"
-          onClick={() => addCategory()}
-        >
-          {isAdding ? <LoadingSpinner /> : "Dodaj kategorie"}
-        </button>
+          <button
+            className="w-3/12 p-2 font-bold text-white bg-orange-400 border border-orange-400 hover:bg-orange-600 max-tablet:text-sm max-mobile:w-6/12"
+            onClick={() => addCategory()}
+          >
+            {isAdding ? <LoadingSpinner /> : "Dodaj kategorie"}
+          </button>
 
       </div>
 
-      {error && <div className="mx-auto mt-2 error">{error}</div>}
+      {error && <div className="mx-auto mt-2 error max-tablet:text-sm">{error}</div>}
 
       <div className="flex justify-center m-6">
 
@@ -164,7 +167,7 @@ export default function DisplayCategories() {
         <input
           type="text"
           id="category-search-bar"
-          className="w-3/12 p-2 text-center text-black border border-orange-400 rounded-md"
+          className="w-3/12 p-2 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:text-sm max-tablet:w-6/12"
           placeholder="Szukaj..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -172,10 +175,10 @@ export default function DisplayCategories() {
 
       </div>
       
-      <table className="w-3/12 mx-auto border border-orange-400">
+      <table className="w-3/12 mx-auto border border-orange-400 max-mobile:w-11/12 max-tablet:text-sm max-tablet:w-7/12">
 
         {/* category table */}
-        <thead className="text-lg font-bold text-white">
+        <thead className="text-lg font-bold text-white max-tablet:text-sm">
           <tr>
             <td>Nazwa</td>
             <td>Obraz</td>
@@ -188,11 +191,18 @@ export default function DisplayCategories() {
             <tr key={item._id}>
               <td>{item.name}</td>
               <td>
-                <a href={item.imageURL} className="m-1 !p-1 !rounded-none btn" target="_blank" rel="noreferrer">1</a>
+                <a
+                  href={item.imageURL}
+                  className="m-1 !p-1 !rounded-none btn max-tablet:text-xs"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  1
+                </a>
               </td>
               <td>
                 <button
-                  className="m-1 btn"
+                  className="m-1 btn max-tablet:text-xs"
                   disabled={isDeleting !== null}
                   onClick={() => deleteCategory(item)}
                 >

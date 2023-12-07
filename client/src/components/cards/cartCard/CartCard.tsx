@@ -47,49 +47,57 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
 
       <div className="grid grid-cols-3 col-span-3 py-2 max-mobile:col-span-2">
         <img src={product.photoURLs[0]} alt={product.name} className="object-scale-down object-center w-24 h-24 mx-auto bg-gray-200 max-mobile:hidden"/>
-        <a href={`/products/${product._id}`} className="col-span-2 my-auto ml-2 text-center uppercase max-mobile:text-xs hover:text-orange-400 max-mobile:col-span-3 max-mobile:ml-0">{product.name}</a>
+        <a href={`/products/${product._id}`} className="col-span-2 my-auto ml-2 text-center uppercase max-mobile:text-xs hover:text-orange-400 max-mobile:col-span-3 max-mobile:ml-0 max-tablet:text-sm">{product.name}</a>
       </div>
 
       <div className="grid grid-cols-5 col-span-3 py-2 max-mobile:col-span-4">
         
-        <div className="flex items-center justify-center col-span-2">
+        <div className="flex flex-col items-center justify-center col-span-2">
 
-          <button
-            className={`h-10 font-bold max-mobile:h-6 flex items-center justify-center text-orange-400 border-2 border-orange-400 w-9 ${purchaseQuantity === 1 && "bg-orange-200"}`}
-            onClick={() => {
-              setIsLoading(true)
-              setPurchaseQuantity(currValue => currValue - 1)
-              dispatchCart({type: "UPDATE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity - 1 }]})
-            }}
-            disabled={purchaseQuantity === 1}
+          <div className="flex items-center justify-center">
+            <button
+              className={`h-10 font-bold max-mobile:h-6 max-tablet:h-8 flex items-center justify-center text-orange-400 border-2 border-orange-400 w-9 ${purchaseQuantity === 1 && "bg-orange-200"}`}
+              onClick={() => {
+                setIsLoading(true)
+                setPurchaseQuantity(currValue => currValue - 1)
+                dispatchCart({type: "UPDATE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity - 1 }]})
+              }}
+              disabled={purchaseQuantity === 1}
+            >
+              -
+            </button>
+
+            <input
+              type="number"
+              className="w-4/12 h-10 font-bold text-center border-orange-400 border-y-2 max-mobile:h-6 max-tablet:h-8 max-tablet:text-xs"
+              value={purchaseQuantity}
+              readOnly
+            />
+
+            <button
+              className={`h-10 font-bold flex items-center justify-center text-orange-400 max-mobile:h-6 max-tablet:h-8 border-2 border-orange-400 w-9 ${purchaseQuantity === product.inStock && "bg-orange-200"}`}
+              onClick={() => {
+                setIsLoading(true)
+                setPurchaseQuantity(currValue => currValue + 1)
+                dispatchCart({type: "UPDATE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity + 1 }]})
+              }}
+              disabled={purchaseQuantity === product.inStock}
+            >
+              +
+            </button>
+          </div>
+
+          <small
+            className="text-xs text-gray-400 max-mobile:hidden"
           >
-            -
-          </button>
-
-          <input
-            type="number"
-            className="w-4/12 h-10 font-bold text-center border-orange-400 border-y-2 max-mobile:h-6 max-mobile:text-xs"
-            value={purchaseQuantity}
-            readOnly
-          />
-
-          <button
-            className={`h-10 font-bold flex items-center justify-center text-orange-400 max-mobile:h-6 border-2 border-orange-400 w-9 ${purchaseQuantity === product.inStock && "bg-orange-200"}`}
-            onClick={() => {
-              setIsLoading(true)
-              setPurchaseQuantity(currValue => currValue + 1)
-              dispatchCart({type: "UPDATE_CART_ITEM", payload: [{ cartItemId: cartItem.cartItemId, cartItemQuantity: purchaseQuantity + 1 }]})
-            }}
-            disabled={purchaseQuantity === product.inStock}
-          >
-            +
-          </button>
+            {product.inStock === 1 ? "ostatnia sztuka" : `z ${product.inStock} sztuk`}
+          </small>
           
         </div>
 
         <div className="flex items-center justify-center">
           <svg 
-            className="hover:cursor-pointer max-mobile:h-6"
+            className="hover:cursor-pointer max-mobile:h-6 max-tablet:h-8"
             onClick={() => {
               setIsLoading(true)
               deleteProductFromCart()
@@ -107,8 +115,8 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
         </div>
 
         <div className="flex flex-col items-end justify-center col-span-2 mr-3">
-          <h3 className="tracking-wide max-mobile:text-sm">{(product.price * purchaseQuantity).toFixed(2)} zł</h3>
-          {purchaseQuantity !== 1 && <small className="text-gray-400 max-mobile:hidden">{product.price} zł za sztukę</small>}
+          <h3 className="tracking-wide max-mobile:text-sm max-tablet:text-base">{(product.price * purchaseQuantity).toFixed(2)} zł</h3>
+          {purchaseQuantity !== 1 && <small className="text-gray-400 max-mobile:hidden max-tablet:text-xs">{product.price} zł za sztukę</small>}
         </div>
 
       </div>

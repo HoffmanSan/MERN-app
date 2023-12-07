@@ -77,7 +77,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
         <input
           type="text"
           id="product-search-bar"
-          className="w-3/12 p-2 text-center text-black border border-orange-400 rounded-md"
+          className="w-3/12 p-2 text-center text-black border border-orange-400 rounded-md max-tablet:text-sm max-mobile:w-full max-tablet:w-6/12"
           placeholder="Szukaj..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -85,12 +85,12 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
 
       </div>
 
-      {error && <div className="mx-auto mb-5 error">{error}</div>}
+      {error && <div className="mx-auto mb-5 error max-tablet:text-sm">{error}</div>}
 
       {/* products table */}
-      <table className="w-11/12 mx-auto border border-orange-400">
+      <table id="products-table" className="w-11/12 mx-auto border border-orange-400">
 
-        <thead className="text-lg font-bold text-white">
+        <thead className="text-lg font-bold text-white max-tablet:hidden">
           <tr>
             <td>Nazwa</td>
             <td>Cena</td>
@@ -103,11 +103,11 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
           </tr>
         </thead>
 
-        <tbody>
+        <tbody className="max-tablet:flex max-tablet:flex-col">
           {filteredProducts && filteredProducts.map(product => (
-            <tr key={product._id}>
-              <td className="w-2/12">{product.name.slice(0, 50)}{product.name.length >= 50 && "..."}</td>
-              <td className="w-1/12">{product.price} zł</td>
+            <tr key={product._id} className="max-tablet:flex max-tablet:flex-col max-tablet:items-center max-tablet:h-fit">
+              <td className="w-2/12 max-tablet:bg-orange-400 max-tablet:text-white max-tablet:font-bold">{product.name.slice(0, 50)}{product.name.length >= 50 && "..."}</td>
+              <td className="w-2/12">{product.price} zł / szt.</td>
               <td className="w-1/12">{product.inStock} szt.</td>
               <td className="w-1/12">{(new Date(product.createdAt)).toLocaleDateString('pl-PL')}</td>
               <td className="w-2/12">
@@ -125,7 +125,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
                     href={item}
                     target="_blank"
                     rel="noreferrer"
-                    className="m-1 !p-1 !rounded-none btn"
+                    className="m-1 !p-1 !rounded-none btn max-tablet:text-xs"
                   >
                     {1 + product.photoURLs.indexOf(item)}
                   </a>
@@ -134,7 +134,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
               <td>
 
                 <button
-                  className="m-1 btn"
+                  className="m-1 btn max-tablet:text-xs"
                   onClick={() => {
                     setUpdatedProduct(product);
                     changePanel("Edit");
@@ -144,7 +144,7 @@ export default function DisplayProducts({changePanel, setUpdatedProduct}: Displa
                 </button>
 
                 <button
-                  className="m-1 btn"
+                  className="m-1 btn max-tablet:text-xs"
                   disabled={isDeleting !== null}
                   onClick={() => deleteProduct(product)}
                 >

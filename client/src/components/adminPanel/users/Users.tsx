@@ -63,7 +63,7 @@ export default function Users() {
         <input
           type="text"
           id="user-search-bar"
-          className="w-3/12 p-2 text-center text-black border border-orange-400 rounded-md"
+          className="w-3/12 p-2 text-center text-black border border-orange-400 rounded-md max-tablet:text-sm max-mobile:w-11/12 max-tablet:w-6/12"
           placeholder="Szukaj..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -71,12 +71,12 @@ export default function Users() {
 
       </div>
 
-      {error && <div className="mx-auto mb-5 error">{error}</div>}
+      {error && <div className="mx-auto mb-5 error max-tablet:text-sm">{error}</div>}
 
       {/* users table */}
-      <table className="w-6/12 mx-auto border border-orange-400">
+      <table id="users-table" className="w-6/12 mx-auto border border-orange-400 max-mobile:w-11/12">
 
-        <thead className="text-lg font-bold text-white">
+        <thead className="text-lg font-bold text-white max-tablet:hidden">
           <tr>
             <td>Email</td>
             <td>Dołączył</td>
@@ -88,13 +88,13 @@ export default function Users() {
         <tbody>
           {filteredUsers && filteredUsers.map(user => (
             <tr key={user._id}>
-              <td>{user.email}</td>
+              <td className="max-tablet:bg-orange-400 max-tablet:text-white max-tablet:font-bold">{user.email}</td>
               <td>{(new Date(user.createdAt)).toLocaleDateString('pl-PL')}</td>
               <td>{user.role}</td>
               <td>
                 {user.role !== "Administrator" &&
                   <button
-                    className="m-1 btn"
+                    className="m-1 btn max-tablet:text-xs"
                     disabled={isDeleting !== null}
                     onClick={() => deleteUser(user)}
                   >

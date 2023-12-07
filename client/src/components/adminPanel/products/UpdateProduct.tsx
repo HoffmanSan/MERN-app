@@ -100,6 +100,10 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
       setError("Uzupełnij dane produktu");
       return
     }
+    if(product.inStock % 1 !== 0) {
+      setError("Ilość dostępnego produktu nie może być ułamkiem")
+      return
+    }
     if (product.categories.length === 0) {
       setError("Przydziel kategorie do produktu");
       return
@@ -148,15 +152,15 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
   return (
     <form className="flex flex-col p-6 mb-6 text-center text-orange-400 bg-white" onSubmit={(e) => handleSubmit(e)}>
       
-      <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md">EDYTUJ PRODUKT</h2>
+      <h2 className="p-1 px-2 mx-auto mb-6 text-white bg-orange-400 rounded-md max-tablet:text-xl">EDYTUJ PRODUKT</h2>
       
-      <h3 className="p-1 text-white bg-orange-400">Dane</h3>
+      <h3 className="p-1 text-white bg-orange-400 max-tablet:text-base">Dane</h3>
 
       {/* product name input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Nazwa:</span>
         <input
-          className="w-4/12 p-2 my-1 text-center text-black border border-orange-400 rounded-md"
+          className="w-4/12 p-2 my-1 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:w-6/12"
           onChange={(e) => setProduct({...product, name: e.target.value})}
           value={product.name}
           id="product-name"
@@ -164,44 +168,44 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
       </label>
 
       {/* product price input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Cena (zł / szt.):</span>
         <input
           type="number"
           value={product.price}
           onChange={(e) => setProduct({...product, price: Number(e.target.value)})}
-          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md"
+          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:w-4/12"
           id="product-price"
         />
       </label>
 
       {/* product in stock quantity input */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Ilość na magazynie (szt.):</span>
         <input
           type="number"
           value={product.inStock}
           onChange={(e) => setProduct({...product, inStock: Number(e.target.value)})}
-          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md"
+          className="px-2 py-1 text-center text-black border border-orange-400 rounded-md max-mobile:w-11/12 max-tablet:w-4/12"
           id="product-quantity"
         />
       </label>
 
       {/* product description */}
-      <label className="flex flex-col items-center">
+      <label className="flex flex-col items-center max-tablet:text-sm">
         <span className="m-1 font-bold">Opis:</span>
         <textarea
-          className="w-6/12 h-40 text-black border border-orange-400 rounded-md outline-none"
+          className="w-6/12 h-40 text-black border border-orange-400 rounded-md outline-none max-mobile:w-11/12 max-tablet:w-10/12"
           value={product.description}
           onChange={(e) => setProduct({...product, description: e.target.value})}
           id="product-description"
         />
       </label>
       
-      <h3 className="p-1 m-2 text-white bg-orange-400">Kategorie</h3>
+      <h3 className="p-1 m-2 text-white bg-orange-400 max-tablet:text-base">Kategorie</h3>
 
       {/* product categories input */}
-      <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left">
+      <div className="grid w-8/12 grid-cols-4 gap-1 mx-auto text-left max-mobile:w-11/12 max-mobile:grid-cols-2 max-tablet:w-10/12 max-tablet:text-sm">
         {categories.sort().map((item) => (
           <div key={item.name} className="flex items-center">
             <input
@@ -216,7 +220,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
         ))}
       </div>
       
-      <h3 className="p-1 m-2 text-white bg-orange-400">Zdjęcia</h3>
+      <h3 className="p-1 m-2 text-white bg-orange-400 max-tablet:text-base">Zdjęcia</h3>
       
       {/* product images input */}
       <div className="m-2 mb-4">
@@ -225,18 +229,25 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
           ref={fileInput}
           onChange={handleFileChange}
           type="file"
+          className="w-1/12 text-transparent max-mobile:w-5/12 max-tablet:text-sm max-tablet:w-3/12"
           multiple
         />
 
-        <div className={`pt-2 w-6/12 mx-auto ${showPreviousPhotos && imagesSize.length !== 0 ? "grid grid-cols-2" : ""}`}>
+        <div className={`pt-2 w-6/12 mx-auto ${showPreviousPhotos && imagesSize.length !== 0 ? "grid grid-cols-2" : ""} max-mobile:w-11/12 max-tablet:w-8/12`}>
 
           <div>
             {imagesSize.length !== 0 &&
-              <h3>Nowe zdjęcia:</h3>
+              <h3 className="max-tablet:text-base">Nowe zdjęcia:</h3>
             }
             {imagesSize.map(item => (
               <Fragment key={item.name}>
-                <span>{item.name.slice(0, 25)}</span> - <span>{(item.size / 1000000).toFixed(2)} mb</span>
+                <span className="max-tablet:text-sm">
+                  {item.name.slice(0, 25)}
+                </span>
+                  {" - "}
+                <span className="max-tablet:text-sm">
+                  {(item.size / 1000000).toFixed(2)} mb
+                </span>
                 <br />
               </Fragment>
             ))}
@@ -245,11 +256,11 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
           {showPreviousPhotos && 
             <div>
               {product.photoURLs.length > 0 &&
-                <h3>Obecne zdjęcia:</h3>
+                <h3 className="max-tablet:text-base">Obecne zdjęcia:</h3>
               }
               {product.photoURLs.map(item => (
                 <Fragment key={item}>
-                  <a href={item} target="_blank" rel="noreferrer" className="hover:font-bold">
+                  <a href={item} target="_blank" rel="noreferrer" className="hover:font-bold max-tablet:text-sm">
                     Zdjęcie {product.photoURLs.indexOf(item) + 1}
                   </a>
                   <br />
@@ -260,15 +271,15 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
 
         </div>
         {imagesSize.length !== 0 &&
-          <p className="mt-3">
-            <span className="font-bold">UWAGA!</span> Jeżeli dodasz nowe pliki to zastąpią one poprzednie zdjęcia
+          <p className="mt-3 max-mobile:text-sm max-tablet:text-base">
+            <span className="font-bold"> UWAGA! </span> Jeżeli dodasz nowe zdjęcia to zastąpią one poprzednie
           </p>
         }
       </div>
 
       <button
-        disabled={isUpdating || error !== ""}
-        className="w-2/12 mx-auto btn"
+        disabled={isUpdating}
+        className="w-2/12 mx-auto btn max-mobile:w-6/12 max-tablet:text-sm max-tablet:w-4/12"
       >
         {isUpdating ?
           <LoadingSpinner />

@@ -24,11 +24,11 @@ export default function ProductsList({filteredProducts}: ProductsListProps) {
   const { user } = useAuthContext();
   
   return (
-    <div className="col-span-3 p-5 mb-6 ml-6 bg-white shadow-md h-min max-mobile:col-span-4 max-mobile:mx-0">
+    <div className="col-span-3 p-5 mb-6 ml-6 bg-white shadow-md h-min max-tablet:col-span-4 max-tablet:mx-0">
       
       {filteredProducts.length > 0 ?
         <>
-          <h2 className="pb-3 text-2xl font-bold max-mobile:text-lg max-mobile:text-center max-mobile:pb-0">Wszystkie oferty</h2>
+          <h2 className="pb-3 text-2xl font-bold max-tablet:text-lg max-tablet:text-center max-mobile:pb-0">Wszystkie oferty</h2>
           {filteredProducts.map(product => (
             <Link key={product._id} to={`/products/${product._id}`}>
               <ProductRow product={product} user={user}/>

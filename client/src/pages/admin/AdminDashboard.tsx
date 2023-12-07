@@ -46,26 +46,26 @@ export default function AdminPanel() {
   };
 
   return (
-    <div className="flex flex-col justify-center w-9/12 pb-6 m-6 mx-auto bg-white rounded-md shadow-md">
+    <div className="flex flex-col justify-center w-9/12 pb-6 m-6 mx-auto bg-white rounded-md shadow-md max-mobile:w-11/12 max-tablet:w-10/12">
       <div className="text-white bg-orange-400">
-        <ul className="flex">
+        <ul className="flex max-mobile:justify-between">
 
           <li
-            className={`p-5 font-bold cursor-pointer hover:bg-orange-600 ${currentPanel === "Products" || currentPanel === "AddProduct" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
+            className={`p-5 font-bold max-mobile:text-xs max-tablet:text-sm max-mobile:p-3 cursor-pointer hover:bg-orange-600 ${currentPanel === "Products" || currentPanel === "AddProduct" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
             onClick={() => setCurrentPanel("Products")}
           >
             PRODUKTY
           </li>
 
           <li
-            className={`p-5 font-bold cursor-pointer hover:bg-orange-600 ${currentPanel === "Users" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
+            className={`p-5 font-bold max-mobile:text-xs max-tablet:text-sm max-mobile:p-3 cursor-pointer hover:bg-orange-600 ${currentPanel === "Users" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
             onClick={() => setCurrentPanel("Users")}
           >
             UŻYTKOWNICY
           </li>
 
           <li
-            className={`p-5 font-bold cursor-pointer hover:bg-orange-600 ${currentPanel === "Categories" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
+            className={`p-5 font-bold max-mobile:text-xs max-tablet:text-sm max-mobile:p-3 cursor-pointer hover:bg-orange-600 ${currentPanel === "Categories" ? "bg-white text-orange-400 hover:bg-white" : ""}`}
             onClick={() => setCurrentPanel("Categories")}
           >
             KATEGORIE

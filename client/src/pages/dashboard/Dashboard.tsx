@@ -1,78 +1,60 @@
 // ImMPORTS
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useProductsContext } from "../../hooks/useContextHooks/useProductsContext";
 import { useCategoriesContext } from "../../hooks/useContextHooks/useCategoriesContext";
 
 // COMPONENTS
 import { Carousel, FilterForm, ProductList, ProductCard, CategoryCard } from "../../components/index";
 
-// TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  categories: string[]
-  description: string
-  inStock: number
-  photoURLs: string[]
-  createdAt: Date
-}
-
 export default function Dashboard() {
+  // LOCAL STATES
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(99999);
+  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
+
   // GLOBAL STATES & UTILITIES
   const { products: allProducts } = useProductsContext();
   const products = allProducts.filter(item => item.inStock > 0);
   const { categories } = useCategoriesContext();
 
-  // LOCAL STATES
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  const [filtersApplied, setFiltersApplied] = useState(false);
-  
   // ---- FILTERING LOGIC ---- \\
-  const handleFilter = (minPrice: number, maxPrice: number, categories: string[]) => {
-    let filteredByPrice = products;
-    let filteredByCategory = products;
-
-    if (maxPrice === 0) {
-      maxPrice = 99999;
+  const filteredProducts = useMemo(() => {
+    if (minPrice === 0 && (maxPrice === 99999 || maxPrice === 0) && filteredCategories.length === 0) {
+      return products
     }
 
-    // filter by price
-    if (minPrice > 0 || maxPrice < 99999) {
-      filteredByPrice = (products).filter(item => {
-        if (item.price >= minPrice && item.price <= maxPrice) {
+    return products.filter(item => 
+      item.price >= minPrice
+      &&
+      item.price <= maxPrice
+      &&
+      item.categories.some(category => {
+        if (filteredCategories.length === 0) {
           return true
-        } else {
-          return false
         }
+        return filteredCategories.includes(category)
       })
+    )
+  }, [filteredCategories, minPrice, maxPrice, products])
+  
+  // ---- SET FILTERING PARAMETERS ---- \\
+  const handleFilter = (minPrice: number, maxPrice: number, categories: string[]) => {
+    setMinPrice(minPrice)
+    setMaxPrice(maxPrice)
+    if (maxPrice === 0) {
+      setMaxPrice(99999)
     }
-    
-    // filter by category
-    if (categories.length !== 0) {
-      filteredByCategory = (products).filter(item => {
-        return (item.categories.some(val => categories.includes(val)));
-      }) 
-    }
-
-    // return products after filtering
-    if (filteredByPrice.length !== 0 || filteredByCategory.length !== 0) {
-      let result = filteredByPrice.filter(val => filteredByCategory.indexOf(val) > -1);
-      setFilteredProducts(result);
-      setFiltersApplied(true);
-      return
-    }
-    setFiltersApplied(false);
+    setFilteredCategories(categories)
   };
   
   return (
     <>
-      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 min-h-max max-mobile:w-11/12">
-        <h2 className="max-mobile:text-center max-mobile:text-lg">Najnowsze produkty</h2>
+      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 min-h-max max-mobile:w-11/12 max-tablet:w-10/12">
+        <h2 className="max-tablet:text-center max-tablet:text-lg">Najnowsze produkty</h2>
         {products.length > 0 ?
           <Carousel>
             {
-              products.map((item) => (
+              products.slice(0, 25).map((item) => (
                 <ProductCard product={item} key={item._id}/>
               )) || <div/>
             }
@@ -82,8 +64,8 @@ export default function Dashboard() {
         }
       </div>
 
-      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 max-mobile:w-11/12">
-        <h2 className="max-mobile:text-center max-mobile:text-lg">Szukaj wg Kategorii</h2>
+      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 max-mobile:w-11/12 max-tablet:w-10/12">
+        <h2 className="max-tablet:text-center max-tablet:text-lg">Szukaj wg Kategorii</h2>
         {categories.length > 0 ?
           <Carousel>
             {
@@ -99,16 +81,16 @@ export default function Dashboard() {
 
       {products.length > 0 ?
 
-        <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max max-mobile:w-11/12">
+        <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max max-mobile:w-11/12 max-tablet:w-10/12">
 
           <FilterForm categoryList={categories} handleFilter={handleFilter}/>
 
-          <ProductList filteredProducts={filtersApplied ? filteredProducts : products} />
+          <ProductList filteredProducts={filteredProducts} />
         </div>
 
       :
 
-        <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white">
+        <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white max-mobile:w-11/12">
           <h3 className="text-gray-300 max-mobile:text-base">Ładowanie...</h3>
         </div>
       }

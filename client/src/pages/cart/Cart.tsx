@@ -82,19 +82,19 @@ export default function Cart() {
   };
   
   return (
-    <div className="grid w-9/12 grid-cols-3 gap-4 mx-auto my-6 max-mobile:w-11/12">
+    <div className="grid w-9/12 grid-cols-3 gap-4 mx-auto my-6 max-mobile:w-11/12 max-tablet:w-10/12">
 
       {/* if the cart is already loaded... */}
       {cartId ?
         <>
           {/* ...and empty */}
-          {cartItems.length === 0 && <h3 className="col-span-3 text-center text-gray-400">Twój koszyk jest pusty</h3>}
+          {cartItems.length === 0 && <h3 className="col-span-3 text-center text-gray-400 max-tablet:text-lg">Twój koszyk jest pusty</h3>}
 
           {/* ...and contains items */}
           {cartItems.length !== 0 &&
             <>
-              <div className="col-span-2 p-5 bg-white shadow-md h-min max-mobile:col-span-3 max-mobile:p-3">
-                <h2 className="pb-2 border-b border-orange-400 max-mobile:text-xl max-mobile:text-center">Twój koszyk</h2>
+              <div className="col-span-2 p-5 bg-white shadow-md h-min max-tablet:col-span-3 max-mobile:p-3">
+                <h2 className="pb-2 border-b border-orange-400 max-tablet:text-xl max-tablet:text-center">Twój koszyk</h2>
                 <div className={`grid grid-rows-${cartItems.length}`}>
                   {cartItems.map(item =>
                     <CartCard key={item.cartItemId} cartItem={item} setIsLoading={setIsLoading} dispatchCart={dispatchCart}/>
@@ -102,17 +102,17 @@ export default function Cart() {
                 </div>
               </div>
 
-              <div className="col-span-1 p-5 bg-white shadow-md h-min max-mobile:col-span-3">
-                <h2 className="pb-2 border-b border-orange-400 max-mobile:text-xl max-mobile:text-center">Razem</h2>
+              <div className="col-span-1 p-5 bg-white shadow-md h-min max-tablet:col-span-3">
+                <h2 className="pb-2 border-b border-orange-400 max-tablet:text-xl max-tablet:text-center">Razem</h2>
 
                 <div className="flex flex-col items-center justify-center">
                   {isLoading ?
                     <LoadingSpinner classNames="!h-20 !w-20 my-10"/>
                   :
                     <>
-                      <h2 className="py-10 my-auto text-4xl tracking-wider max-mobile:text-2xl max-mobile:py-5">{getTotalCartValue()} zł</h2>
+                      <h2 className="py-10 my-auto text-4xl tracking-wider max-tablet:text-2xl max-mobile:py-5">{getTotalCartValue()} zł</h2>
                       <button
-                        className="w-full btn max-mobile:text-sm"
+                        className="w-full btn max-tablet:text-sm"
                         onClick={() => startPayment()}
                         disabled={isRedirecting}
                       >

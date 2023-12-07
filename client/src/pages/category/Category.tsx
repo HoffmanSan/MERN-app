@@ -37,8 +37,8 @@ export default function Category() {
     <>
       {categoryProducts.length !== 0 ? 
         <>
-          <div className="w-3/12 p-3 mx-auto mt-6 bg-white shadow-md max-mobile:w-9/12">
-            <h2 className="text-center max-mobile:text-lg">Cena</h2>
+          <div className="w-3/12 p-3 mx-auto mt-6 bg-white shadow-md max-mobile:w-9/12 max-tablet:w-10/12">
+            <h2 className="text-center max-tablet:text-lg">Cena</h2>
             <form className="text-center">
 
               <input 
@@ -60,13 +60,13 @@ export default function Category() {
             </form>
           </div>
 
-          <div className="grid w-9/12 grid-cols-5 px-5 pt-3 pb-5 mx-auto my-6 bg-white shadow-md max-mobile:w-11/12 max-mobile:grid-cols-2">
-            <h2 className="col-span-5 text-center max-mobile:text-lg max-mobile:col-span-2">Produkty z kategorii: {categoryName}</h2>
+          <div className="grid w-9/12 grid-cols-5 px-5 pt-3 pb-5 mx-auto my-6 bg-white shadow-md max-mobile:w-11/12 max-mobile:grid-cols-2 max-tablet:w-10/12 max-tablet:grid-cols-3">
+            <h2 className="col-span-5 text-center max-mobile:col-span-2 max-tablet:col-span-3 max-tablet:text-lg">Produkty z kategorii: {categoryName}</h2>
             {categoryProductsFilteredByPrice.length === 0 ?
               minPrice === 0 && maxPrice === 99999 ?
-                <h3 className="col-span-5 mt-5 text-center text-gray-400 max-mobile:text-base">Ładowanie...</h3>
+                <h3 className="col-span-5 mt-5 text-center text-gray-400 max-mobile:text-base max-tablet:text-lg">Ładowanie...</h3>
               :
-                <h3 className="col-span-5 mt-5 text-center text-gray-400 max-mobile:text-base">Brak produktów spełniających podane kryteria</h3>
+                <h3 className="col-span-5 mt-5 text-center text-gray-400 max-mobile:text-base max-tablet:text-lg">Brak produktów spełniających podane kryteria</h3>
             :
               categoryProductsFilteredByPrice.map(item => (
                 <ProductCard key={item._id} product={item} />
