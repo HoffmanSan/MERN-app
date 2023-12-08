@@ -136,7 +136,7 @@ export default function DisplayCategories() {
         {/* category img input */}
         <input 
           type="file"
-          className="w-1/12 text-transparent text-orange-400 max-mobile:w-4/12 max-mobile:pb-2 max-mobile:scale-90 max-tablet:w-2/12 max-tablet:scale-95"
+          className="text-orange-400 max-mobile:text-transparent max-mobile:w-4/12 max-mobile:pb-2 max-mobile:scale-90 max-tablet:scale-95"
           onChange={handleFileChange}
         />
 
@@ -175,7 +175,7 @@ export default function DisplayCategories() {
 
       </div>
       
-      <table className="w-3/12 mx-auto border border-orange-400 max-mobile:w-11/12 max-tablet:text-sm max-tablet:w-7/12">
+      <table className="w-3/12 mx-auto border border-orange-400 max-mobile:w-11/12 max-tablet:text-sm max-tablet:w-7/12 max-laptop:w-5/12">
 
         {/* category table */}
         <thead className="text-lg font-bold text-white max-tablet:text-sm">

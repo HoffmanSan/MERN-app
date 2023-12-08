@@ -37,14 +37,14 @@ export default function Category() {
     <>
       {categoryProducts.length !== 0 ? 
         <>
-          <div className="w-3/12 p-3 mx-auto mt-6 bg-white shadow-md max-mobile:w-9/12 max-tablet:w-10/12">
+          <div className="w-3/12 p-3 mx-auto mt-6 bg-white shadow-md max-mobile:w-9/12 max-laptop:w-5/12">
             <h2 className="text-center max-tablet:text-lg">Cena</h2>
             <form className="text-center">
 
               <input 
                 type="number"
                 placeholder="od"
-                className="w-3/12 px-2 py-1 my-1 border border-black max-mobile:w-5/12"
+                className="w-3/12 px-2 py-1 my-1 border border-black max-mobile:w-5/12 max-tablet:w-4/12 max-laptop:w-3/12"
                 onChange={(e) => setMinPrice(Number(e.target.value))}
               />
 
@@ -53,14 +53,14 @@ export default function Category() {
               <input 
                 type="number"
                 placeholder="do"
-                className="w-3/12 px-2 py-1 my-1 border border-black max-mobile:w-5/12"
+                className="w-3/12 px-2 py-1 my-1 border border-black max-mobile:w-5/12 max-tablet:w-4/12 max-laptop:w-3/12"
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
               />
             
             </form>
           </div>
 
-          <div className="grid w-9/12 grid-cols-5 px-5 pt-3 pb-5 mx-auto my-6 bg-white shadow-md max-mobile:w-11/12 max-mobile:grid-cols-2 max-tablet:w-10/12 max-tablet:grid-cols-3">
+          <div className="grid w-9/12 grid-cols-5 px-5 pt-3 pb-5 mx-auto my-6 bg-white shadow-md max-mobile:w-11/12 max-mobile:grid-cols-2 max-laptop:w-10/12 max-tablet:grid-cols-3">
             <h2 className="col-span-5 text-center max-mobile:col-span-2 max-tablet:col-span-3 max-tablet:text-lg">Produkty z kategorii: {categoryName}</h2>
             {categoryProductsFilteredByPrice.length === 0 ?
               minPrice === 0 && maxPrice === 99999 ?

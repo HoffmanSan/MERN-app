@@ -82,7 +82,7 @@ export default function Cart() {
   };
   
   return (
-    <div className="grid w-9/12 grid-cols-3 gap-4 mx-auto my-6 max-mobile:w-11/12 max-tablet:w-10/12">
+    <div className="grid w-9/12 grid-cols-3 gap-4 mx-auto my-6 max-mobile:w-11/12 max-laptop:w-10/12">
 
       {/* if the cart is already loaded... */}
       {cartId ?

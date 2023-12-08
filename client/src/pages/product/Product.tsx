@@ -90,7 +90,7 @@ export default function Products() {
   }, [isLoading, cart, userCartId, updateDocument]);
   
   return (
-    <div className="grid w-8/12 grid-cols-4 grid-rows-2 gap-5 mx-auto my-6 max-mobile:w-11/12 max-tablet:w-10/12">
+    <div className="grid w-8/12 grid-cols-4 grid-rows-2 gap-5 mx-auto my-6 max-mobile:w-11/12 max-laptop:w-10/12">
       {product && (
         <>
 

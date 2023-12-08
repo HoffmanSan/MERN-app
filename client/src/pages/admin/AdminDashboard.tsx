@@ -46,7 +46,7 @@ export default function AdminPanel() {
   };
 
   return (
-    <div className="flex flex-col justify-center w-9/12 pb-6 m-6 mx-auto bg-white rounded-md shadow-md max-mobile:w-11/12 max-tablet:w-10/12">
+    <div className="flex flex-col justify-center w-9/12 pb-6 m-6 mx-auto bg-white rounded-md shadow-md max-mobile:w-11/12 max-laptop:w-10/12">
       <div className="text-white bg-orange-400">
         <ul className="flex max-mobile:justify-between">
 

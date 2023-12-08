@@ -12,7 +12,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-20 bg-orange-400 max-mobile:relative">
-      <ul className="z-10 flex w-9/12 py-2 mx-auto max-mobile:grid max-mobile:grid-rows-2 max-mobile:gap-2 max-mobile:justify-center max-tablet:w-10/12">
+      <ul className="z-10 flex w-9/12 py-2 mx-auto max-mobile:grid max-mobile:grid-rows-2 max-mobile:gap-2 max-mobile:justify-center max-laptop:w-10/12">
 
         <li className="max-mobile:row-start-1">
           <Link to="/">

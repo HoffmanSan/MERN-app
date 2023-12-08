@@ -28,8 +28,7 @@ export default function Search() {
       <h3 className="mt-5 text-center text-gray-400 max-mobile:text-base max-tablet:text-lg">Nie znaleziono produktów</h3>
     :
       <>
-        
-        <div className="w-9/12 p-5 mx-auto mt-6 bg-white shadow-md max-mobile:w-11/12">
+        <div className="w-9/12 p-5 mx-auto mt-6 bg-white shadow-md max-mobile:w-11/12 max-laptop:w-10/12">
           <h2 className="text-center max-tablet:text-lg">Wyniki wyszukiwania dla: {querry}</h2>
 
           <div className="grid grid-cols-5 max-mobile:grid-cols-2 max-tablet:grid-cols-3">

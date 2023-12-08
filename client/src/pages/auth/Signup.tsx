@@ -17,7 +17,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-9/10-screen max-mobile:text-sm">
+    <div className="flex items-center justify-center mx-auto min-h-9/10-screen max-mobile:text-sm max-mobile:w-11/12 max-laptop:w-10/12">
       <div className="p-8 mx-auto text-orange-400 bg-white rounded-lg shadow-lg w-96">
         <h3 className="text-center pb-7 max-mobile:text-base">ZAREJESTRUJ SIĘ</h3>
 

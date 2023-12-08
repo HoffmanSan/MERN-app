@@ -116,7 +116,7 @@ export default function CartCard({cartItem, setIsLoading, dispatchCart}: CartCar
 
         <div className="flex flex-col items-end justify-center col-span-2 mr-3">
           <h3 className="tracking-wide max-mobile:text-sm max-tablet:text-base">{(product.price * purchaseQuantity).toFixed(2)} zł</h3>
-          {purchaseQuantity !== 1 && <small className="text-gray-400 max-mobile:hidden max-tablet:text-xs">{product.price} zł za sztukę</small>}
+          {purchaseQuantity !== 1 && <small className="text-gray-400 max-mobile:hidden max-tablet:text-xs">{product.price} zł / szt</small>}
         </div>
 
       </div>

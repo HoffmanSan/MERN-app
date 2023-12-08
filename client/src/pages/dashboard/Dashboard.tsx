@@ -49,7 +49,7 @@ export default function Dashboard() {
   
   return (
     <>
-      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 min-h-max max-mobile:w-11/12 max-tablet:w-10/12">
+      <div className="w-9/12 px-5 py-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 min-h-max max-mobile:w-11/12 max-laptop:w-10/12">
         <h2 className="max-tablet:text-center max-tablet:text-lg">Najnowsze produkty</h2>
         {products.length > 0 ?
           <Carousel>
@@ -64,7 +64,7 @@ export default function Dashboard() {
         }
       </div>
 
-      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 max-mobile:w-11/12 max-tablet:w-10/12">
+      <div className="w-9/12 px-5 pt-3 mx-auto my-6 bg-white shadow-md max-mobile:py-2 max-mobile:w-11/12 max-laptop:w-10/12">
         <h2 className="max-tablet:text-center max-tablet:text-lg">Szukaj wg Kategorii</h2>
         {categories.length > 0 ?
           <Carousel>
@@ -81,7 +81,7 @@ export default function Dashboard() {
 
       {products.length > 0 ?
 
-        <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max max-mobile:w-11/12 max-tablet:w-10/12">
+        <div className="grid w-9/12 grid-cols-4 mx-auto auto-rows-max max-mobile:w-11/12 max-laptop:w-10/12">
 
           <FilterForm categoryList={categories} handleFilter={handleFilter}/>
 
@@ -90,7 +90,7 @@ export default function Dashboard() {
 
       :
 
-        <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white max-mobile:w-11/12">
+        <div className="flex items-center justify-center w-9/12 h-40 mx-auto bg-white max-mobile:w-11/12 max-laptop:w-10/12">
           <h3 className="text-gray-300 max-mobile:text-base">Ładowanie...</h3>
         </div>
       }

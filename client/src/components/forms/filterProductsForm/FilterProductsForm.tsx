@@ -46,7 +46,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
           type="number"
           placeholder="od"
           onChange={(e) => setMinPrice(Number(e.target.value))}
-          className="w-5/12 px-2 py-1 border border-black max-mobile:w-5/12 max-tablet:w-3/12"
+          className="w-4/12 px-2 py-1 border border-black max-mobile:w-5/12 max-tablet:w-3/12 max-laptop:w-5/12"
           id="filter-minimum-price"
         />
 
@@ -57,7 +57,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
           type="number"
           placeholder="do"
           onChange={(e) => setMaxPrice(Number(e.target.value))}
-          className="w-5/12 px-2 py-1 border border-black max-mobile:w-5/12 max-tablet:w-3/12"
+          className="w-4/12 px-2 py-1 border border-black max-mobile:w-5/12 max-tablet:w-3/12 max-laptop:w-5/12"
           id="filter-maximum-price"
         />
       </div>
@@ -65,7 +65,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
       <h3 className="py-1 text-lg font-bold max-tablet:text-center">Kategorie</h3>
       
       {/* category selection checkboxes */}
-      <div className="grid grid-cols-2 gap-y-2 max-mobile:grid-cols-2 max-tablet:grid-cols-3">
+      <div className="grid grid-cols-2 gap-y-2 max-mobile:grid-cols-2 max-tablet:grid-cols-3 max-laptop:grid-cols-1">
         {categoryList.map((item) => (
           <div className="flex items-center px-0.5" key={item.name}>
             <>
@@ -77,7 +77,7 @@ export default function FilterForm({categoryList, handleFilter}: FilterFormProps
               />
               <span onClick={() => handleCheck(item.name)}/>
             </>
-            <label className="pl-2" htmlFor={item.name}>{item.name}</label>
+            <label className="pl-2 max-mobile:text-sm" htmlFor={item.name}>{item.name}</label>
           </div>
         ))}
       </div>

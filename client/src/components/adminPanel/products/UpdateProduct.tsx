@@ -229,7 +229,7 @@ export default function UpdateProduct({updatedProduct}: UpdateProductProps) {
           ref={fileInput}
           onChange={handleFileChange}
           type="file"
-          className="w-1/12 text-transparent max-mobile:w-5/12 max-tablet:text-sm max-tablet:w-3/12"
+          className="max-mobile:text-transparent max-mobile:w-5/12 max-tablet:text-sm"
           multiple
         />
 
