@@ -24,7 +24,7 @@ const responsive = {
     slidesToSlide: 3
   },
   mobile: {
-    breakpoint: { max: 375, min: 0 },
+    breakpoint: { max: 414, min: 0 },
     items: 2
   }
 };
