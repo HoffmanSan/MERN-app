@@ -38,7 +38,7 @@ const createCheckoutSession = async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: lineItems,
-      success_url: `${process.env.API_SERVER_URI}/api/payments/payment-successful?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.API_SERVER_URI}api/payments/payment-successful?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.CLIENT_URI}/payment/failure`,
       client_reference_id: user.cartId
     });
