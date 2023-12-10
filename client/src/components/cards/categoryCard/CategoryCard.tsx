@@ -16,6 +16,10 @@ export default function CategoryCard({category}: CategoryCardProps) {
   // GLOBAL STATES && UTILITIES
   const { categories } = useCategoriesContext();
 
+  if (!category?.imageURL) {
+    return null
+  }
+
   return (
     <Link to={`/categories/${category?.name}`}>
         <div
