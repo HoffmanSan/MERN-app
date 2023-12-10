@@ -50,8 +50,8 @@ function App() {
           <Route path="/" element={<Dashboard />}/>
           <Route path="/login" element={user ? <Navigate to="/"/> : <Login />}/>
           <Route path="/signup" element={user ? <Navigate to="/"/> : <Signup />}/>
-          <Route path="/success" element={<Success />}/>
-          <Route path="/failure" element={<Failure />}/>
+          <Route path="/payment/success" element={<Success />}/>
+          <Route path="/payment/failure" element={<Failure />}/>
 
           <Route path="/categories/:categoryName" element={
             <Suspense>
