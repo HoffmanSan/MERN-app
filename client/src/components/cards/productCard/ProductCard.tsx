@@ -2,16 +2,7 @@
 import { Link } from "react-router-dom";
 
 // TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  categories: string[]
-  description: string
-  inStock: number
-  photoURLs: string[]
-  createdAt: Date
-}
+import { Product } from "../../../types/types";
 type CardProps = {
   product: Product
 }

@@ -8,6 +8,12 @@ body {
   @apply min-w-full bg-gray-200 font-main;
 }
 
+@supports (-moz-appearance:none) {
+  body {
+    @apply font-sans !important
+  }
+}
+
 h2 {
   @apply text-2xl font-bold max-mobile:text-base
 }

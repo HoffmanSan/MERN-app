@@ -11,17 +11,7 @@ import { useDataAPI } from "../../hooks/useDataAPI";
 import { CategoryCard, LoadingSpinner } from "../../components";
 
 // TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  categories: string[]
-  description: string
-  inStock: number
-  photoURLs: string[]
-  cloudinaryFolderId: string
-  createdAt: Date 
-}
+import { Product } from "../../types/types"
 
 export default function Products() {
   // LOCAL STATES
@@ -44,6 +34,7 @@ export default function Products() {
   // ---- FIND PRODUCT IN PRODUCTS CONTEXT ON COMPONENT MOUNT ---- \\
   useEffect(() => {
     const product = products.find(product => product._id === id);
+
     if (product) {
       setProduct(product);
       setCurrentImage(product.photoURLs[0]);
@@ -52,7 +43,7 @@ export default function Products() {
 
   // ---- UPDATE LOCAL CART ---- \\
   const addProductToCart = async () => {
-    if(!user) {
+    if (!user) {
       return navigate("/login");
     }
 
@@ -163,7 +154,7 @@ export default function Products() {
 
           <div className="row-span-1 p-4 bg-white shadow-md max-tablet:col-span-2 max-mobile:p-2">
             <h3 className="text-center max-tablet:text-lg">Sprawdź inne produkty:</h3>
-            <CategoryCard category={categories.find(category => product.categories.find(item => item === category.name))}/>
+            <CategoryCard category={categories.find(category => product.categories.find(item => item === category.name)) || categories[0]}/>
           </div>
           
           <div className="col-span-4 p-4 pb-2 bg-white shadow-md">

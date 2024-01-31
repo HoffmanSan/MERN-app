@@ -8,12 +8,7 @@ import { useUsersContext } from "../../../hooks/useContextHooks/useUsersContext"
 import { LoadingSpinner } from "../../index";
 
 // TYPES
-type User = {
-  email: string
-  createdAt: Date
-  _id: string
-  role: string
-}
+import { User } from "../../../types/types";
 
 export default function Users() {
   // LOCAL STATES

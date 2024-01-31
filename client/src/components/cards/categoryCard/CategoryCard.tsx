@@ -3,11 +3,7 @@ import { Link } from "react-router-dom";
 import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategoriesContext";
 
 // TYPES
-type Category = {
-  _id: string
-  name: string
-  imageURL: string
-} | undefined
+import { Category } from "../../../types/types"
 type CategoryCardProps = {
   category: Category
 }
@@ -16,7 +12,7 @@ export default function CategoryCard({category}: CategoryCardProps) {
   // GLOBAL STATES && UTILITIES
   const { categories } = useCategoriesContext();
 
-  if (!category?.imageURL) {
+  if (!category.imageURL) {
     return null
   }
 

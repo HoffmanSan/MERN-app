@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { useAuthAPI } from "../../hooks/useAuthAPI";
 
-// CoOMPONENTS
+// COMPONENTS
 import { AuthForm } from "../../components";
 
 export default function Login() {

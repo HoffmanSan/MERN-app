@@ -9,17 +9,7 @@ import { useDebounce } from "../../../hooks/useDebounce";
 import { LoadingSpinner } from "../../index";
 
 // TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  categories: string[]
-  description: string
-  inStock: number
-  photoURLs: string[]
-  cloudinaryFolderId: string
-  createdAt: Date
-}
+import { Product } from "../../../types/types";
 type DisplayProductsProps = {
   changePanel: (v: string) => void
   setUpdatedProduct: (product: Product) => void

@@ -9,17 +9,7 @@ import { useCategoriesContext } from "../../../hooks/useContextHooks/useCategori
 import { LoadingSpinner } from "../../index";
 
 // TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  description: string
-  inStock: number
-  categories: string[]
-  photoURLs: string[]
-  cloudinaryFolderId: string
-  createdAt: Date
-}
+import { Product } from "../../../types/types"
 type UpdateProductProps = {
   updatedProduct: Product
 }

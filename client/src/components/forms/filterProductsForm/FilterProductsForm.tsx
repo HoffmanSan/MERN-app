@@ -2,10 +2,7 @@
 import { useState } from "react";
 
 // TYPES
-type Category = {
-  name: string
-  _id: string
-}
+import { Category } from "../../../types/types"
 type FilterFormProps = {
   categoryList: Category[]
   handleFilter: (minPrice: number, maxPrice: number, categories: string[]) => void

@@ -10,11 +10,7 @@ import { nanoid } from "nanoid";
 import { LoadingSpinner } from "../../index";
 
 // TYPES
-type Category = {
-  _id: string
-  name: string
-  cloudinaryFolderId: string
-}
+import { Category } from '../../../types/types';
 
 export default function DisplayCategories() {
   // LOCAL STATES

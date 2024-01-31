@@ -1,26 +1,10 @@
 // TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  categories: string[]
-  description: string
-  inStock: number
-  photoURLs: string[]
-  createdAt: Date
-}
-type User = {
-  email: string
-  token: string
-  role: string
-  cartId: string
-} | null
+import { Product } from "../../types/types"
 type ProductRowProps = {
   product: Product
-  user: User
 }
 
-export default function ProductRow({product, user}: ProductRowProps) {
+export default function ProductRow({product}: ProductRowProps) {
   return (
     <div className="grid grid-cols-6 my-2 transition duration-200 ease-out border-t border-gray-300 hover:bg-gray-100 group last:border-b max-mobile:text-center">
                 

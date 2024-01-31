@@ -10,15 +10,7 @@ import { nanoid } from "nanoid";
 import { LoadingSpinner } from "../../index";
 
 // TYPES
-type Product = {
-  name: string
-  price: number
-  description: string
-  inStock: number
-  categories: string[]
-  photoURLs: string[]
-  cloudinaryFolderId: string
-}
+import { NewProduct } from '../../../types/types';
 
 export default function CreateProduct() {
   // LOCAL STATES
@@ -27,7 +19,7 @@ export default function CreateProduct() {
   const [outcome, setOutcome] = useState("");
   const [imageSizes, setImageSizes] = useState<File[]>([]);
   const [imageList, setImageList] = useState<File[] | null>(null);
-  const [product, setProduct] = useState<Product>({
+  const [product, setProduct] = useState<NewProduct>({
     name: "",
     price: 0,
     description: "",

@@ -5,17 +5,7 @@ import { useState } from "react";
 import { DisplayProducts, CreateProduct, UpdateProduct } from "../.."
 
 // TYPES
-type Product = {
-  _id: string
-  name: string
-  price: number
-  categories: string[]
-  description: string
-  inStock: number
-  photoURLs: string[]
-  cloudinaryFolderId: string
-  createdAt: Date
-}
+import { Product } from "../../../types/types"
 
 export default function Products() {
   // LOCAL STATES

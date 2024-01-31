@@ -3,16 +3,13 @@ import { useMemo, useState } from "react";
 import { useProductsContext } from "../../../hooks/useContextHooks/useProductsContext";
 
 // TYPES
+import { CartItem } from "../../../types/types"
 type UpdateCartAction = {
   type: "UPDATE_CART_ITEM" | "DELETE_CART_ITEM"
   payload: CartItem[]
 }
 type Action = UpdateCartAction
-type Dispatch= (action: Action) => void
-type CartItem = {
-  cartItemId: string
-  cartItemQuantity: number
-}
+type Dispatch = (action: Action) => void
 type CartCardProps = {
   cartItem: CartItem
   dispatchCart: Dispatch

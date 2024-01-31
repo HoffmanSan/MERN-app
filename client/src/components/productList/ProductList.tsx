@@ -6,17 +6,9 @@ import { useAuthContext } from "../../hooks/useContextHooks/useAuthContext";
 import { ProductRow } from "../index";
 
 // TYPES
+import { Product } from "../../types/types"
 type ProductsListProps = {
-  filteredProducts: {
-    _id: string
-    name: string
-    price: number
-    categories: string[]
-    description: string
-    inStock: number
-    photoURLs: string[]
-    createdAt: Date
-  }[]
+  filteredProducts: Product[]
 }
 
 export default function ProductsList({filteredProducts}: ProductsListProps) {
@@ -31,7 +23,7 @@ export default function ProductsList({filteredProducts}: ProductsListProps) {
           <h2 className="pb-3 text-2xl font-bold max-tablet:text-lg max-tablet:text-center max-mobile:pb-0">Wszystkie oferty</h2>
           {filteredProducts.map(product => (
             <Link key={product._id} to={`/products/${product._id}`}>
-              <ProductRow product={product} user={user}/>
+              <ProductRow product={product}/>
             </Link>
           ))}
         </>
